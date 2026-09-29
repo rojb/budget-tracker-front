@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
+import '../features/auth/welcome_page.dart';
 import '../features/home/home_page.dart';
 import '../features/placeholder/placeholder_page.dart';
 import 'dependencies.dart';
@@ -62,10 +63,7 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.welcome,
-        builder: (context, state) => const PlaceholderPage(
-          title: '34 Bienvenida',
-          description: 'Pantalla en construcción.',
-        ),
+        builder: (context, state) => WelcomePage(auth: auth),
       ),
       GoRoute(
         path: AppRoutes.home,
