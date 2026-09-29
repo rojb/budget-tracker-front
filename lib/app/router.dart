@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
+import '../features/auth/register_page.dart';
 import '../features/home/home_page.dart';
 import '../features/placeholder/placeholder_page.dart';
 import 'dependencies.dart';
@@ -55,11 +56,8 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.register,
-        builder: (context, state) => PlaceholderPage(
-          title: '19 Crear cuenta',
-          description: 'Pantalla en construcción.',
-          actionLabel: 'Iniciar sesión',
-          onAction: () => context.go(AppRoutes.login),
+        builder: (context, state) => RegisterPage(
+          controllerFactory: dependencies.createRegisterController,
         ),
       ),
       GoRoute(

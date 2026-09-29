@@ -4,6 +4,7 @@ import '../core/session/session_storage.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/auth_repository.dart';
 import '../features/auth/login_controller.dart';
+import '../features/auth/register_controller.dart';
 import '../features/home/home_controller.dart';
 
 /// Composition root: builds the object graph once and hands dependencies to
@@ -40,6 +41,9 @@ class Dependencies {
   final AuthController authController;
 
   LoginController createLoginController() => LoginController(authController);
+
+  RegisterController createRegisterController() =>
+      RegisterController(authController);
 
   HomeController createHomeController() => HomeController(authController);
 }
