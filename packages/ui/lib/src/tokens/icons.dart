@@ -17,6 +17,12 @@ abstract final class UiIcons {
   static const IconData lock = LucideIcons.lock300;
   static const IconData mail = LucideIcons.mail300;
   static const IconData eye = LucideIcons.eye300;
+  static const IconData eyeOff = LucideIcons.eyeOff300;
+  static const IconData user = LucideIcons.user300;
+  static const IconData circleAlert = LucideIcons.circleAlert300;
+  static const IconData qrCode = LucideIcons.qrCode300;
+  static const IconData camera = LucideIcons.camera300;
+  static const IconData logOut = LucideIcons.logOut300;
   static const IconData chevronRight = LucideIcons.chevronRight300;
   static const IconData delete = LucideIcons.delete300;
   static const IconData undo = LucideIcons.rotateCcw300;

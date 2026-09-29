@@ -18,6 +18,11 @@ class UiTextField extends StatefulWidget {
     this.obscureText = false,
     this.keyboardType,
     this.onChanged,
+    this.textInputAction,
+    this.onSubmitted,
+    this.autofillHints,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
     super.key,
   });
 
@@ -32,6 +37,15 @@ class UiTextField extends StatefulWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
+
+  /// Keyboard action button (next/done) and its callback.
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+
+  /// Autofill hints for password managers, e.g. `AutofillHints.email`.
+  final Iterable<String>? autofillHints;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   @override
   State<UiTextField> createState() => _UiTextFieldState();
@@ -104,6 +118,11 @@ class _UiTextFieldState extends State<UiTextField> {
                       obscureText: widget.obscureText,
                       keyboardType: widget.keyboardType,
                       onChanged: widget.onChanged,
+                      textInputAction: widget.textInputAction,
+                      onSubmitted: widget.onSubmitted,
+                      autofillHints: widget.autofillHints,
+                      autocorrect: widget.autocorrect,
+                      enableSuggestions: widget.enableSuggestions,
                       cursorColor: UiColors.ink,
                       style: UiTypography.bodyStrong,
                       decoration: const InputDecoration.collapsed(hintText: ''),

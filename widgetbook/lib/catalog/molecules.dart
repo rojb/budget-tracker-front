@@ -41,6 +41,27 @@ WidgetbookFolder moleculesFolder() {
               ),
             ),
           ),
+          WidgetbookUseCase(
+            name: 'password (obscured, eye toggle)',
+            builder: (context) => stage(const _PasswordDemo()),
+          ),
+          WidgetbookUseCase(
+            name: 'icons (user, mail, eye-off)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: Column(
+                  children: [
+                    _DemoField(trailingIcon: UiIcons.user),
+                    SizedBox(height: 10),
+                    _DemoField(trailingIcon: UiIcons.mail),
+                    SizedBox(height: 10),
+                    _DemoField(trailingIcon: UiIcons.eyeOff),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
@@ -170,6 +191,44 @@ class _DemoFieldState extends State<_DemoField> {
       focusNode: _node,
       trailingIcon: widget.trailingIcon,
       errorText: widget.errorText,
+    );
+  }
+}
+
+class _PasswordDemo extends StatefulWidget {
+  const _PasswordDemo();
+
+  @override
+  State<_PasswordDemo> createState() => _PasswordDemoState();
+}
+
+class _PasswordDemoState extends State<_PasswordDemo> {
+  final TextEditingController _controller = TextEditingController(
+    text: 'secreto123',
+  );
+  bool _obscured = true;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 340,
+      child: UiTextField(
+        label: 'Contraseña',
+        controller: _controller,
+        obscureText: _obscured,
+        trailingIcon: _obscured ? UiIcons.eye : UiIcons.eyeOff,
+        onTrailingPressed: () => setState(() => _obscured = !_obscured),
+        autofillHints: const [AutofillHints.password],
+        textInputAction: TextInputAction.done,
+        autocorrect: false,
+        enableSuggestions: false,
+      ),
     );
   }
 }

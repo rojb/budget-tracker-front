@@ -65,6 +65,19 @@ WidgetbookFolder atomsFolder() {
               ),
             ),
           ),
+          WidgetbookUseCase(
+            name: 'primary loading',
+            builder: (context) => stage(
+              SizedBox(
+                width: 340,
+                child: UiButton(
+                  label: 'Entrar',
+                  loading: true,
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
