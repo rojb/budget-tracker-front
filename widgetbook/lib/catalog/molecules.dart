@@ -1,0 +1,207 @@
+import 'package:flutter/material.dart';
+import 'package:ui/ui.dart';
+import 'package:widgetbook/widgetbook.dart';
+
+import 'stage.dart';
+
+WidgetbookFolder moleculesFolder() {
+  return WidgetbookFolder(
+    name: 'molecules',
+    children: [
+      WidgetbookComponent(
+        name: 'TextField',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: _DemoField(trailingIcon: UiIcons.mail),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'focus',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: _DemoField(trailingIcon: UiIcons.mail, autofocus: true),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'error',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: _DemoField(
+                  trailingIcon: UiIcons.eye,
+                  errorText: 'Revisá el valor ingresado',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'FieldRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiFieldRow(label: 'Campo', value: 'Valor', onTap: () {}),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'AmountCapsule',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(const UiAmountCapsule(value: '0')),
+          ),
+          WidgetbookUseCase(
+            name: 'usd',
+            builder: (context) =>
+                stage(const UiAmountCapsule(symbol: r'US$', value: '1.250,50')),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'Toast',
+        useCases: [
+          for (final v in UiToastVariant.values)
+            WidgetbookUseCase(
+              name: v.name,
+              builder: (context) => stage(_toast(v)),
+            ),
+          WidgetbookUseCase(
+            name: 'live (one at a time, 4 s)',
+            builder: (context) => stage(const _ToastLive()),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Widget _toast(UiToastVariant v) {
+  switch (v) {
+    case UiToastVariant.neutral:
+      return UiToast(
+        variant: v,
+        title: 'Recalculado',
+        detail: 'Agosto y septiembre actualizados.',
+        actionLabel: 'Deshacer',
+        onAction: () {},
+      );
+    case UiToastVariant.success:
+      return UiToast(
+        variant: v,
+        title: 'Movimiento guardado',
+        detail: r'Supermercado · −$ 18.450',
+      );
+    case UiToastVariant.info:
+      return UiToast(
+        variant: v,
+        title: 'Código copiado',
+        detail: 'K7M-4QX listo para compartir.',
+      );
+    case UiToastVariant.warning:
+      return UiToast(
+        variant: v,
+        title: 'Transporte quedó sobregirado',
+        detail: 'Cubrilo antes de cerrar el mes.',
+      );
+    case UiToastVariant.error:
+      return UiToast(
+        variant: v,
+        title: 'No se pudo guardar',
+        detail: 'Revisá tu conexión e intentá de nuevo.',
+      );
+  }
+}
+
+class _DemoField extends StatefulWidget {
+  const _DemoField({
+    required this.trailingIcon,
+    this.autofocus = false,
+    this.errorText,
+  });
+
+  final IconData trailingIcon;
+  final bool autofocus;
+  final String? errorText;
+
+  @override
+  State<_DemoField> createState() => _DemoFieldState();
+}
+
+class _DemoFieldState extends State<_DemoField> {
+  final FocusNode _node = FocusNode();
+  final TextEditingController _controller = TextEditingController(
+    text: 'Value',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autofocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _node.requestFocus());
+    }
+  }
+
+  @override
+  void dispose() {
+    _node.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return UiTextField(
+      label: 'Label',
+      controller: _controller,
+      focusNode: _node,
+      trailingIcon: widget.trailingIcon,
+      errorText: widget.errorText,
+    );
+  }
+}
+
+class _ToastLive extends StatelessWidget {
+  const _ToastLive();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final v in UiToastVariant.values)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: SizedBox(
+              width: 260,
+              child: UiButton(
+                label: 'Mostrar ${v.name}',
+                variant: UiButtonVariant.secondary,
+                onPressed: () => showUiToast(
+                  context,
+                  variant: v,
+                  title: 'Toast ${v.name}',
+                  detail: 'Se cierra en 4 s o deslizando.',
+                  actionLabel: v == UiToastVariant.neutral ? 'Deshacer' : null,
+                  onAction: () {},
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}

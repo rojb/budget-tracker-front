@@ -25,8 +25,9 @@ class UiButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = variant == UiButtonVariant.primary;
-    final height =
-        primary ? UiSizes.buttonPrimaryHeight : UiSizes.buttonSecondaryHeight;
+    final height = primary
+        ? UiSizes.buttonPrimaryHeight
+        : UiSizes.buttonSecondaryHeight;
     final style = UiTypography.custom(primary ? 16 : 15, weight: 500);
     return UiHitTarget(
       onTap: onPressed,

@@ -8,9 +8,8 @@ GoRouter createRouter(Dependencies dependencies) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => HomePage(
-          controllerFactory: dependencies.createHomeController,
-        ),
+        builder: (context, state) =>
+            HomePage(controllerFactory: dependencies.createHomeController),
       ),
     ],
   );

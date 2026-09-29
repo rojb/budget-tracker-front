@@ -40,7 +40,11 @@ class UiFieldRow extends StatelessWidget {
             const SizedBox(width: 10),
             Text(value, style: UiTypography.custom(15, weight: 500)),
             const SizedBox(width: 4),
-            const Icon(UiIcons.chevronRight, size: 14, color: UiColors.inkMuted),
+            const Icon(
+              UiIcons.chevronRight,
+              size: 14,
+              color: UiColors.inkMuted,
+            ),
           ],
         ),
       ),

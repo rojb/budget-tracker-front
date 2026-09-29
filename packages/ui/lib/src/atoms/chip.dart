@@ -45,22 +45,24 @@ class UiChip extends StatelessWidget {
       child: Container(
         height: size.height,
         padding: const EdgeInsets.symmetric(horizontal: 18),
-        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: selected ? UiColors.lavender : UiColors.surface,
           borderRadius: BorderRadius.circular(size.height / 2),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showCheck) ...[
-              const Icon(UiIcons.check, size: 15, color: UiColors.ink),
-              const SizedBox(width: 6),
+        child: Center(
+          widthFactor: 1,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showCheck) ...[
+                const Icon(UiIcons.check, size: 15, color: UiColors.ink),
+                const SizedBox(width: 6),
+              ],
+              ExcludeSemantics(
+                child: Text(label, style: UiTypography.custom(15)),
+              ),
             ],
-            ExcludeSemantics(
-              child: Text(label, style: UiTypography.custom(15)),
-            ),
-          ],
+          ),
         ),
       ),
     );

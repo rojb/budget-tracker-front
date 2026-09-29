@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ui/ui.dart';
 
 import 'dependencies.dart';
 import 'router.dart';
@@ -26,6 +27,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Budget Tracker',
+      theme: buildUiTheme(),
       routerConfig: _router,
     );
   }

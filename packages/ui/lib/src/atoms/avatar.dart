@@ -6,7 +6,11 @@ import '../tokens/typography.dart';
 
 /// Lavender circle with the person's initials.
 class UiAvatar extends StatelessWidget {
-  const UiAvatar({required this.initials, this.size = UiSizes.avatar, super.key});
+  const UiAvatar({
+    required this.initials,
+    this.size = UiSizes.avatar,
+    super.key,
+  });
 
   final String initials;
   final double size;

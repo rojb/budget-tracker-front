@@ -6,7 +6,6 @@ export 'src/atoms/button.dart';
 export 'src/atoms/chip.dart';
 export 'src/atoms/icon_button.dart';
 export 'src/atoms/key.dart';
-export 'src/atoms/placeholder_card.dart';
 export 'src/atoms/toggle.dart';
 export 'src/molecules/amount_capsule.dart';
 export 'src/molecules/field_row.dart';

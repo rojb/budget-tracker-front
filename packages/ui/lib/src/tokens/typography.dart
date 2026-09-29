@@ -10,7 +10,11 @@ abstract final class UiTypography {
   static const String family = 'Urbanist';
   static const String package = 'ui';
 
-  static TextStyle _style(double size, int weight, {Color color = UiColors.ink}) {
+  static TextStyle _style(
+    double size,
+    int weight, {
+    Color color = UiColors.ink,
+  }) {
     return TextStyle(
       fontFamily: family,
       package: package,
@@ -24,8 +28,11 @@ abstract final class UiTypography {
 
   /// Build any Urbanist style outside the fixed scale (component-specific
   /// sizes from the design masters, e.g. 15/500 for toast titles).
-  static TextStyle custom(double size, {int weight = 400, Color color = UiColors.ink}) =>
-      _style(size, weight, color: color);
+  static TextStyle custom(
+    double size, {
+    int weight = 400,
+    Color color = UiColors.ink,
+  }) => _style(size, weight, color: color);
 
   static final TextStyle display = _style(40, 300);
   static final TextStyle headline = _style(34, 400);

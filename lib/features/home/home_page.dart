@@ -29,7 +29,11 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: ListenableBuilder(
             listenable: _controller,
-            builder: (context, _) => PlaceholderCard(message: _controller.message),
+            builder: (context, _) => Text(
+              _controller.message,
+              style: UiTypography.headline,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),

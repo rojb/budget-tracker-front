@@ -83,7 +83,9 @@ class _UiTextFieldState extends State<UiTextField> {
           decoration: BoxDecoration(
             color: UiColors.surface,
             borderRadius: BorderRadius.circular(UiSizes.textFieldHeight / 2),
-            border: border == null ? null : Border.all(color: border, width: 1.5),
+            border: border == null
+                ? null
+                : Border.all(color: border, width: 1.5),
           ),
           child: Row(
             children: [
@@ -114,7 +116,11 @@ class _UiTextFieldState extends State<UiTextField> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: widget.onTrailingPressed,
-                  child: Icon(widget.trailingIcon, size: 18, color: UiColors.ink),
+                  child: Icon(
+                    widget.trailingIcon,
+                    size: 18,
+                    color: UiColors.ink,
+                  ),
                 ),
               ],
             ],

@@ -9,11 +9,7 @@ import '../tokens/typography.dart';
 /// Symbols longer than one character (for example "US$") use a smaller font so
 /// they fit the 48 dp badge.
 class UiAmountCapsule extends StatelessWidget {
-  const UiAmountCapsule({
-    required this.value,
-    this.symbol = r'$',
-    super.key,
-  });
+  const UiAmountCapsule({required this.value, this.symbol = r'$', super.key});
 
   final String value;
   final String symbol;

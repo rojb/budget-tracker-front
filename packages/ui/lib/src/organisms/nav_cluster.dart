@@ -43,28 +43,32 @@ class UiNavCluster extends StatelessWidget {
     final children = <Widget>[];
     for (final tab in UiNavTab.values) {
       if (children.isNotEmpty) children.add(const SizedBox(width: _gap));
-      children.add(_circle(
-        size: _tab,
-        background: tab == activeTab ? UiColors.ink : UiColors.surface,
-        icon: tab.icon,
-        iconColor: tab == activeTab ? UiColors.surface : UiColors.ink,
-        iconSize: 22,
-        label: tab.label,
-        selected: tab == activeTab,
-        onTap: () => onTabSelected(tab),
-      ));
+      children.add(
+        _circle(
+          size: _tab,
+          background: tab == activeTab ? UiColors.ink : UiColors.surface,
+          icon: tab.icon,
+          iconColor: tab == activeTab ? UiColors.surface : UiColors.ink,
+          iconSize: 22,
+          label: tab.label,
+          selected: tab == activeTab,
+          onTap: () => onTabSelected(tab),
+        ),
+      );
       if (tab == UiNavTab.plan) {
         children
           ..add(const SizedBox(width: _gap))
-          ..add(_circle(
-            size: _add,
-            background: UiColors.chartreuse,
-            icon: UiIcons.plus,
-            iconColor: UiColors.ink,
-            iconSize: 24,
-            label: 'Agregar',
-            onTap: onAddPressed,
-          ));
+          ..add(
+            _circle(
+              size: _add,
+              background: UiColors.chartreuse,
+              icon: UiIcons.plus,
+              iconColor: UiColors.ink,
+              iconSize: 24,
+              label: 'Agregar',
+              onTap: onAddPressed,
+            ),
+          );
       }
     }
 
@@ -121,4 +125,3 @@ class UiNavCluster extends StatelessWidget {
     );
   }
 }
-

@@ -31,11 +31,13 @@ class UiToggle extends StatelessWidget {
         children: [
           for (var i = 0; i < labels.length; i++) ...[
             if (i > 0) const SizedBox(width: 4),
-            Expanded(child: _Segment(
-              label: labels[i],
-              active: i == selectedIndex,
-              onTap: () => onChanged(i),
-            )),
+            Expanded(
+              child: _Segment(
+                label: labels[i],
+                active: i == selectedIndex,
+                onTap: () => onChanged(i),
+              ),
+            ),
           ],
         ],
       ),

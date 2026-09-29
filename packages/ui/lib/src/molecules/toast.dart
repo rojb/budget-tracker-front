@@ -88,8 +88,7 @@ class UiToast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showAction =
-        variant == UiToastVariant.neutral && actionLabel != null;
+    final showAction = variant == UiToastVariant.neutral && actionLabel != null;
     return Semantics(
       liveRegion: true,
       container: true,
@@ -124,8 +123,11 @@ class UiToast extends StatelessWidget {
                       title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: UiTypography.custom(15,
-                          weight: 500, color: variant.title),
+                      style: UiTypography.custom(
+                        15,
+                        weight: 500,
+                        color: variant.title,
+                      ),
                     ),
                     Text(
                       detail,
@@ -150,8 +152,11 @@ class UiToast extends StatelessWidget {
                       widthFactor: 1,
                       child: Text(
                         actionLabel!,
-                        style: UiTypography.custom(14,
-                            weight: 500, color: UiColors.chartreuse),
+                        style: UiTypography.custom(
+                          14,
+                          weight: 500,
+                          color: UiColors.chartreuse,
+                        ),
                       ),
                     ),
                   ),
