@@ -49,6 +49,22 @@ widgetbook/            # app Flutter aparte con el catálogo de packages/ui
 depende de la app ni de ningún cliente de API, así que importar código de la app desde
 `packages/ui` no compila y `flutter analyze` falla.
 
+## Cliente de API generado
+
+`packages/api_client` se genera desde `openapi.yaml` (repo de specs, clonado al lado como `../2do` o
+`../budget-tracker-specs`) con OpenAPI Generator `dart-dio`; nunca se edita a mano. La versión del
+generador está fijada en `openapitools.json` (necesita Java). Para regenerarlo:
+
+```bash
+npx @openapitools/openapi-generator-cli generate
+cd packages/api_client && dart pub get && dart run build_runner build --delete-conflicting-outputs
+```
+
+Es lo mismo que `npx @openapitools/openapi-generator-cli generate -g dart-dio -i ../2do/openapi.yaml
+-o packages/api_client`. Ajustá `inputSpec` en `openapitools.json` si tu checkout del repo de specs
+tiene otro nombre. Los `*.g.dart` generados se commitean, y `test/` y `doc/` no se generan (ver
+`packages/api_client/README.md`).
+
 ## Widgetbook
 
 ```bash
