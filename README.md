@@ -65,6 +65,34 @@ Es lo mismo que `npx @openapitools/openapi-generator-cli generate -g dart-dio -i
 tiene otro nombre. Los `*.g.dart` generados se commitean, y `test/` y `doc/` no se generan (ver
 `packages/api_client/README.md`).
 
+## Autenticación y cómo correr la app contra la API
+
+Sesión con un JWT guardado en `flutter_secure_storage`; `go_router` redirige según la sesión
+(`lib/app/router.dart`) y `AuthController` (`lib/features/auth`) la maneja. El logout borra el
+token. Pantallas: 18 Acceso, 19 Crear cuenta, 34 Bienvenida; 01/02, 20 y 30 son rutas placeholder.
+
+**Contra el backend real** (repo `budget-tracker-back`: `docker compose up -d`,
+`npm run migration:run`, `npm run start:dev`) en un dispositivo Android por USB:
+
+```bash
+adb reverse tcp:3000 tcp:3000
+flutter run --dart-define=API_BASE_URL=http://localhost:3000
+```
+
+En el emulador alcanza con el valor por defecto (`http://10.0.2.2:3000`). El tráfico HTTP sin TLS
+solo está permitido en builds debug (`android/app/src/debug/AndroidManifest.xml`).
+
+**Sin backend, con un mock Prism** generado desde `openapi.yaml`:
+
+```bash
+npx @stoplight/prism-cli mock ../2do/openapi.yaml -p 4010
+adb reverse tcp:4010 tcp:4010
+flutter run --dart-define=API_BASE_URL=http://localhost:4010
+```
+
+Prism no valida el JWT ni las credenciales: sirve para los caminos felices (los 401 solo se ven con
+el backend real).
+
 ## Widgetbook
 
 ```bash
