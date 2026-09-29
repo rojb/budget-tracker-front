@@ -1,15 +1,28 @@
 import 'package:flutter/foundation.dart';
 
-/// UI state for the home screen. Later changes load real data through the
-/// API client injected from the composition root.
+import '../auth/auth_controller.dart';
+
+/// UI state for the signed-in home placeholder (screens 01/02 arrive with
+/// `add-plans-and-accounts`). Shows who is signed in and ends the session.
 class HomeController extends ChangeNotifier {
-  String _message = 'Budget Tracker scaffold';
+  HomeController(this._auth) {
+    _auth.addListener(notifyListeners);
+  }
 
-  String get message => _message;
+  final AuthController _auth;
 
-  void updateMessage(String value) {
-    if (value == _message) return;
-    _message = value;
-    notifyListeners();
+  String get greeting {
+    final name = _auth.user?.name;
+    return name == null ? 'Hola' : 'Hola, $name';
+  }
+
+  String? get email => _auth.user?.email;
+
+  Future<void> logout() => _auth.logout();
+
+  @override
+  void dispose() {
+    _auth.removeListener(notifyListeners);
+    super.dispose();
   }
 }

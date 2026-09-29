@@ -41,6 +41,27 @@ WidgetbookFolder moleculesFolder() {
               ),
             ),
           ),
+          WidgetbookUseCase(
+            name: 'password (obscured, eye toggle)',
+            builder: (context) => stage(const _PasswordDemo()),
+          ),
+          WidgetbookUseCase(
+            name: 'icons (user, mail, eye-off)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: Column(
+                  children: [
+                    _DemoField(trailingIcon: UiIcons.user),
+                    SizedBox(height: 10),
+                    _DemoField(trailingIcon: UiIcons.mail),
+                    SizedBox(height: 10),
+                    _DemoField(trailingIcon: UiIcons.eyeOff),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
@@ -68,6 +89,86 @@ WidgetbookFolder moleculesFolder() {
             name: 'usd',
             builder: (context) =>
                 stage(const UiAmountCapsule(symbol: r'US$', value: '1.250,50')),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'HeroCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'photo (Acceso, 320)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Sobres',
+                  subtitle: 'Cada peso con un destino, antes de gastarlo.',
+                  image: AssetImage('assets/hero.jpg'),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'photo (Crear cuenta, 260)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Empezá',
+                  subtitle: 'Un plan propio, con tus cuentas y tus sobres.',
+                  height: 260,
+                  image: AssetImage('assets/hero.jpg'),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'no image (gradient fallback)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Sobres',
+                  subtitle: 'Cada peso con un destino, antes de gastarlo.',
+                  height: 260,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'OptionCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'lavender',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiOptionCard(
+                  icon: UiIcons.sparkles,
+                  title: 'Crear mi plan',
+                  description:
+                      'Armá tu plan desde cero, con tus cuentas y tus sobres.',
+                  variant: UiOptionCardVariant.lavender,
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'white',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiOptionCard(
+                  icon: UiIcons.qrCode,
+                  title: 'Tengo un código',
+                  description: 'Alguien ya te invitó a un plan compartido. Ingresá el código o escaneá el QR.',
+                  onPressed: () {},
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -170,6 +271,44 @@ class _DemoFieldState extends State<_DemoField> {
       focusNode: _node,
       trailingIcon: widget.trailingIcon,
       errorText: widget.errorText,
+    );
+  }
+}
+
+class _PasswordDemo extends StatefulWidget {
+  const _PasswordDemo();
+
+  @override
+  State<_PasswordDemo> createState() => _PasswordDemoState();
+}
+
+class _PasswordDemoState extends State<_PasswordDemo> {
+  final TextEditingController _controller = TextEditingController(
+    text: 'secreto123',
+  );
+  bool _obscured = true;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 340,
+      child: UiTextField(
+        label: 'Contraseña',
+        controller: _controller,
+        obscureText: _obscured,
+        trailingIcon: _obscured ? UiIcons.eye : UiIcons.eyeOff,
+        onTrailingPressed: () => setState(() => _obscured = !_obscured),
+        autofillHints: const [AutofillHints.password],
+        textInputAction: TextInputAction.done,
+        autocorrect: false,
+        enableSuggestions: false,
+      ),
     );
   }
 }

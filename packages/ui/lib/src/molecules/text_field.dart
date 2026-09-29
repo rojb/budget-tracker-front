@@ -18,6 +18,11 @@ class UiTextField extends StatefulWidget {
     this.obscureText = false,
     this.keyboardType,
     this.onChanged,
+    this.textInputAction,
+    this.onSubmitted,
+    this.autofillHints,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
     super.key,
   });
 
@@ -25,13 +30,24 @@ class UiTextField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
 
-  /// When non-null the field is in the Error state and shows this message.
+  /// When non-null the field is in the Error state and shows this message
+  /// (an empty string keeps the Error border but shows no message line, for
+  /// forms that render one shared message elsewhere).
   final String? errorText;
   final IconData? trailingIcon;
   final VoidCallback? onTrailingPressed;
   final bool obscureText;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
+
+  /// Keyboard action button (next/done) and its callback.
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+
+  /// Autofill hints for password managers, e.g. `AutofillHints.email`.
+  final Iterable<String>? autofillHints;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   @override
   State<UiTextField> createState() => _UiTextFieldState();
@@ -104,6 +120,11 @@ class _UiTextFieldState extends State<UiTextField> {
                       obscureText: widget.obscureText,
                       keyboardType: widget.keyboardType,
                       onChanged: widget.onChanged,
+                      textInputAction: widget.textInputAction,
+                      onSubmitted: widget.onSubmitted,
+                      autofillHints: widget.autofillHints,
+                      autocorrect: widget.autocorrect,
+                      enableSuggestions: widget.enableSuggestions,
                       cursorColor: UiColors.ink,
                       style: UiTypography.bodyStrong,
                       decoration: const InputDecoration.collapsed(hintText: ''),
@@ -126,7 +147,7 @@ class _UiTextFieldState extends State<UiTextField> {
             ],
           ),
         ),
-        if (hasError)
+        if (hasError && widget.errorText!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(left: 20, top: 6),
             child: Text(

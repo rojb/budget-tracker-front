@@ -1,0 +1,17 @@
+{
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.25.0",
+    "generators": {
+      "api_client": {
+        "generatorName": "dart-dio",
+        "inputSpec": "../2do/openapi.yaml",
+        "output": "packages/api_client",
+        "additionalProperties": {
+          "pubName": "api_client",
+          "pubAuthor": "budget-tracker"
+        }
+      }
+    }
+  }
+}

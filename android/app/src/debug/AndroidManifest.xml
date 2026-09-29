@@ -4,4 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Debug builds only: allow plain HTTP to the local backend / Prism mock
+         (adb reverse tcp:3000 tcp:3000). Release builds stay HTTPS-only. -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

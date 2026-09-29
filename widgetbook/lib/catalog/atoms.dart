@@ -65,6 +65,19 @@ WidgetbookFolder atomsFolder() {
               ),
             ),
           ),
+          WidgetbookUseCase(
+            name: 'primary loading',
+            builder: (context) => stage(
+              SizedBox(
+                width: 340,
+                child: UiButton(
+                  label: 'Entrar',
+                  loading: true,
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
@@ -92,6 +105,40 @@ WidgetbookFolder atomsFolder() {
                 label: 'Alquiler',
                 size: UiChipSize.compact,
                 onPressed: () {},
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'FormMessage',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiFormMessage(
+                  message: 'Email o contraseña incorrectos. Revisalos e intentá de nuevo.',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'LinkRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiLinkRow(
+                  prompt: '¿No tenés cuenta?',
+                  actionLabel: 'Crear cuenta',
+                  onPressed: () {},
+                ),
               ),
             ),
           ),

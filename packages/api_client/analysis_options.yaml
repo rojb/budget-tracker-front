@@ -1,0 +1,19 @@
+# Hand-maintained (see .openapi-generator-ignore). The code in lib/ is generated and never
+# edited by hand, so the lints the generator output is known to violate are silenced instead.
+analyzer:
+  language:
+    strict-inference: true
+    strict-raw-types: true
+    strict-casts: false
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  errors:
+    deprecated_member_use_from_same_package: ignore
+    unused_import: ignore
+    unused_element_parameter: ignore
