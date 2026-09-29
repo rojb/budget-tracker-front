@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../atoms/hit_target.dart';
 import '../tokens/colors.dart';
 import '../tokens/icons.dart';
+import '../tokens/joined_shape.dart';
 
 enum UiNavTab {
   home(UiIcons.house, 'Inicio'),
@@ -37,6 +38,23 @@ class UiNavCluster extends StatelessWidget {
   static const double _add = 64;
   static const double _gap = 8;
   static const double _trayPad = 6;
+  static const double _neck = 10;
+
+  /// One tray lobe per circle, each [_trayPad] wider than its circle on both
+  /// sides; circles are [_gap] apart so neighbouring lobes overlap and the
+  /// outline pinches between them.
+  static const List<double> _circleSizes = [_tab, _tab, _add, _tab, _tab];
+
+  static List<JoinedLobe> _lobes(Size size) {
+    final lobes = <JoinedLobe>[];
+    var x = 0.0;
+    for (final c in _circleSizes) {
+      final w = c + _trayPad * 2;
+      lobes.add(JoinedLobe(x: x, width: w, radius: w / 2));
+      x += c + _gap;
+    }
+    return lobes;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,29 +90,31 @@ class UiNavCluster extends StatelessWidget {
       }
     }
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular((_add + _trayPad * 2) / 2),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1F000000),
-            offset: Offset(0, 8),
-            blurRadius: 24,
-          ),
-        ],
+    return CustomPaint(
+      painter: const JoinedShapePainter(
+        lobes: _lobes,
+        neck: _neck,
+        shadow: BoxShadow(
+          color: Color(0x1F000000),
+          offset: Offset(0, 8),
+          blurRadius: 24,
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular((_add + _trayPad * 2) / 2),
+      child: ClipPath(
+        clipper: const JoinedShapeClipper(lobes: _lobes, neck: _neck),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            padding: const EdgeInsets.all(_trayPad),
-            decoration: BoxDecoration(
-              color: UiColors.trayFill,
-              border: Border.all(color: UiColors.trayBorder),
-              borderRadius: BorderRadius.circular((_add + _trayPad * 2) / 2),
+          child: CustomPaint(
+            painter: const JoinedShapePainter(
+              lobes: _lobes,
+              neck: _neck,
+              fill: UiColors.trayFill,
+              stroke: UiColors.trayBorder,
             ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: children),
+            child: Padding(
+              padding: const EdgeInsets.all(_trayPad),
+              child: Row(mainAxisSize: MainAxisSize.min, children: children),
+            ),
           ),
         ),
       ),
