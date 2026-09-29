@@ -111,6 +111,40 @@ WidgetbookFolder atomsFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'FormMessage',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiFormMessage(
+                  message: 'Email o contraseña incorrectos. Revisalos e intentá de nuevo.',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'LinkRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiLinkRow(
+                  prompt: '¿No tenés cuenta?',
+                  actionLabel: 'Crear cuenta',
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'Avatar',
         useCases: [
           WidgetbookUseCase(

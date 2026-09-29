@@ -93,6 +93,86 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'HeroCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'photo (Acceso, 320)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Sobres',
+                  subtitle: 'Cada peso con un destino, antes de gastarlo.',
+                  image: AssetImage('assets/hero.jpg'),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'photo (Crear cuenta, 260)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Empezá',
+                  subtitle: 'Un plan propio, con tus cuentas y tus sobres.',
+                  height: 260,
+                  image: AssetImage('assets/hero.jpg'),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'no image (gradient fallback)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 362,
+                child: UiHeroCard(
+                  title: 'Sobres',
+                  subtitle: 'Cada peso con un destino, antes de gastarlo.',
+                  height: 260,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'OptionCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'lavender',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiOptionCard(
+                  icon: UiIcons.sparkles,
+                  title: 'Crear mi plan',
+                  description:
+                      'Armá tu plan desde cero, con tus cuentas y tus sobres.',
+                  variant: UiOptionCardVariant.lavender,
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'white',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiOptionCard(
+                  icon: UiIcons.qrCode,
+                  title: 'Tengo un código',
+                  description: 'Alguien ya te invitó a un plan compartido. Ingresá el código o escaneá el QR.',
+                  onPressed: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'Toast',
         useCases: [
           for (final v in UiToastVariant.values)
