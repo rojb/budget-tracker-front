@@ -3,6 +3,7 @@ import '../core/config.dart';
 import '../core/session/session_storage.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/auth_repository.dart';
+import '../features/auth/login_controller.dart';
 import '../features/home/home_controller.dart';
 
 /// Composition root: builds the object graph once and hands dependencies to
@@ -37,6 +38,8 @@ class Dependencies {
 
   /// Session state shared by the router and the auth screens.
   final AuthController authController;
+
+  LoginController createLoginController() => LoginController(authController);
 
   HomeController createHomeController() => HomeController(authController);
 }

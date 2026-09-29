@@ -30,7 +30,9 @@ class UiTextField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
 
-  /// When non-null the field is in the Error state and shows this message.
+  /// When non-null the field is in the Error state and shows this message
+  /// (an empty string keeps the Error border but shows no message line, for
+  /// forms that render one shared message elsewhere).
   final String? errorText;
   final IconData? trailingIcon;
   final VoidCallback? onTrailingPressed;
@@ -145,7 +147,7 @@ class _UiTextFieldState extends State<UiTextField> {
             ],
           ),
         ),
-        if (hasError)
+        if (hasError && widget.errorText!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(left: 20, top: 6),
             child: Text(

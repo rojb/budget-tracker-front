@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_controller.dart';
+import '../features/auth/login_page.dart';
 import '../features/home/home_page.dart';
 import '../features/placeholder/placeholder_page.dart';
 import 'dependencies.dart';
@@ -49,12 +50,8 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.login,
-        builder: (context, state) => PlaceholderPage(
-          title: '18 Acceso',
-          description: 'Pantalla en construcción.',
-          actionLabel: 'Crear cuenta',
-          onAction: () => context.go(AppRoutes.register),
-        ),
+        builder: (context, state) =>
+            LoginPage(controllerFactory: dependencies.createLoginController),
       ),
       GoRoute(
         path: AppRoutes.register,
