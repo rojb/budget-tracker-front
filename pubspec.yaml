@@ -37,6 +37,10 @@ dependencies:
   go_router: ^18.0.2
   ui:
     path: packages/ui
+  dio: ^5.11.1
+  flutter_secure_storage: ^11.2.0
+  api_client:
+    path: packages/api_client
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
