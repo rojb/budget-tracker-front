@@ -18,6 +18,13 @@ class _AppState extends State<App> {
   late final GoRouter _router = createRouter(widget.dependencies);
 
   @override
+  void initState() {
+    super.initState();
+    // Restore the stored session; the router shows a blank splash meanwhile.
+    widget.dependencies.authController.restore();
+  }
+
+  @override
   void dispose() {
     _router.dispose();
     super.dispose();

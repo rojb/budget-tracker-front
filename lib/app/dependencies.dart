@@ -38,5 +38,5 @@ class Dependencies {
   /// Session state shared by the router and the auth screens.
   final AuthController authController;
 
-  HomeController createHomeController() => HomeController();
+  HomeController createHomeController() => HomeController(authController);
 }
