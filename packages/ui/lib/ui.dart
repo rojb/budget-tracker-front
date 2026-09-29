@@ -1,4 +1,9 @@
-/// Public API of the `ui` package. Consumers import only this file.
+/// Public barrel of the `ui` design-system package.
 library;
 
 export 'src/atoms/placeholder_card.dart';
+export 'src/tokens/colors.dart';
+export 'src/tokens/icons.dart';
+export 'src/tokens/shape.dart';
+export 'src/tokens/theme.dart';
+export 'src/tokens/typography.dart';
