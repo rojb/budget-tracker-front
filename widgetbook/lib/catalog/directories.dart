@@ -1,22 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
-/// One component per `packages/ui` widget, grouped by atomic level.
+import 'atoms.dart';
+import 'foundations.dart';
+import 'molecules.dart';
+import 'organisms.dart';
+
+/// One component per `packages/ui` widget, grouped by atomic level, one use
+/// case per variant.
 final List<WidgetbookNode> directories = [
-  WidgetbookFolder(
-    name: 'atoms',
-    children: [
-      WidgetbookComponent(
-        name: 'PlaceholderCard',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'default',
-            builder: (BuildContext context) =>
-                const PlaceholderCard(message: 'Placeholder story'),
-          ),
-        ],
-      ),
-    ],
-  ),
+  foundationsFolder(),
+  atomsFolder(),
+  moleculesFolder(),
+  organismsFolder(),
 ];
