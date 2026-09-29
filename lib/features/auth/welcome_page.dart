@@ -22,18 +22,22 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 34, 20, 24),
+          padding: const EdgeInsets.fromLTRB(20, 44, 20, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                '¿Cómo querés empezar?',
-                style: UiTypography.headline.copyWith(height: 1.05),
+              Padding(
+                // Narrower than the screen so the title wraps in two lines like the design.
+                padding: const EdgeInsets.only(right: 90),
+                child: Text(
+                  '¿Cómo querés empezar?',
+                  style: UiTypography.headline.copyWith(height: 1.05),
+                ),
               ),
               const SizedBox(height: 14),
               Text(
                 'Elegí si vas a armar tu plan desde cero o alguien ya te invitó a uno.',
-                style: UiTypography.custom(16, color: UiColors.inkMuted),
+                style: UiTypography.custom(15, color: UiColors.inkMuted),
               ),
               const SizedBox(height: 28),
               UiOptionCard(
@@ -64,7 +68,7 @@ class WelcomePage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'El código QR también funciona con la cámara del teléfono.',
-                      style: UiTypography.custom(14, color: UiColors.inkMuted),
+                      style: UiTypography.custom(13, color: UiColors.inkMuted),
                     ),
                   ),
                 ],

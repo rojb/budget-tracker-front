@@ -67,7 +67,7 @@ class UiOptionCard extends StatelessWidget {
                     const SizedBox(width: 4),
                   ],
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 30),
                 Text(title, style: UiTypography.title),
                 const SizedBox(height: 6),
                 Text(
