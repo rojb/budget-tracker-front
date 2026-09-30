@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
 import '../features/accounts/account_detail_page.dart';
+import '../features/accounts/account_form_controller.dart';
+import '../features/accounts/account_form_page.dart';
+import '../features/accounts/archived_accounts_page.dart';
 import '../features/accounts/accounts_page.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
@@ -138,19 +141,19 @@ GoRouter createRouter(Dependencies dependencies) {
                   GoRoute(
                     path: 'new',
                     parentNavigatorKey: rootKey,
-                    builder: (context, state) => _placeholder(
-                      context,
-                      '28 Nueva cuenta',
-                      'Llega en la tarea 3.10.',
+                    builder: (context, state) => AccountFormPage(
+                      plans: plans,
+                      controllerFactory: () => AccountFormController(
+                        dependencies.accountsController,
+                      ),
                     ),
                   ),
                   GoRoute(
                     path: 'archived',
                     parentNavigatorKey: rootKey,
-                    builder: (context, state) => _placeholder(
-                      context,
-                      '51 Cuentas archivadas',
-                      'Llega en la tarea 3.10.',
+                    builder: (context, state) => ArchivedAccountsPage(
+                      accounts: dependencies.accountsController,
+                      plans: plans,
                     ),
                   ),
                   GoRoute(
@@ -160,6 +163,37 @@ GoRouter createRouter(Dependencies dependencies) {
                       accounts: dependencies.accountsController,
                       plans: plans,
                     ),
+                    routes: [
+                      GoRoute(
+                        path: 'edit',
+                        parentNavigatorKey: rootKey,
+                        builder: (context, state) {
+                          final accounts = dependencies.accountsController;
+                          final account = accounts.byId(
+                            state.pathParameters['accountId']!,
+                          );
+                          if (account == null) {
+                            return _placeholder(
+                              context,
+                              'Cuenta no encontrada',
+                              'Volvé a la lista de cuentas.',
+                            );
+                          }
+                          return AccountFormPage(
+                            plans: plans,
+                            controllerFactory: () => AccountFormController(
+                              accounts,
+                              account: account,
+                            ),
+                            onArchive: (context) => confirmAndArchive(
+                              context,
+                              account,
+                              () => accounts.archive(account.id),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
