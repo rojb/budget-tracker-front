@@ -22,6 +22,7 @@ import 'package:api_client/src/model/create_account_request.dart';
 import 'package:api_client/src/model/create_invitation_request.dart';
 import 'package:api_client/src/model/create_payee_request.dart';
 import 'package:api_client/src/model/create_plan_request.dart';
+import 'package:api_client/src/model/create_transfer_request.dart';
 import 'package:api_client/src/model/currency.dart';
 import 'package:api_client/src/model/currency_code.dart';
 import 'package:api_client/src/model/error.dart';
@@ -38,6 +39,8 @@ import 'package:api_client/src/model/plan.dart';
 import 'package:api_client/src/model/plan_member.dart';
 import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
+import 'package:api_client/src/model/transfer.dart';
+import 'package:api_client/src/model/transfer_page.dart';
 import 'package:api_client/src/model/update_account_request.dart';
 import 'package:api_client/src/model/update_member_request.dart';
 import 'package:api_client/src/model/update_payee_request.dart';
@@ -56,6 +59,7 @@ part 'serializers.g.dart';
   CreateInvitationRequest,
   CreatePayeeRequest,
   CreatePlanRequest,
+  CreateTransferRequest,
   Currency,
   CurrencyCode,
   Error,
@@ -72,6 +76,8 @@ part 'serializers.g.dart';
   PlanMember,
   PlanRole,
   RegisterRequest,
+  Transfer,
+  TransferPage,
   UpdateAccountRequest,
   UpdateMemberRequest,
   UpdatePayeeRequest,
@@ -87,6 +93,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Payee)]),
         () => ListBuilder<Payee>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Transfer)]),
+        () => ListBuilder<Transfer>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(PlanMember)]),
