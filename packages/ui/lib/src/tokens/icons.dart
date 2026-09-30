@@ -52,4 +52,7 @@ abstract final class UiIcons {
   static const IconData hash = LucideIcons.hash300;
   static const IconData logIn = LucideIcons.logIn300;
   static const IconData chevronDown = LucideIcons.chevronDown300;
+  static const IconData chevronUp = LucideIcons.chevronUp300;
+  static const IconData arrowDown = LucideIcons.arrowDown300;
+  static const IconData clock = LucideIcons.clock300;
 }

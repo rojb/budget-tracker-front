@@ -78,6 +78,9 @@ Widget _icons() {
     'hash': UiIcons.hash,
     'logIn': UiIcons.logIn,
     'chevronDown': UiIcons.chevronDown,
+    'chevronUp': UiIcons.chevronUp,
+    'arrowDown': UiIcons.arrowDown,
+    'clock': UiIcons.clock,
     'info': UiIcons.info,
     'logOut': UiIcons.logOut,
   };
