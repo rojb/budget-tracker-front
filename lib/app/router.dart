@@ -8,6 +8,8 @@ import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/home/home_page.dart';
 import '../features/placeholder/placeholder_page.dart';
+import '../features/plans/empty_plan_page.dart';
+import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/shell/account_menu_sheet.dart';
@@ -100,10 +102,9 @@ GoRouter createRouter(Dependencies dependencies) {
             routes: [
               GoRoute(
                 path: AppRoutes.plan,
-                builder: (context, state) => const PlaceholderPage(
-                  title: '06 Plan vacío',
-                  description:
-                      'Llega en la tarea 3.7 de add-plans-and-accounts.',
+                builder: (context, state) => EmptyPlanPage(
+                  plans: plans,
+                  accounts: dependencies.accountsController,
                 ),
               ),
             ],
@@ -135,10 +136,8 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.newPlan,
-        builder: (context, state) => _placeholder(
-          context,
-          '20 Nuevo plan',
-          'Llega en la tarea 3.7 de add-plans-and-accounts.',
+        builder: (context, state) => NewPlanPage(
+          controllerFactory: dependencies.createNewPlanController,
         ),
       ),
       GoRoute(
@@ -173,6 +172,22 @@ GoRouter createRouter(Dependencies dependencies) {
           'Llega con add-transactions.',
         ),
       ),
+      for (final (path, title, change) in const [
+        (AppRoutes.groups, '32 Grupos', 'add-envelopes'),
+        (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
+        (AppRoutes.newEnvelope, '31 Nuevo sobre', 'add-envelopes'),
+        (AppRoutes.transfer, '29 Transferencia', 'add-account-transfers'),
+        (
+          AppRoutes.newAccount,
+          '28 Nueva cuenta',
+          'add-plans-and-accounts (3.10)',
+        ),
+      ])
+        GoRoute(
+          path: path,
+          builder: (context, state) =>
+              _placeholder(context, title, 'Llega con $change.'),
+        ),
       GoRoute(
         path: AppRoutes.payees,
         builder: (context, state) =>

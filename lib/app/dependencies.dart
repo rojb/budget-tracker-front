@@ -2,11 +2,14 @@ import '../core/api/api_gateway.dart';
 import '../core/config.dart';
 import '../core/plan/active_plan_storage.dart';
 import '../core/session/session_storage.dart';
+import '../features/accounts/accounts_controller.dart';
+import '../features/accounts/accounts_repository.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/auth_repository.dart';
 import '../features/auth/login_controller.dart';
 import '../features/auth/register_controller.dart';
 import '../features/home/home_controller.dart';
+import '../features/plans/new_plan_controller.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_repository.dart';
 
@@ -20,6 +23,7 @@ class Dependencies {
     required this.authRepository,
     required this.authController,
     required this.plansController,
+    required this.accountsController,
   });
 
   factory Dependencies.create() {
@@ -28,16 +32,21 @@ class Dependencies {
     const storage = SecureSessionStorage();
     final repository = AuthRepository(gateway);
     final auth = AuthController(repository, storage, gateway);
+    final plans = PlansController(
+      PlansRepository(gateway),
+      const SecureActivePlanStorage(),
+      auth,
+    );
     return Dependencies(
       config: config,
       apiGateway: gateway,
       sessionStorage: storage,
       authRepository: repository,
       authController: auth,
-      plansController: PlansController(
-        PlansRepository(gateway),
-        const SecureActivePlanStorage(),
-        auth,
+      plansController: plans,
+      accountsController: AccountsController(
+        AccountsRepository(gateway),
+        plans,
       ),
     );
   }
@@ -53,6 +62,9 @@ class Dependencies {
   /// The user's plans and the active one, shared by the router and screens.
   final PlansController plansController;
 
+  /// Accounts of the active plan (06, 13, 14, 51, 37).
+  final AccountsController accountsController;
+
   LoginController createLoginController() => LoginController(authController);
 
   RegisterController createRegisterController() =>
@@ -60,4 +72,7 @@ class Dependencies {
 
   HomeController createHomeController() =>
       HomeController(authController, plansController);
+
+  NewPlanController createNewPlanController() =>
+      NewPlanController(plansController);
 }

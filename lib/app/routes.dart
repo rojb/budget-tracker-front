@@ -18,4 +18,10 @@ abstract final class AppRoutes {
   static const invite = '/plans/invite'; // 21 placeholder
   static const newTransaction = '/transactions/new'; // 07 placeholder
   static const payees = '/payees'; // 15 placeholder
+  static const newAccount = '/accounts/new'; // 28 Nueva cuenta
+  static const archivedAccounts = '/accounts/archived'; // 51
+  static const groups = '/groups'; // 32 placeholder
+  static const template = '/envelopes/template'; // 35 placeholder
+  static const newEnvelope = '/envelopes/new'; // 31 placeholder
+  static const transfer = '/transfer'; // 29 placeholder
 }
