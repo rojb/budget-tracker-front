@@ -344,7 +344,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
           child: Column(children: fields),
         ),
-        if (!expense) ...[
+        // With the pad open the destination cards would push the SaveBar off screen.
+        if (!expense && !_padVisible) ...[
           const SizedBox(height: 18),
           Text('¿A dónde va?', style: UiTypography.title),
           const SizedBox(height: 10),
