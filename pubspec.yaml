@@ -41,6 +41,8 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   api_client:
     path: packages/api_client
+  qr_flutter: ^4.1.0
+  share_plus: ^13.3.0
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
