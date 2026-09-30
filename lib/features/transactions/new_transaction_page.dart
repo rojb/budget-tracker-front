@@ -54,7 +54,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
 
   /// Income only: the pad is shown while the amount is empty; the calculator
   /// icon of the `SaveBar` (or a tap on the capsule) shows or hides it.
-  bool? _incomePad;
+  bool _incomePad = true;
 
   Currency get _currency => widget.plans.currency;
 
@@ -84,8 +84,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     if (_error != null && mounted) setState(() => _error = null);
   }
 
-  bool get _padVisible =>
-      _draft.isExpense || (_incomePad ?? _draft.amount.isEmpty);
+  bool get _padVisible => _draft.isExpense || _incomePad;
 
   void _onKey(String key) {
     if (key == ',') {
@@ -303,7 +302,11 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
             Expanded(
               child: UiToggle(
                 selectedIndex: expense ? 0 : 1,
-                onChanged: (index) => draft.setDirection(expense: index == 0),
+                onChanged: (index) {
+                  // Income opens the pad only while there is nothing typed yet.
+                  if (index == 1 && expense) _incomePad = draft.amount.isEmpty;
+                  draft.setDirection(expense: index == 0);
+                },
               ),
             ),
             const SizedBox(width: 12),
