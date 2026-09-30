@@ -139,9 +139,15 @@ class UiAccountRow extends StatelessWidget {
           )
         : row;
 
+    final label = [name, subtitle, amount, ?caption].join(', ');
+    if (onTap == null) {
+      // Not tappable (48, 51): a plain labelled group, not a disabled button,
+      // so a trailing action inside it stays enabled for screen readers.
+      return Semantics(container: true, label: label, child: content);
+    }
     return UiHitTarget(
       onTap: onTap,
-      semanticLabel: [name, subtitle, amount, ?caption].join(', '),
+      semanticLabel: label,
       selected: variant == UiAccountRowVariant.selectable ? selected : null,
       minWidth: 0,
       child: content,
