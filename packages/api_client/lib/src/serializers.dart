@@ -25,6 +25,8 @@ import 'package:api_client/src/model/create_envelope_request.dart';
 import 'package:api_client/src/model/create_invitation_request.dart';
 import 'package:api_client/src/model/create_payee_request.dart';
 import 'package:api_client/src/model/create_plan_request.dart';
+import 'package:api_client/src/model/create_transaction_request.dart';
+import 'package:api_client/src/model/create_transaction_split.dart';
 import 'package:api_client/src/model/create_transfer_request.dart';
 import 'package:api_client/src/model/currency.dart';
 import 'package:api_client/src/model/currency_code.dart';
@@ -56,6 +58,10 @@ import 'package:api_client/src/model/reorder_envelope_groups_request.dart';
 import 'package:api_client/src/model/reorder_envelopes_request.dart';
 import 'package:api_client/src/model/template_envelope.dart';
 import 'package:api_client/src/model/template_group.dart';
+import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/transaction_direction.dart';
+import 'package:api_client/src/model/transaction_page.dart';
+import 'package:api_client/src/model/transaction_split.dart';
 import 'package:api_client/src/model/transfer.dart';
 import 'package:api_client/src/model/transfer_page.dart';
 import 'package:api_client/src/model/update_account_request.dart';
@@ -81,6 +87,8 @@ part 'serializers.g.dart';
   CreateInvitationRequest,
   CreatePayeeRequest,
   CreatePlanRequest,
+  CreateTransactionRequest,
+  CreateTransactionSplit,
   CreateTransferRequest,
   Currency,
   CurrencyCode,
@@ -112,6 +120,10 @@ part 'serializers.g.dart';
   ReorderEnvelopesRequest,
   TemplateEnvelope,
   TemplateGroup,
+  Transaction,
+  TransactionDirection,
+  TransactionPage,
+  TransactionSplit,
   Transfer,
   TransferPage,
   UpdateAccountRequest,
@@ -125,6 +137,26 @@ part 'serializers.g.dart';
 ])
 Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Plan)]),
+        () => ListBuilder<Plan>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(CreateTransactionSplit)]),
+        () => ListBuilder<CreateTransactionSplit>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(PlanMember)]),
+        () => ListBuilder<PlanMember>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(TemplateEnvelope)]),
+        () => ListBuilder<TemplateEnvelope>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Account)]),
+        () => ListBuilder<Account>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(TemplateGroup)]),
         () => ListBuilder<TemplateGroup>(),
       )
@@ -133,8 +165,8 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<Envelope>(),
       )
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(Plan)]),
-        () => ListBuilder<Plan>(),
+        const FullType(BuiltList, [FullType(Transaction)]),
+        () => ListBuilder<Transaction>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(EnvelopeGroup)]),
@@ -153,12 +185,8 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<InitialAssignment>(),
       )
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(PlanMember)]),
-        () => ListBuilder<PlanMember>(),
-      )
-      ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(TemplateEnvelope)]),
-        () => ListBuilder<TemplateEnvelope>(),
+        const FullType(BuiltList, [FullType(TransactionSplit)]),
+        () => ListBuilder<TransactionSplit>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),
@@ -167,10 +195,6 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(EnvelopeLine)]),
         () => ListBuilder<EnvelopeLine>(),
-      )
-      ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(Account)]),
-        () => ListBuilder<Account>(),
       )
       ..add(Account.serializer)
       ..add(PageMeta.serializer)

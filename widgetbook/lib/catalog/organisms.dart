@@ -157,6 +157,28 @@ WidgetbookFolder organismsFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'CalculatorPad',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'keypad of 07',
+            builder: (context) => stage(const _CalculatorPadDemo()),
+          ),
+          WidgetbookUseCase(
+            name: 'decimal comma muted',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: UiCalculatorPad(
+                  decimalEnabled: false,
+                  onKey: (_) {},
+                  onDelete: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'CalendarMonth',
         useCases: [
           WidgetbookUseCase(
@@ -180,6 +202,39 @@ WidgetbookFolder organismsFolder() {
       ),
     ],
   );
+}
+
+class _CalculatorPadDemo extends StatefulWidget {
+  const _CalculatorPadDemo();
+
+  @override
+  State<_CalculatorPadDemo> createState() => _CalculatorPadDemoState();
+}
+
+class _CalculatorPadDemoState extends State<_CalculatorPadDemo> {
+  String _typed = '12300+6150';
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 350,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(_typed.isEmpty ? '0' : _typed, style: UiTypography.title),
+          const SizedBox(height: 12),
+          UiCalculatorPad(
+            onKey: (key) => setState(() => _typed += key),
+            onDelete: () => setState(
+              () => _typed = _typed.isEmpty
+                  ? _typed
+                  : _typed.substring(0, _typed.length - 1),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _SaveBarDemo extends StatefulWidget {

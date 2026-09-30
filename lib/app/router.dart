@@ -28,6 +28,10 @@ import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
+import '../features/transactions/movements_page.dart';
+import '../features/transactions/new_transaction_page.dart';
+import '../features/transactions/split_page.dart';
+import '../features/transactions/transaction_draft.dart';
 import '../features/sharing/invite_controller.dart';
 import '../features/sharing/invite_page.dart';
 import '../features/sharing/join_link_page.dart';
@@ -155,9 +159,10 @@ GoRouter createRouter(Dependencies dependencies) {
             routes: [
               GoRoute(
                 path: AppRoutes.transactions,
-                builder: (context, state) => const PlaceholderPage(
-                  title: '10 Movimientos',
-                  description: 'Llega con add-transactions.',
+                builder: (context, state) => MovementsPage(
+                  transactions: dependencies.transactionsController,
+                  envelopes: dependencies.envelopesController,
+                  plans: plans,
                 ),
               ),
             ],
@@ -196,6 +201,8 @@ GoRouter createRouter(Dependencies dependencies) {
                       accounts: dependencies.accountsController,
                       plans: plans,
                       transfers: TransfersRepository(dependencies.apiGateway),
+                      transactions: dependencies.transactionsController,
+                      envelopes: dependencies.envelopesController,
                     ),
                     routes: [
                       GoRoute(
@@ -288,11 +295,26 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.newTransaction,
-        builder: (context, state) => _placeholder(
-          context,
-          '07 Nuevo movimiento',
-          'Llega con add-transactions.',
+        builder: (context, state) => NewTransactionPage(
+          plans: plans,
+          accounts: dependencies.accountsController,
+          envelopes: dependencies.envelopesController,
+          transactions: dependencies.transactionsController,
+          payees: PayeesRepository(dependencies.apiGateway),
         ),
+        routes: [
+          GoRoute(
+            path: 'split',
+            parentNavigatorKey: rootKey,
+            builder: (context, state) => SplitPage(
+              draft: state.extra! as TransactionDraft,
+              plans: plans,
+              accounts: dependencies.accountsController,
+              envelopes: dependencies.envelopesController,
+              transactions: dependencies.transactionsController,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.newEnvelope,

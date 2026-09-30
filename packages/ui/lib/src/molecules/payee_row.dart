@@ -2,19 +2,32 @@ import 'package:flutter/widgets.dart';
 
 import '../atoms/avatar.dart';
 import '../atoms/hit_target.dart';
+import '../atoms/selection_mark.dart';
 import '../tokens/colors.dart';
 import '../tokens/icons.dart';
 import '../tokens/typography.dart';
 
+enum UiPayeeRowVariant {
+  /// 15 Beneficiarios: a chevron when the row can be opened.
+  list,
+
+  /// 26 Elegir beneficiario: lavender avatar and the selection mark
+  /// (lavender check, or an empty radio) instead of the chevron.
+  selectable,
+}
+
 /// Payee row of 15 Beneficiarios: initials avatar, name, subtitle
 /// ("Supermercado · 14 movimientos") and a chevron when it can be opened. Unlike the amount rows it
-/// keeps the chevron: its right column has no figure (PRD-ux-spec.md 8).
+/// keeps the chevron: its right column has no figure (PRD-ux-spec.md 8). The [UiPayeeRowVariant.selectable]
+/// variant is the row of the picker 26.
 class UiPayeeRow extends StatelessWidget {
   const UiPayeeRow({
     required this.initials,
     required this.name,
     required this.subtitle,
     this.highlighted = false,
+    this.variant = UiPayeeRowVariant.list,
+    this.selected = false,
     this.onTap,
     super.key,
   });
@@ -25,10 +38,15 @@ class UiPayeeRow extends StatelessWidget {
 
   /// Lavender avatar (the first row of the render); soft grey otherwise.
   final bool highlighted;
+  final UiPayeeRowVariant variant;
+
+  /// Selectable variant: the lavender check instead of the empty radio.
+  final bool selected;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final selectable = variant == UiPayeeRowVariant.selectable;
     final content = ExcludeSemantics(
       child: SizedBox(
         height: 80,
@@ -37,7 +55,9 @@ class UiPayeeRow extends StatelessWidget {
           children: [
             UiAvatar(
               initials: initials,
-              color: highlighted ? UiColors.lavender : UiColors.bg,
+              color: highlighted || selectable
+                  ? UiColors.lavender
+                  : UiColors.bg,
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -61,7 +81,9 @@ class UiPayeeRow extends StatelessWidget {
                 ],
               ),
             ),
-            if (onTap != null)
+            if (selectable)
+              UiSelectionMark(selected: selected)
+            else if (onTap != null)
               const Icon(
                 UiIcons.chevronRight,
                 size: 18,
@@ -81,6 +103,7 @@ class UiPayeeRow extends StatelessWidget {
     }
     return UiHitTarget(
       onTap: onTap,
+      selected: selectable ? selected : null,
       semanticLabel: '$name, $subtitle',
       minWidth: 0,
       child: content,

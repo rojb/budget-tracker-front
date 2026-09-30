@@ -8,6 +8,7 @@ lib/src/api/health_api.dart
 lib/src/api/payees_api.dart
 lib/src/api/plans_api.dart
 lib/src/api/sharing_api.dart
+lib/src/api/transactions_api.dart
 lib/src/api/users_api.dart
 lib/src/api_util.dart
 lib/src/auth/api_key_auth.dart
@@ -27,6 +28,8 @@ lib/src/model/create_envelope_request.dart
 lib/src/model/create_invitation_request.dart
 lib/src/model/create_payee_request.dart
 lib/src/model/create_plan_request.dart
+lib/src/model/create_transaction_request.dart
+lib/src/model/create_transaction_split.dart
 lib/src/model/create_transfer_request.dart
 lib/src/model/currency.dart
 lib/src/model/currency_code.dart
@@ -59,6 +62,10 @@ lib/src/model/reorder_envelope_groups_request.dart
 lib/src/model/reorder_envelopes_request.dart
 lib/src/model/template_envelope.dart
 lib/src/model/template_group.dart
+lib/src/model/transaction.dart
+lib/src/model/transaction_direction.dart
+lib/src/model/transaction_page.dart
+lib/src/model/transaction_split.dart
 lib/src/model/transfer.dart
 lib/src/model/transfer_page.dart
 lib/src/model/update_account_request.dart

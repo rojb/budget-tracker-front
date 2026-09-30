@@ -12,6 +12,8 @@ class _$EnvelopeLine extends EnvelopeLine {
   @override
   final int assignedMinor;
   @override
+  final int spentMinor;
+  @override
   final int availableMinor;
 
   factory _$EnvelopeLine([void Function(EnvelopeLineBuilder)? updates]) =>
@@ -20,6 +22,7 @@ class _$EnvelopeLine extends EnvelopeLine {
   _$EnvelopeLine._(
       {required this.envelope,
       required this.assignedMinor,
+      required this.spentMinor,
       required this.availableMinor})
       : super._();
   @override
@@ -35,6 +38,7 @@ class _$EnvelopeLine extends EnvelopeLine {
     return other is EnvelopeLine &&
         envelope == other.envelope &&
         assignedMinor == other.assignedMinor &&
+        spentMinor == other.spentMinor &&
         availableMinor == other.availableMinor;
   }
 
@@ -43,6 +47,7 @@ class _$EnvelopeLine extends EnvelopeLine {
     var _$hash = 0;
     _$hash = $jc(_$hash, envelope.hashCode);
     _$hash = $jc(_$hash, assignedMinor.hashCode);
+    _$hash = $jc(_$hash, spentMinor.hashCode);
     _$hash = $jc(_$hash, availableMinor.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -53,6 +58,7 @@ class _$EnvelopeLine extends EnvelopeLine {
     return (newBuiltValueToStringHelper(r'EnvelopeLine')
           ..add('envelope', envelope)
           ..add('assignedMinor', assignedMinor)
+          ..add('spentMinor', spentMinor)
           ..add('availableMinor', availableMinor))
         .toString();
   }
@@ -71,6 +77,10 @@ class EnvelopeLineBuilder
   set assignedMinor(int? assignedMinor) =>
       _$this._assignedMinor = assignedMinor;
 
+  int? _spentMinor;
+  int? get spentMinor => _$this._spentMinor;
+  set spentMinor(int? spentMinor) => _$this._spentMinor = spentMinor;
+
   int? _availableMinor;
   int? get availableMinor => _$this._availableMinor;
   set availableMinor(int? availableMinor) =>
@@ -85,6 +95,7 @@ class EnvelopeLineBuilder
     if ($v != null) {
       _envelope = $v.envelope.toBuilder();
       _assignedMinor = $v.assignedMinor;
+      _spentMinor = $v.spentMinor;
       _availableMinor = $v.availableMinor;
       _$v = null;
     }
@@ -112,6 +123,8 @@ class EnvelopeLineBuilder
             envelope: envelope.build(),
             assignedMinor: BuiltValueNullFieldError.checkNotNull(
                 assignedMinor, r'EnvelopeLine', 'assignedMinor'),
+            spentMinor: BuiltValueNullFieldError.checkNotNull(
+                spentMinor, r'EnvelopeLine', 'spentMinor'),
             availableMinor: BuiltValueNullFieldError.checkNotNull(
                 availableMinor, r'EnvelopeLine', 'availableMinor'),
           );

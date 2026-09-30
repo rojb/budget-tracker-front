@@ -60,7 +60,9 @@ class _PlanPageState extends State<PlanPage> {
   }
 
   Widget _row(BuildContext context, EnvelopeLineData line, Currency currency) {
-    final spent = math.max(0, line.assignedMinor - line.availableMinor);
+    // Spending comes from the engine (transactions), not from assigned − available, which
+    // carryover and income sent to an envelope would falsify.
+    final spent = math.max(0, line.spentMinor);
     final variant = _variantOf(line);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),

@@ -59,16 +59,17 @@ class EnvelopeLineData {
   const EnvelopeLineData({
     required this.envelope,
     required this.assignedMinor,
+    required this.spentMinor,
     required this.availableMinor,
   });
 
   final EnvelopeData envelope;
   final int assignedMinor;
-  final int availableMinor;
 
-  /// Spending is not derived yet (it arrives with `add-transactions`), so the
-  /// part of the assignment that is gone is the assignment minus what is left.
-  int get spentMinor => assignedMinor - availableMinor;
+  /// Net outflow of the month as the engine derives it (expenses minus income
+  /// sent to the envelope); negative when income exceeds expenses.
+  final int spentMinor;
+  final int availableMinor;
 }
 
 class EnvelopeBoard {
@@ -135,6 +136,7 @@ class EnvelopesRepository {
               EnvelopeLineData(
                 envelope: EnvelopeData.fromApi(line.envelope),
                 assignedMinor: line.assignedMinor,
+                spentMinor: line.spentMinor,
                 availableMinor: line.availableMinor,
               ),
           ],

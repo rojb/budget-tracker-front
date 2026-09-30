@@ -10,7 +10,7 @@ abstract final class AppRoutes {
   static const home = '/home'; // 01 Inicio
   static const plan =
       '/plan'; // 06 Plan vacío, or 02 Plan del mes with envelopes
-  static const transactions = '/transactions'; // 10 placeholder
+  static const transactions = '/transactions'; // 10 Movimientos
   static const accounts = '/accounts'; // 13 Cuentas
 
   static const plans = '/plans'; // 16 Planes y miembros
@@ -19,7 +19,8 @@ abstract final class AppRoutes {
   static const joinLinkPrefix = '/unirse/'; // 45, from sobres.app/unirse/<code>
   static String joinLink(String code) => '$joinLinkPrefix$code';
   static const invite = '/plans/invite'; // 21 Invitar miembro
-  static const newTransaction = '/transactions/new'; // 07 placeholder
+  static const newTransaction = '/transactions/new'; // 07 / 09
+  static const splitTransaction = '/transactions/new/split'; // 08 Dividir pago
   static const payees = '/payees'; // 15 Beneficiarios
   static const newPayee = '/payees/new'; // 41 Nuevo beneficiario
   static String payee(String id) => '/payees/$id'; // 41 Editar beneficiario
