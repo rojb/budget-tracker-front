@@ -34,68 +34,74 @@ class UiPlanRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UiHitTarget(
-      onTap: onTap,
-      semanticLabel: '$title, $subtitle${active ? ', plan activo' : ''}',
-      selected: active,
-      minWidth: 0,
-      child: ExcludeSemantics(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          decoration: BoxDecoration(
-            color: active ? UiColors.lavender : UiColors.surface,
-            borderRadius: BorderRadius.circular(UiRadius.card),
-          ),
-          child: Row(
-            children: [
-              _leading(),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: UiTypography.custom(18),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: UiTypography.custom(14, color: UiColors.inkMuted),
-                    ),
-                  ],
-                ),
+    final label = '$title, $subtitle${active ? ', plan activo' : ''}';
+    final card = ExcludeSemantics(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: active ? UiColors.lavender : UiColors.surface,
+          borderRadius: BorderRadius.circular(UiRadius.card),
+        ),
+        child: Row(
+          children: [
+            _leading(),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: UiTypography.custom(18),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: onTap == null ? 2 : 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: UiTypography.custom(14, color: UiColors.inkMuted),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              if (active)
-                Container(
-                  width: 44,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: UiColors.ink,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    UiIcons.check,
-                    size: 18,
-                    color: UiColors.surface,
-                  ),
-                )
-              else
-                const Icon(
-                  UiIcons.chevronRight,
-                  size: 18,
-                  color: UiColors.inkMuted,
+            ),
+            const SizedBox(width: 8),
+            if (active)
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: UiColors.ink,
+                  shape: BoxShape.circle,
                 ),
-            ],
-          ),
+                child: const Icon(
+                  UiIcons.check,
+                  size: 18,
+                  color: UiColors.surface,
+                ),
+              )
+            else if (onTap != null)
+              const Icon(
+                UiIcons.chevronRight,
+                size: 18,
+                color: UiColors.inkMuted,
+              ),
+          ],
         ),
       ),
+    );
+    // Without [onTap] (45's preview) it is a labelled group, not a disabled button.
+    if (onTap == null) {
+      return Semantics(container: true, label: label, child: card);
+    }
+    return UiHitTarget(
+      onTap: onTap,
+      semanticLabel: label,
+      selected: active,
+      minWidth: 0,
+      child: card,
     );
   }
 

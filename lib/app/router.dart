@@ -22,6 +22,10 @@ import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
+import '../features/sharing/invite_controller.dart';
+import '../features/sharing/invite_page.dart';
+import '../features/sharing/join_link_page.dart';
+import '../features/sharing/join_page.dart';
 import '../features/shell/account_menu_sheet.dart';
 import '../features/shell/app_shell.dart';
 import 'dependencies.dart';
@@ -35,6 +39,7 @@ export 'routes.dart';
 GoRouter createRouter(Dependencies dependencies) {
   final auth = dependencies.authController;
   final plans = dependencies.plansController;
+  final pending = dependencies.pendingInvite;
   const authRoutes = {AppRoutes.login, AppRoutes.register};
   const withoutPlan = {
     AppRoutes.start,
@@ -51,14 +56,31 @@ GoRouter createRouter(Dependencies dependencies) {
     refreshListenable: Listenable.merge([auth, plans]),
     redirect: (context, state) {
       final location = state.matchedLocation;
+      // Parsed from the location: path parameters are not reliable here.
+      final linkCode = location.startsWith(AppRoutes.joinLinkPrefix)
+          ? location.substring(AppRoutes.joinLinkPrefix.length)
+          : null;
       switch (auth.status) {
         case SessionStatus.unknown:
           return location == AppRoutes.splash ? null : AppRoutes.splash;
         case SessionStatus.signedOut:
+          // An invitation link without a session: sign up first, then 45.
+          if (linkCode != null) {
+            pending.remember(linkCode);
+            return AppRoutes.register;
+          }
           return authRoutes.contains(location) ? null : AppRoutes.login;
         case SessionStatus.signedIn:
           final entering =
               location == AppRoutes.splash || authRoutes.contains(location);
+          final pendingCode = pending.code;
+          if (pendingCode != null && linkCode == null) {
+            auth.consumeWelcome();
+            return AppRoutes.joinLink(pendingCode);
+          }
+          // 45 consumes the pending code when it opens (the router can
+          // evaluate the old location more than once per sign-in).
+          if (linkCode != null) return null;
           if (auth.showWelcome) {
             return entering ? AppRoutes.welcome : null;
           }
@@ -213,23 +235,36 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.plans,
-        builder: (context, state) => PlansPage(plans: plans, auth: auth),
+        builder: (context, state) => PlansPage(
+          plans: plans,
+          auth: auth,
+          sharing: dependencies.sharingRepository,
+        ),
       ),
       GoRoute(
         path: AppRoutes.joinPlan,
-        builder: (context, state) => _placeholder(
-          context,
-          '30 Unirse a un plan',
-          'Llega con add-plan-sharing.',
+        builder: (context, state) =>
+            JoinPage(controllerFactory: dependencies.createJoinController),
+      ),
+      GoRoute(
+        path: '${AppRoutes.joinLinkPrefix}:code',
+        builder: (context, state) => JoinLinkPage(
+          code: state.pathParameters['code']!,
+          onOpen: pending.clear,
+          repository: dependencies.sharingRepository,
+          controllerFactory: dependencies.createJoinController,
         ),
       ),
       GoRoute(
         path: AppRoutes.invite,
-        builder: (context, state) => _placeholder(
-          context,
-          '21 Invitar miembro',
-          'Llega con add-plan-sharing.',
-        ),
+        builder: (context, state) {
+          final plan = plans.activePlan!;
+          return InvitePage(
+            planName: plan.name,
+            controllerFactory: () =>
+                InviteController(dependencies.sharingRepository, plan.id),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.newTransaction,

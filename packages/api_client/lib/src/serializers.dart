@@ -19,6 +19,7 @@ import 'package:api_client/src/model/account_detail.dart';
 import 'package:api_client/src/model/account_type.dart';
 import 'package:api_client/src/model/auth_session.dart';
 import 'package:api_client/src/model/create_account_request.dart';
+import 'package:api_client/src/model/create_invitation_request.dart';
 import 'package:api_client/src/model/create_payee_request.dart';
 import 'package:api_client/src/model/create_plan_request.dart';
 import 'package:api_client/src/model/currency.dart';
@@ -26,6 +27,9 @@ import 'package:api_client/src/model/currency_code.dart';
 import 'package:api_client/src/model/error.dart';
 import 'package:api_client/src/model/error_message.dart';
 import 'package:api_client/src/model/health_status.dart';
+import 'package:api_client/src/model/invitation.dart';
+import 'package:api_client/src/model/invitation_preview.dart';
+import 'package:api_client/src/model/invitation_role.dart';
 import 'package:api_client/src/model/login_request.dart';
 import 'package:api_client/src/model/page_meta.dart';
 import 'package:api_client/src/model/payee.dart';
@@ -35,6 +39,7 @@ import 'package:api_client/src/model/plan_member.dart';
 import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
 import 'package:api_client/src/model/update_account_request.dart';
+import 'package:api_client/src/model/update_member_request.dart';
 import 'package:api_client/src/model/update_payee_request.dart';
 import 'package:api_client/src/model/update_plan_request.dart';
 import 'package:api_client/src/model/user.dart';
@@ -48,6 +53,7 @@ part 'serializers.g.dart';
   AccountType,
   AuthSession,
   CreateAccountRequest,
+  CreateInvitationRequest,
   CreatePayeeRequest,
   CreatePlanRequest,
   Currency,
@@ -55,6 +61,9 @@ part 'serializers.g.dart';
   Error,
   ErrorMessage,
   HealthStatus,
+  Invitation,
+  InvitationPreview,
+  InvitationRole,
   LoginRequest,
   PageMeta,$PageMeta,
   Payee,
@@ -64,6 +73,7 @@ part 'serializers.g.dart';
   PlanRole,
   RegisterRequest,
   UpdateAccountRequest,
+  UpdateMemberRequest,
   UpdatePayeeRequest,
   UpdatePlanRequest,
   User,
