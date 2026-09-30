@@ -21,6 +21,7 @@ export 'src/molecules/member_row.dart';
 export 'src/molecules/menu_row.dart';
 export 'src/molecules/month_switch.dart';
 export 'src/molecules/option_card.dart';
+export 'src/molecules/payee_row.dart';
 export 'src/molecules/plan_row.dart';
 export 'src/molecules/text_field.dart';
 export 'src/molecules/toast.dart';

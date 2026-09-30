@@ -203,6 +203,45 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'PayeeRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'list (15)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiPayeeRow(
+                        initials: 'CO',
+                        name: 'Coto',
+                        subtitle: 'Supermercado · 14 movimientos',
+                        highlighted: true,
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        initials: 'ED',
+                        name: 'Edenor',
+                        subtitle: 'Servicios · 1 movimiento',
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        initials: 'EP',
+                        name: 'Estudio Pérez SRL',
+                        subtitle: 'Listo para asignar · 1 movimiento',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'MemberRow',
         useCases: [
           WidgetbookUseCase(

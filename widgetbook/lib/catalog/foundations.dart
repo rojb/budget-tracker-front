@@ -68,6 +68,10 @@ Widget _icons() {
     'contact': UiIcons.contact,
     'cornerDownRight': UiIcons.cornerDownRight,
     'wand': UiIcons.wand,
+    'userPlus': UiIcons.userPlus,
+    'lightbulb': UiIcons.lightbulb,
+    'history': UiIcons.history,
+    'trash': UiIcons.trash,
     'info': UiIcons.info,
     'logOut': UiIcons.logOut,
   };
