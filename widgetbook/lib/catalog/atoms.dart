@@ -126,6 +126,26 @@ WidgetbookFolder atomsFolder() {
                 stage(UiChip(label: 'Chip', showCheck: true, onPressed: () {})),
           ),
           WidgetbookUseCase(
+            name: 'soft compact (on a white card, 06)',
+            builder: (context) => stage(
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: UiColors.surface,
+                child: const Wrap(
+                  spacing: 8,
+                  children: [
+                    UiChip(
+                      label: 'Alquiler',
+                      soft: true,
+                      size: UiChipSize.compact,
+                    ),
+                    UiChip(label: '+8', soft: true, size: UiChipSize.compact),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
             name: 'compact (34)',
             builder: (context) => stage(
               UiChip(

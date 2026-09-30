@@ -85,7 +85,7 @@ class UiJoinedCard extends StatelessWidget {
                 ),
                 Positioned(
                   left: left + 8,
-                  right: onAdd != null && !secondaryIsAmount ? 60 : 18,
+                  right: 18,
                   top: 28,
                   child: _figure(
                     secondaryValue,
