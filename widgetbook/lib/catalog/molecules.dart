@@ -65,6 +65,24 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'MonthSwitch',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiMonthSwitch(
+                  label: 'Septiembre 2026',
+                  onPrevious: () {},
+                  onNext: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'FieldRow',
         useCases: [
           WidgetbookUseCase(
