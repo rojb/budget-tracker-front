@@ -147,6 +147,151 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'EnvelopePickRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'selected, overspent and free (36)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: Column(
+                    children: [
+                      const UiSectionLabel('Día a día'),
+                      UiEnvelopePickRow(
+                        icon: UiIcons.bus,
+                        name: 'Transporte',
+                        subtitle: 'Día a día',
+                        amount: formatMoney(-6200, Currency.ars),
+                        caption: 'Sobregirado',
+                        overspent: true,
+                        selected: false,
+                        onTap: () {},
+                      ),
+                      UiEnvelopePickRow(
+                        icon: UiIcons.cart,
+                        name: 'Supermercado',
+                        subtitle: 'Día a día',
+                        amount: formatMoney(47550, Currency.ars),
+                        caption: 'Disponible',
+                        selected: true,
+                        onTap: () {},
+                      ),
+                      const UiSectionLabel('Obligaciones'),
+                      UiEnvelopePickRow(
+                        icon: UiIcons.house,
+                        name: 'Alquiler',
+                        subtitle: 'Obligaciones',
+                        amount: formatMoney(380000, Currency.ars),
+                        caption: 'Disponible',
+                        selected: false,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'SplitRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'parts, progress and pending row (08)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    const UiSplitProgress(
+                      value: 0.9,
+                      distributed: r'Repartido $ 21.800',
+                      remaining: r'Restan $ 2.500',
+                    ),
+                    const SizedBox(height: 16),
+                    UiSplitRow(
+                      icon: UiIcons.pill,
+                      name: 'Farmacia',
+                      subtitle: r'$ 24.000 disponible',
+                      amount: formatMoney(15800, Currency.ars),
+                      onTap: () {},
+                      onAmountTap: () {},
+                      onLongPress: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    UiSplitRow(
+                      icon: UiIcons.cart,
+                      name: 'Supermercado',
+                      subtitle: r'$ 47.550 disponible',
+                      amount: formatMoney(6000, Currency.ars),
+                      onTap: () {},
+                      onAmountTap: () {},
+                      onLongPress: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    UiSplitRow(
+                      variant: UiSplitRowVariant.pending,
+                      name: 'Elegí un sobre',
+                      amount: formatMoney(2500, Currency.ars),
+                      attention: true,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'pending row with nothing left',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiSplitRow(
+                  variant: UiSplitRowVariant.pending,
+                  name: 'Elegí un sobre',
+                  amount: formatMoney(0, Currency.ars),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ChoiceCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'two choices (09)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiChoiceCard(
+                      icon: UiIcons.inbox,
+                      title: 'Listo para asignar',
+                      description: 'Recomendado. Lo repartís después.',
+                      selected: true,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiChoiceCard(
+                      icon: UiIcons.wallet,
+                      title: 'Directo a un sobre',
+                      description: 'Para reintegros de un gasto puntual.',
+                      selected: false,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'GroupHeader',
         useCases: [
           WidgetbookUseCase(
@@ -526,6 +671,48 @@ WidgetbookFolder moleculesFolder() {
                         initials: 'EP',
                         name: 'Estudio Pérez SRL',
                         subtitle: 'Listo para asignar · 1 movimiento',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PayeeRow selectable',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'picker (26)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiPayeeRow(
+                        variant: UiPayeeRowVariant.selectable,
+                        selected: true,
+                        initials: 'CO',
+                        name: 'Coto',
+                        subtitle: 'Sugerido: Supermercado',
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        variant: UiPayeeRowVariant.selectable,
+                        initials: 'CC',
+                        name: 'Coca-Cola Andina',
+                        subtitle: 'Sugerido: Día a día',
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        variant: UiPayeeRowVariant.selectable,
+                        initials: 'CA',
+                        name: 'Correo Argentino',
+                        subtitle: 'Sugerido: Día a día',
                         onTap: () {},
                       ),
                     ],

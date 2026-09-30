@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../atoms/hit_target.dart';
+import '../atoms/selection_mark.dart';
 import '../tokens/colors.dart';
 import '../tokens/icons.dart';
 import '../tokens/typography.dart';
@@ -94,6 +95,113 @@ class UiEnvelopeTickRow extends StatelessWidget {
         child: ticked
             ? const Icon(UiIcons.check, size: 16, color: UiColors.ink)
             : null,
+      ),
+    );
+  }
+}
+
+/// Envelope row of 36 Elegir sobre: icon circle (tinted red when overspent),
+/// name, group, the available amount with its caption ("Disponible",
+/// "Sobregirado") and the selection mark. Reports taps only.
+class UiEnvelopePickRow extends StatelessWidget {
+  const UiEnvelopePickRow({
+    required this.icon,
+    required this.name,
+    required this.subtitle,
+    required this.amount,
+    required this.caption,
+    required this.selected,
+    required this.onTap,
+    this.overspent = false,
+    super.key,
+  });
+
+  final IconData icon;
+  final String name;
+
+  /// Group of the envelope, e.g. "Día a día".
+  final String subtitle;
+
+  /// Formatted available amount ("$ 47.550", "−$ 6.200").
+  final String amount;
+  final String caption;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  /// Red icon circle, amount and caption: never by color alone, the caption
+  /// says "Sobregirado".
+  final bool overspent;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = overspent ? UiColors.danger : UiColors.ink;
+    return UiHitTarget(
+      onTap: onTap,
+      selected: selected,
+      semanticLabel: '$name, $subtitle, $amount, $caption',
+      minWidth: 0,
+      child: ExcludeSemantics(
+        child: SizedBox(
+          height: 76,
+          width: double.infinity,
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: overspent ? UiColors.dangerSoft : UiColors.bg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 21, color: tone),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: UiTypography.custom(18),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: UiTypography.custom(14, color: UiColors.inkMuted),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    amount,
+                    style: UiTypography.custom(17, weight: 500, color: tone),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    caption,
+                    style: UiTypography.custom(
+                      13,
+                      color: overspent ? UiColors.danger : UiColors.inkMuted,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 14),
+              UiSelectionMark(selected: selected, size: 30),
+            ],
+          ),
+        ),
       ),
     );
   }
