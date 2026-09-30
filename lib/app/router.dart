@@ -14,6 +14,7 @@ import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
+import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
 import '../features/home/home_page.dart';
 import '../features/payees/payee_form_page.dart';
@@ -298,8 +299,12 @@ GoRouter createRouter(Dependencies dependencies) {
           initialGroupId: state.uri.queryParameters['groupId'],
         ),
       ),
+      GoRoute(
+        path: AppRoutes.groups,
+        builder: (context, state) =>
+            GroupsPage(envelopes: dependencies.envelopesController),
+      ),
       for (final (path, title, change) in const [
-        (AppRoutes.groups, '32 Grupos', 'add-envelopes'),
         (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
         (AppRoutes.assignMoney, '46 Asigná tu dinero', 'add-envelopes'),
       ])
