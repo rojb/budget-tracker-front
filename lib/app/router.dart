@@ -28,6 +28,7 @@ import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
+import '../features/transactions/new_transaction_page.dart';
 import '../features/sharing/invite_controller.dart';
 import '../features/sharing/invite_page.dart';
 import '../features/sharing/join_link_page.dart';
@@ -288,10 +289,12 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.newTransaction,
-        builder: (context, state) => _placeholder(
-          context,
-          '07 Nuevo movimiento',
-          'Llega con add-transactions.',
+        builder: (context, state) => NewTransactionPage(
+          plans: plans,
+          accounts: dependencies.accountsController,
+          envelopes: dependencies.envelopesController,
+          transactions: dependencies.transactionsController,
+          payees: PayeesRepository(dependencies.apiGateway),
         ),
       ),
       GoRoute(
