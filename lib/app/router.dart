@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
+import '../features/accounts/account_detail_page.dart';
+import '../features/accounts/accounts_page.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
@@ -34,7 +36,10 @@ GoRouter createRouter(Dependencies dependencies) {
     AppRoutes.joinPlan,
   };
 
+  final rootKey = GlobalKey<NavigatorState>();
+
   return GoRouter(
+    navigatorKey: rootKey,
     initialLocation: AppRoutes.splash,
     refreshListenable: Listenable.merge([auth, plans]),
     redirect: (context, state) {
@@ -125,11 +130,38 @@ GoRouter createRouter(Dependencies dependencies) {
             routes: [
               GoRoute(
                 path: AppRoutes.accounts,
-                builder: (context, state) => const PlaceholderPage(
-                  title: '13 Cuentas',
-                  description:
-                      'Llega en la tarea 3.9 de add-plans-and-accounts.',
+                builder: (context, state) => AccountsPage(
+                  accounts: dependencies.accountsController,
+                  plans: plans,
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'new',
+                    parentNavigatorKey: rootKey,
+                    builder: (context, state) => _placeholder(
+                      context,
+                      '28 Nueva cuenta',
+                      'Llega en la tarea 3.10.',
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'archived',
+                    parentNavigatorKey: rootKey,
+                    builder: (context, state) => _placeholder(
+                      context,
+                      '51 Cuentas archivadas',
+                      'Llega en la tarea 3.10.',
+                    ),
+                  ),
+                  GoRoute(
+                    path: ':accountId',
+                    builder: (context, state) => AccountDetailPage(
+                      accountId: state.pathParameters['accountId']!,
+                      accounts: dependencies.accountsController,
+                      plans: plans,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -174,11 +206,6 @@ GoRouter createRouter(Dependencies dependencies) {
         (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
         (AppRoutes.newEnvelope, '31 Nuevo sobre', 'add-envelopes'),
         (AppRoutes.transfer, '29 Transferencia', 'add-account-transfers'),
-        (
-          AppRoutes.newAccount,
-          '28 Nueva cuenta',
-          'add-plans-and-accounts (3.10)',
-        ),
       ])
         GoRoute(
           path: path,

@@ -19,6 +19,8 @@ abstract final class AppRoutes {
   static const newTransaction = '/transactions/new'; // 07 placeholder
   static const payees = '/payees'; // 15 placeholder
   static const newAccount = '/accounts/new'; // 28 Nueva cuenta
+  static String accountDetail(String id) => '/accounts/$id'; // 14
+  static String editAccount(String id) => '/accounts/$id/edit'; // 42
   static const archivedAccounts = '/accounts/archived'; // 51
   static const groups = '/groups'; // 32 placeholder
   static const template = '/envelopes/template'; // 35 placeholder
