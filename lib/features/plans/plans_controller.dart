@@ -57,9 +57,13 @@ class PlansController extends ChangeNotifier {
   }
 
   /// Loads the plans and picks the remembered active plan, or the first one.
+  /// A reload while ready keeps the status, so the router does not bounce to
+  /// the splash (e.g. after joining a plan).
   Future<void> load() async {
-    _status = PlansStatus.loading;
-    notifyListeners();
+    if (_status != PlansStatus.ready) {
+      _status = PlansStatus.loading;
+      notifyListeners();
+    }
     try {
       _plans = await _repository.list();
       final remembered = await _storage.read();

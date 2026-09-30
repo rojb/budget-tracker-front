@@ -14,8 +14,10 @@ abstract final class AppRoutes {
 
   static const plans = '/plans'; // 16 Planes y miembros
   static const newPlan = '/plans/new'; // 20 Nuevo plan
-  static const joinPlan = '/plans/join'; // 30 placeholder
-  static const invite = '/plans/invite'; // 21 placeholder
+  static const joinPlan = '/plans/join'; // 30 Unirse a un plan
+  static const joinLinkPrefix = '/unirse/'; // 45, from sobres.app/unirse/<code>
+  static String joinLink(String code) => '$joinLinkPrefix$code';
+  static const invite = '/plans/invite'; // 21 Invitar miembro
   static const newTransaction = '/transactions/new'; // 07 placeholder
   static const payees = '/payees'; // 15 Beneficiarios
   static const newPayee = '/payees/new'; // 41 Nuevo beneficiario

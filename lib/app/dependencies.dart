@@ -10,6 +10,9 @@ import '../features/auth/login_controller.dart';
 import '../features/auth/register_controller.dart';
 import '../features/home/home_controller.dart';
 import '../features/plans/new_plan_controller.dart';
+import '../features/sharing/join_controller.dart';
+import '../features/sharing/pending_invite.dart';
+import '../features/sharing/sharing_repository.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_repository.dart';
 
@@ -24,6 +27,8 @@ class Dependencies {
     required this.authController,
     required this.plansController,
     required this.accountsController,
+    required this.sharingRepository,
+    required this.pendingInvite,
   });
 
   factory Dependencies.create() {
@@ -48,6 +53,8 @@ class Dependencies {
         AccountsRepository(gateway),
         plans,
       ),
+      sharingRepository: SharingRepository(gateway),
+      pendingInvite: PendingInvite(),
     );
   }
 
@@ -65,6 +72,11 @@ class Dependencies {
   /// Accounts of the active plan (06, 13, 14, 51, 37).
   final AccountsController accountsController;
 
+  final SharingRepository sharingRepository;
+
+  /// Code of an invitation link opened without a session.
+  final PendingInvite pendingInvite;
+
   LoginController createLoginController() => LoginController(authController);
 
   RegisterController createRegisterController() =>
@@ -75,4 +87,7 @@ class Dependencies {
 
   NewPlanController createNewPlanController() =>
       NewPlanController(plansController);
+
+  JoinController createJoinController() =>
+      JoinController(sharingRepository, plansController);
 }
