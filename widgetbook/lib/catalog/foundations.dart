@@ -27,6 +27,12 @@ WidgetbookFolder foundationsFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'Icons',
+        useCases: [
+          WidgetbookUseCase(name: 'set', builder: (context) => stage(_icons())),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'Money',
         useCases: [
           WidgetbookUseCase(
@@ -35,6 +41,64 @@ WidgetbookFolder foundationsFolder() {
           ),
         ],
       ),
+    ],
+  );
+}
+
+Widget _icons() {
+  const icons = <String, IconData>{
+    'house': UiIcons.house,
+    'wallet': UiIcons.wallet,
+    'arrowLeftRight': UiIcons.arrowLeftRight,
+    'creditCard': UiIcons.creditCard,
+    'plus': UiIcons.plus,
+    'check': UiIcons.check,
+    'calculator': UiIcons.calculator,
+    'chevronLeft': UiIcons.chevronLeft,
+    'chevronRight': UiIcons.chevronRight,
+    'close': UiIcons.close,
+    'search': UiIcons.search,
+    'layers': UiIcons.layers,
+    'pencil': UiIcons.pencil,
+    'archive': UiIcons.archive,
+    'landmark': UiIcons.landmark,
+    'smartphone': UiIcons.smartphone,
+    'banknote': UiIcons.banknote,
+    'keyRound': UiIcons.keyRound,
+    'contact': UiIcons.contact,
+    'cornerDownRight': UiIcons.cornerDownRight,
+    'wand': UiIcons.wand,
+    'userPlus': UiIcons.userPlus,
+    'lightbulb': UiIcons.lightbulb,
+    'history': UiIcons.history,
+    'trash': UiIcons.trash,
+    'copy': UiIcons.copy,
+    'share': UiIcons.share,
+    'refresh': UiIcons.refresh,
+    'hash': UiIcons.hash,
+    'logIn': UiIcons.logIn,
+    'chevronDown': UiIcons.chevronDown,
+    'chevronUp': UiIcons.chevronUp,
+    'arrowDown': UiIcons.arrowDown,
+    'clock': UiIcons.clock,
+    'info': UiIcons.info,
+    'logOut': UiIcons.logOut,
+  };
+  return Wrap(
+    spacing: 16,
+    runSpacing: 16,
+    children: [
+      for (final e in icons.entries)
+        SizedBox(
+          width: 88,
+          child: Column(
+            children: [
+              Icon(e.value, size: 24, color: UiColors.ink),
+              const SizedBox(height: 6),
+              Text(e.key, style: UiTypography.caption),
+            ],
+          ),
+        ),
     ],
   );
 }

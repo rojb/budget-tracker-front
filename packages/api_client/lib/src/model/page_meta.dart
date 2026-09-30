@@ -14,8 +14,8 @@ part 'page_meta.g.dart';
 /// * [page] 
 /// * [pageSize] 
 /// * [total] - Count of all matching items across pages.
-@BuiltValue()
-abstract class PageMeta implements Built<PageMeta, PageMetaBuilder> {
+@BuiltValue(instantiable: false)
+abstract class PageMeta  {
   @BuiltValueField(wireName: r'page')
   int get page;
 
@@ -26,20 +26,13 @@ abstract class PageMeta implements Built<PageMeta, PageMetaBuilder> {
   @BuiltValueField(wireName: r'total')
   int get total;
 
-  PageMeta._();
-
-  factory PageMeta([void updates(PageMetaBuilder b)]) = _$PageMeta;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(PageMetaBuilder b) => b;
-
   @BuiltValueSerializer(custom: true)
   static Serializer<PageMeta> get serializer => _$PageMetaSerializer();
 }
 
 class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
   @override
-  final Iterable<Type> types = const [PageMeta, _$PageMeta];
+  final Iterable<Type> types = const [PageMeta];
 
   @override
   final String wireName = r'PageMeta';
@@ -73,6 +66,47 @@ class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
     FullType specifiedType = FullType.unspecified,
   }) {
     return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+  }
+
+  @override
+  PageMeta deserialize(
+    Serializers serializers,
+    Object serialized, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
+    return serializers.deserialize(serialized, specifiedType: FullType($PageMeta)) as $PageMeta;
+  }
+}
+
+
+/// a concrete implementation of [PageMeta], since [PageMeta] is not instantiable
+@BuiltValue(instantiable: true)
+abstract class $PageMeta implements PageMeta, Built<$PageMeta, $PageMetaBuilder> {
+  $PageMeta._();
+
+  factory $PageMeta([void Function($PageMetaBuilder)? updates]) = _$$PageMeta;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _defaults($PageMetaBuilder b) => b;
+
+  @BuiltValueSerializer(custom: true)
+  static Serializer<$PageMeta> get serializer => _$$PageMetaSerializer();
+}
+
+class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
+  @override
+  final Iterable<Type> types = const [$PageMeta, _$$PageMeta];
+
+  @override
+  final String wireName = r'$PageMeta';
+
+  @override
+  Object serialize(
+    Serializers serializers,
+    $PageMeta object, {
+    FullType specifiedType = FullType.unspecified,
+  }) {
+    return serializers.serialize(object, specifiedType: FullType(PageMeta))!;
   }
 
   void _deserializeProperties(
@@ -117,12 +151,12 @@ class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
   }
 
   @override
-  PageMeta deserialize(
+  $PageMeta deserialize(
     Serializers serializers,
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final result = PageMetaBuilder();
+    final result = $PageMetaBuilder();
     final serializedList = (serialized as Iterable<Object?>).toList();
     final unhandled = <Object?>[];
     _deserializeProperties(
@@ -136,5 +170,4 @@ class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
     return result.build();
   }
 }
-
 

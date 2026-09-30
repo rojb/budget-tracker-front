@@ -66,6 +66,33 @@ WidgetbookFolder atomsFolder() {
             ),
           ),
           WidgetbookUseCase(
+            name: 'white and danger (confirmation sheet)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 340,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: UiButton(
+                        label: 'Cancelar',
+                        variant: UiButtonVariant.white,
+                        onPressed: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: UiButton(
+                        label: 'Archivar',
+                        variant: UiButtonVariant.danger,
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
             name: 'primary loading',
             builder: (context) => stage(
               SizedBox(
@@ -97,6 +124,26 @@ WidgetbookFolder atomsFolder() {
             name: 'defaultIcon',
             builder: (context) =>
                 stage(UiChip(label: 'Chip', showCheck: true, onPressed: () {})),
+          ),
+          WidgetbookUseCase(
+            name: 'soft compact (on a white card, 06)',
+            builder: (context) => stage(
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: UiColors.surface,
+                child: const Wrap(
+                  spacing: 8,
+                  children: [
+                    UiChip(
+                      label: 'Alquiler',
+                      soft: true,
+                      size: UiChipSize.compact,
+                    ),
+                    UiChip(label: '+8', soft: true, size: UiChipSize.compact),
+                  ],
+                ),
+              ),
+            ),
           ),
           WidgetbookUseCase(
             name: 'compact (34)',
@@ -187,6 +234,113 @@ WidgetbookFolder atomsFolder() {
           WidgetbookUseCase(
             name: 'ingresoActive',
             builder: (context) => stage(const _ToggleDemo(initial: 1)),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'InfoNote',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'plain',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiInfoNote(
+                  text:
+                      'Esto es lo que tenés, no lo que podés gastar. Lo gastable '
+                      'está en tus sobres.',
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'lavender',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiInfoNote(
+                  variant: UiInfoNoteVariant.lavender,
+                  icon: UiIcons.cornerDownRight,
+                  title: 'Deja de sumar al saldo total.',
+                  text: 'Sus movimientos se conservan.',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'StripeBar',
+        useCases: [
+          for (final value in [0.84, 0.12, 0.04, 1.0, 0.0])
+            WidgetbookUseCase(
+              name: '${(value * 100).round()} %',
+              builder: (context) =>
+                  stage(SizedBox(width: 360, child: UiStripeBar(value: value))),
+            ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ChecklistRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'done, pending, disabled',
+            builder: (context) => stage(
+              Container(
+                width: 380,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: UiColors.surface,
+                  borderRadius: BorderRadius.circular(UiRadius.card),
+                ),
+                child: Column(
+                  children: [
+                    const UiChecklistRow(
+                      label: 'Creaste tu plan',
+                      state: UiChecklistState.done,
+                    ),
+                    UiChecklistRow(
+                      label: 'Agregá tus otras cuentas',
+                      onTap: () {},
+                    ),
+                    UiChecklistRow(label: 'Creá tus sobres', onTap: () {}),
+                    UiChecklistRow(
+                      label: 'Asigná tu dinero',
+                      state: UiChecklistState.disabled,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'Stepper',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'hour and minute (38)',
+            builder: (context) => stage(
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  UiStepper(
+                    value: '14',
+                    label: 'Hora',
+                    onIncrement: () {},
+                    onDecrement: () {},
+                  ),
+                  const SizedBox(width: 12),
+                  UiStepper(
+                    value: '32',
+                    label: 'Minutos',
+                    onIncrement: () {},
+                    onDecrement: () {},
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

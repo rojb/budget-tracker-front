@@ -6,7 +6,20 @@ part of 'page_meta.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$PageMeta extends PageMeta {
+abstract mixin class PageMetaBuilder {
+  void replace(PageMeta other);
+  void update(void Function(PageMetaBuilder) updates);
+  int? get page;
+  set page(int? page);
+
+  int? get pageSize;
+  set pageSize(int? pageSize);
+
+  int? get total;
+  set total(int? total);
+}
+
+class _$$PageMeta extends $PageMeta {
   @override
   final int page;
   @override
@@ -14,23 +27,23 @@ class _$PageMeta extends PageMeta {
   @override
   final int total;
 
-  factory _$PageMeta([void Function(PageMetaBuilder)? updates]) =>
-      (PageMetaBuilder()..update(updates))._build();
+  factory _$$PageMeta([void Function($PageMetaBuilder)? updates]) =>
+      ($PageMetaBuilder()..update(updates))._build();
 
-  _$PageMeta._(
+  _$$PageMeta._(
       {required this.page, required this.pageSize, required this.total})
       : super._();
   @override
-  PageMeta rebuild(void Function(PageMetaBuilder) updates) =>
+  $PageMeta rebuild(void Function($PageMetaBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  PageMetaBuilder toBuilder() => PageMetaBuilder()..replace(this);
+  $PageMetaBuilder toBuilder() => $PageMetaBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is PageMeta &&
+    return other is $PageMeta &&
         page == other.page &&
         pageSize == other.pageSize &&
         total == other.total;
@@ -48,7 +61,7 @@ class _$PageMeta extends PageMeta {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'PageMeta')
+    return (newBuiltValueToStringHelper(r'$PageMeta')
           ..add('page', page)
           ..add('pageSize', pageSize)
           ..add('total', total))
@@ -56,26 +69,27 @@ class _$PageMeta extends PageMeta {
   }
 }
 
-class PageMetaBuilder implements Builder<PageMeta, PageMetaBuilder> {
-  _$PageMeta? _$v;
+class $PageMetaBuilder
+    implements Builder<$PageMeta, $PageMetaBuilder>, PageMetaBuilder {
+  _$$PageMeta? _$v;
 
   int? _page;
   int? get page => _$this._page;
-  set page(int? page) => _$this._page = page;
+  set page(covariant int? page) => _$this._page = page;
 
   int? _pageSize;
   int? get pageSize => _$this._pageSize;
-  set pageSize(int? pageSize) => _$this._pageSize = pageSize;
+  set pageSize(covariant int? pageSize) => _$this._pageSize = pageSize;
 
   int? _total;
   int? get total => _$this._total;
-  set total(int? total) => _$this._total = total;
+  set total(covariant int? total) => _$this._total = total;
 
-  PageMetaBuilder() {
-    PageMeta._defaults(this);
+  $PageMetaBuilder() {
+    $PageMeta._defaults(this);
   }
 
-  PageMetaBuilder get _$this {
+  $PageMetaBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _page = $v.page;
@@ -87,27 +101,27 @@ class PageMetaBuilder implements Builder<PageMeta, PageMetaBuilder> {
   }
 
   @override
-  void replace(PageMeta other) {
-    _$v = other as _$PageMeta;
+  void replace(covariant $PageMeta other) {
+    _$v = other as _$$PageMeta;
   }
 
   @override
-  void update(void Function(PageMetaBuilder)? updates) {
+  void update(void Function($PageMetaBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  PageMeta build() => _build();
+  $PageMeta build() => _build();
 
-  _$PageMeta _build() {
+  _$$PageMeta _build() {
     final _$result = _$v ??
-        _$PageMeta._(
+        _$$PageMeta._(
           page:
-              BuiltValueNullFieldError.checkNotNull(page, r'PageMeta', 'page'),
+              BuiltValueNullFieldError.checkNotNull(page, r'$PageMeta', 'page'),
           pageSize: BuiltValueNullFieldError.checkNotNull(
-              pageSize, r'PageMeta', 'pageSize'),
+              pageSize, r'$PageMeta', 'pageSize'),
           total: BuiltValueNullFieldError.checkNotNull(
-              total, r'PageMeta', 'total'),
+              total, r'$PageMeta', 'total'),
         );
     replace(_$result);
     return _$result;

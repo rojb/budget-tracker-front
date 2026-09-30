@@ -65,6 +65,316 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'MonthSwitch',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiMonthSwitch(
+                  label: 'Septiembre 2026',
+                  onPrevious: () {},
+                  onNext: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'AccountRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'standard (13)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    for (final a in _demoAccounts) ...[
+                      UiCard(
+                        child: UiAccountRow(
+                          icon: a.$1,
+                          name: a.$2,
+                          subtitle: a.$3,
+                          amount: formatMoney(a.$4, Currency.ars),
+                          caption: '${(a.$5 * 100).round()}% del total',
+                          share: a.$5,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'selectable (37)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: Column(
+                    children: [
+                      for (final a in _demoAccounts)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: UiAccountRow(
+                            variant: UiAccountRowVariant.selectable,
+                            selected: a.$2 == 'Banco Nación',
+                            icon: a.$1,
+                            name: a.$2,
+                            subtitle: a.$3,
+                            amount: formatMoney(a.$4, Currency.ars),
+                            caption: '${(a.$5 * 100).round()}% del total',
+                            onTap: () {},
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'archived (51)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: UiAccountRow(
+                    variant: UiAccountRowVariant.archived,
+                    icon: UiIcons.landmark,
+                    name: 'Brubank',
+                    subtitle: 'Banco · archivada el 12 ago',
+                    amount: formatMoney(0, Currency.ars),
+                    trailing: UiChip(
+                      label: 'Restaurar',
+                      selected: true,
+                      size: UiChipSize.compact,
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PlanRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'active and inactive (16)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiPlanRow(
+                      title: 'Mi plan',
+                      subtitle: r'Solo vos · pesos ($)',
+                      active: true,
+                      icon: UiIcons.wallet,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiPlanRow(
+                      title: 'Casa con Juli',
+                      subtitle: r'Compartido · 2 miembros · pesos ($)',
+                      initials: const ['SO', 'JU'],
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiPlanRow(
+                      title: 'Viaje a Chile',
+                      subtitle: r'Solo vos · dólares (US$)',
+                      initials: const ['SO'],
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'TxRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'expense and income (14)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiTxRow(
+                        icon: UiIcons.arrowLeftRight,
+                        title: 'Transferencia a Mercado Pago',
+                        subtitle: 'Sin sobre · 15:04',
+                        amount: '−${formatMoney(20000, Currency.ars)}',
+                        onTap: () {},
+                      ),
+                      UiTxRow(
+                        icon: UiIcons.arrowLeftRight,
+                        title: 'Transferencia de Banco Nación',
+                        subtitle: 'Sin sobre · 15:04',
+                        amount: formatMoney(20000, Currency.ars),
+                        variant: UiTxRowVariant.income,
+                        caption: 'Entró',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PayeeRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'list (15)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiPayeeRow(
+                        initials: 'CO',
+                        name: 'Coto',
+                        subtitle: 'Supermercado · 14 movimientos',
+                        highlighted: true,
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        initials: 'ED',
+                        name: 'Edenor',
+                        subtitle: 'Servicios · 1 movimiento',
+                        onTap: () {},
+                      ),
+                      UiPayeeRow(
+                        initials: 'EP',
+                        name: 'Estudio Pérez SRL',
+                        subtitle: 'Listo para asignar · 1 movimiento',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'MemberRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'owner and editor (16)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: Column(
+                    children: [
+                      UiMemberRow(
+                        initials: 'SO',
+                        name: 'Sofía (vos)',
+                        email: 'sofia@correo.com',
+                        role: 'Dueña',
+                      ),
+                      SizedBox(height: 8),
+                      UiMemberRow(
+                        initials: 'JU',
+                        name: 'Julián',
+                        email: 'julian@correo.com',
+                        role: 'Puede editar',
+                        avatarColor: UiColors.chartreuse,
+                        onRoleTap: _noop,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'MenuRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default and destructive (39)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiCard(
+                      child: Column(
+                        children: [
+                          UiMenuRow(
+                            icon: UiIcons.layers,
+                            label: 'Planes y miembros',
+                            onTap: () {},
+                          ),
+                          UiMenuRow(
+                            icon: UiIcons.contact,
+                            label: 'Beneficiarios',
+                            onTap: () {},
+                          ),
+                          UiMenuRow(
+                            icon: UiIcons.keyRound,
+                            label: 'Unirme con código',
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    UiMenuRow(
+                      icon: UiIcons.logOut,
+                      label: 'Cerrar sesión',
+                      destructive: true,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CodeCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'code with QR slot (21)',
+            builder: (context) => stage(const _CodeCardDemo()),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CurrencySelector',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'pesos selected (20)',
+            builder: (context) => stage(const _CurrencyDemo()),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'FieldRow',
         useCases: [
           WidgetbookUseCase(
@@ -341,6 +651,66 @@ class _ToastLive extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+const _demoAccounts = [
+  (UiIcons.landmark, 'Banco Nación', 'Cuenta sueldo', 842300, 0.84),
+  (UiIcons.smartphone, 'Mercado Pago', 'Billetera virtual', 121200, 0.12),
+  (UiIcons.banknote, 'Efectivo', 'Billetera', 36500, 0.04),
+];
+
+class _CurrencyDemo extends StatefulWidget {
+  const _CurrencyDemo();
+
+  @override
+  State<_CurrencyDemo> createState() => _CurrencyDemoState();
+}
+
+class _CurrencyDemoState extends State<_CurrencyDemo> {
+  Currency _selected = Currency.ars;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 380,
+      child: UiCurrencySelector(
+        selected: _selected,
+        onChanged: (currency) => setState(() => _selected = currency),
+      ),
+    );
+  }
+}
+
+void _noop() {}
+
+class _CodeCardDemo extends StatefulWidget {
+  const _CodeCardDemo();
+
+  @override
+  State<_CodeCardDemo> createState() => _CodeCardDemoState();
+}
+
+class _CodeCardDemoState extends State<_CodeCardDemo> {
+  bool _copied = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 380,
+      child: UiCodeCard(
+        code: 'K7M-4QX',
+        copied: _copied,
+        caption: 'Vence en 24 h · un solo uso',
+        qr: Container(width: 180, height: 180, color: UiColors.soft),
+        onCopy: () {
+          setState(() => _copied = true);
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            if (mounted) setState(() => _copied = false);
+          });
+        },
+      ),
     );
   }
 }

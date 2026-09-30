@@ -61,7 +61,14 @@ cd packages/api_client && dart pub get && dart run build_runner build --delete-c
 ```
 
 Es lo mismo que `npx @openapitools/openapi-generator-cli generate -g dart-dio -i ../2do/openapi.yaml
--o packages/api_client`. Ajustá `inputSpec` en `openapitools.json` si tu checkout del repo de specs
+-o packages/api_client`. Si tu checkout de specs se llama `budget-tracker-specs`, pasá el contrato
+con `-i` sin tocar el pin de `openapitools.json`:
+
+```bash
+npx @openapitools/openapi-generator-cli generate -g dart-dio \
+  -i ../budget-tracker-specs/openapi.yaml -o packages/api_client \
+  --additional-properties=pubName=api_client,pubAuthor=budget-tracker
+``` Ajustá `inputSpec` en `openapitools.json` si tu checkout del repo de specs
 tiene otro nombre. Los `*.g.dart` generados se commitean, y `test/` y `doc/` no se generan (ver
 `packages/api_client/README.md`).
 
@@ -92,6 +99,60 @@ flutter run --dart-define=API_BASE_URL=http://localhost:4010
 
 Prism no valida el JWT ni las credenciales: sirve para los caminos felices (los 401 solo se ven con
 el backend real).
+
+## Planes, cuentas y pestañas
+
+Cambio `add-plans-and-accounts` (RRG-46).
+
+- **Pestañas** (`lib/features/shell/app_shell.dart`): `StatefulShellRoute` con Inicio (01, por ahora
+  solo el avatar que abre 39 Menú de cuenta), Plan (06 Plan vacío mientras no haya sobres), "+"
+  (07, placeholder) y Movimientos (10, placeholder) y Cuentas (13 → 14). El `UiNavCluster` va fijo
+  fuera del contenido que scrollea.
+- **Plan activo** (`PlansController`, app-scoped): carga `GET /plans` al iniciar sesión, recuerda el
+  plan elegido en `flutter_secure_storage` y se limpia al cerrar sesión. Sin planes, el router
+  manda a `/start` (crear 20 o unirse 30). Todo monto se formatea con la moneda del plan activo
+  (`formatMoney(minor, plans.currency)`).
+- **Cuentas** (`AccountsController`, app-scoped): cuentas activas y archivadas del plan activo;
+  pantallas 13, 14, 28/42 (mismo formulario), 48 (hoja de confirmación), 51 y el selector 37
+  (`showAccountPicker`, para movimientos y transferencias).
+- Errores de API mapeados una sola vez en `lib/core/api/api_failure.dart` (400 por campo, 403, 404,
+  409, red).
+- Pantallas de cambios futuros (07, 10, 15, 21, 29, 30, 31, 32, 35) son rutas placeholder.
+
+## Beneficiarios
+
+Cambio `add-payees` (RRG-48). Desde 39 Menú de cuenta → "Beneficiarios": 15 (lista con búsqueda en
+el lugar), 41 (alta y edición) y 47 (hoja de confirmación). La baja es lógica: los movimientos
+pasados conservan el beneficiario (FR-05). Un `PayeesController` vive mientras 15 → 41 están
+abiertas (`ShellRoute` en `lib/app/router.dart`). El campo "Sobre" de 41 queda en "Sin sobre" hasta
+que `add-envelopes` traiga el selector 36, y los contadores de movimientos quedan en 0 hasta
+`add-transactions`.
+
+## Planes compartidos
+
+Cambio `add-plan-sharing` (RRG-53). 21 Invitar miembro (desde 16, solo la titular: código, QR con
+`qr_flutter`, copiar, compartir con `share_plus`, generar otro, revocar), 30 Unirse a un plan (código
+con o sin guion) y 45 Unirse desde enlace. En 16 la titular cambia roles o quita miembros; el resto
+puede salir del plan.
+
+El enlace `https://sobres.app/unirse/<code>` abre 45 (intent filter en
+`android/app/src/main/AndroidManifest.xml`, `FlutterDeepLinkingEnabled` en iOS). Sin sesión, el
+router guarda el código (`PendingInvite`), pasa por 19 (o 18) y después abre 45. Para probarlo en
+un dispositivo:
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "https://sobres.app/unirse/K7M4QX"
+```
+
+El QR se lee con la cámara del teléfono (abre el enlace); la pestaña "Escanear QR" de 30 lo explica.
+
+## Transferencias
+
+Cambio `add-account-transfers` (RRG-55). Desde 14 Detalle de cuenta → "Transferir" (ícono de
+flechas) se abre 29 Transferencia: origen y destino con el selector 37 (nunca ofrece la otra
+punta), monto con el teclado, fecha y hora con la hoja 38 (`lib/features/common/date_time_sheet.dart`,
+reutilizable por `add-transactions`). 14 lista las transferencias agrupadas por día con `UiTxRow`;
+tocar una permite eliminarla. Una transferencia no usa sobres.
 
 ## Widgetbook
 

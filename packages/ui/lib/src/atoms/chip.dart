@@ -17,10 +17,13 @@ enum UiChipSize {
 }
 
 /// Pill chip. Default (surface), Selected (lavender), or with a leading check.
+/// [soft] uses the `bg` grey instead of white, for chips that sit on a white
+/// card (06's template preview).
 class UiChip extends StatelessWidget {
   const UiChip({
     required this.label,
     this.selected = false,
+    this.soft = false,
     this.showCheck = false,
     this.size = UiChipSize.regular,
     this.onPressed,
@@ -29,6 +32,7 @@ class UiChip extends StatelessWidget {
 
   final String label;
   final bool selected;
+  final bool soft;
 
   /// Leading check icon (the `DefaultIcon` variant).
   final bool showCheck;
@@ -46,7 +50,9 @@ class UiChip extends StatelessWidget {
         height: size.height,
         padding: const EdgeInsets.symmetric(horizontal: 18),
         decoration: BoxDecoration(
-          color: selected ? UiColors.lavender : UiColors.surface,
+          color: selected
+              ? UiColors.lavender
+              : (soft ? UiColors.bg : UiColors.surface),
           borderRadius: BorderRadius.circular(size.height / 2),
         ),
         child: Center(
