@@ -81,7 +81,8 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               icon: UiIcons.arrowLeftRight,
               variant: UiIconButtonVariant.soft,
               semanticLabel: 'Transferir',
-              onPressed: () => context.push(AppRoutes.transfer),
+              onPressed: () =>
+                  context.push(AppRoutes.transferFrom(widget.accountId)),
             ),
             const SizedBox(width: 8),
             UiIconButton(
