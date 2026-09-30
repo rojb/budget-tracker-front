@@ -13,13 +13,13 @@ import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
+import '../features/envelopes/plan_tab_page.dart';
 import '../features/home/home_page.dart';
 import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
 import '../features/payees/payees_page.dart';
 import '../features/payees/payees_repository.dart';
 import '../features/placeholder/placeholder_page.dart';
-import '../features/plans/empty_plan_page.dart';
 import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
@@ -139,9 +139,10 @@ GoRouter createRouter(Dependencies dependencies) {
             routes: [
               GoRoute(
                 path: AppRoutes.plan,
-                builder: (context, state) => EmptyPlanPage(
+                builder: (context, state) => PlanTabPage(
                   plans: plans,
                   accounts: dependencies.accountsController,
+                  envelopes: dependencies.envelopesController,
                 ),
               ),
             ],
@@ -293,12 +294,21 @@ GoRouter createRouter(Dependencies dependencies) {
         (AppRoutes.groups, '32 Grupos', 'add-envelopes'),
         (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
         (AppRoutes.newEnvelope, '31 Nuevo sobre', 'add-envelopes'),
+        (AppRoutes.assignMoney, '46 Asigná tu dinero', 'add-envelopes'),
       ])
         GoRoute(
           path: path,
           builder: (context, state) =>
               _placeholder(context, title, 'Llega con $change.'),
         ),
+      GoRoute(
+        path: '/envelopes/:envelopeId',
+        builder: (context, state) => _placeholder(
+          context,
+          '22 Detalle de sobre',
+          'Llega con add-envelope-goals.',
+        ),
+      ),
       ShellRoute(
         // One PayeesController per visit to 15, shared with 41.
         builder: (context, state, child) => _PayeesScope(

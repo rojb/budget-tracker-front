@@ -8,7 +8,8 @@ abstract final class AppRoutes {
 
   // Tabs.
   static const home = '/home'; // 01 Inicio
-  static const plan = '/plan'; // 06 Plan vacío (02 with add-envelopes)
+  static const plan =
+      '/plan'; // 06 Plan vacío, or 02 Plan del mes with envelopes
   static const transactions = '/transactions'; // 10 placeholder
   static const accounts = '/accounts'; // 13 Cuentas
 
@@ -27,7 +28,12 @@ abstract final class AppRoutes {
   static String editAccount(String id) => '/accounts/$id/edit'; // 42
   static String transferFrom(String id) => '/accounts/$id/transfer'; // 29
   static const archivedAccounts = '/accounts/archived'; // 51
-  static const groups = '/groups'; // 32 placeholder
-  static const template = '/envelopes/template'; // 35 placeholder
-  static const newEnvelope = '/envelopes/new'; // 31 placeholder
+  static const groups = '/groups'; // 32 Grupos
+  static const template = '/envelopes/template'; // 35 Plantilla sugerida
+  static const newEnvelope = '/envelopes/new'; // 31 Nuevo sobre
+  static String newEnvelopeIn(String groupId) =>
+      '$newEnvelope?groupId=$groupId'; // 31 with the group preselected
+  static const assignMoney = '/envelopes/assign'; // 46 Asigná tu dinero
+  static String envelopeDetail(String id) =>
+      '/envelopes/$id'; // 22 placeholder (add-envelope-goals)
 }
