@@ -40,15 +40,15 @@ class UiJoinedCard extends StatelessWidget {
   /// uses a smaller size so both amounts fit.
   final bool secondaryIsAmount;
 
-  static const double _height = 150;
-  static const double _split = 0.6;
-  static const double _neck = 12;
+  static const double _height = 128;
+  static const double _split = 0.62;
+  static const double _neck = 14;
 
   static List<JoinedLobe> _lobes(Size size) {
     final left = size.width * _split;
     return [
-      JoinedLobe(x: 0, width: left + 2, radius: 28),
-      JoinedLobe(x: left - 2, width: size.width - left + 2, radius: 28),
+      JoinedLobe(x: 0, width: left - 10, radius: 34),
+      JoinedLobe(x: left + 10, width: size.width - left - 10, radius: 34),
     ];
   }
 
@@ -73,9 +73,9 @@ class UiJoinedCard extends StatelessWidget {
             return Stack(
               children: [
                 Positioned(
-                  left: 26,
-                  width: left - 38,
-                  top: 34,
+                  left: 22,
+                  width: left - 32,
+                  top: 28,
                   child: _figure(
                     primaryValue,
                     primaryLabel,
@@ -84,9 +84,9 @@ class UiJoinedCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: left + 16,
+                  left: left + 8,
                   right: onAdd != null && !secondaryIsAmount ? 60 : 18,
-                  top: 34,
+                  top: 28,
                   child: _figure(
                     secondaryValue,
                     secondaryLabel,
@@ -129,7 +129,7 @@ class UiJoinedCard extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(value, maxLines: 1, style: valueStyle),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Text(
               label,
               maxLines: 1,

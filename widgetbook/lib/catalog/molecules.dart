@@ -83,6 +83,168 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'AccountRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'standard (13)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    for (final a in _demoAccounts) ...[
+                      UiCard(
+                        child: UiAccountRow(
+                          icon: a.$1,
+                          name: a.$2,
+                          subtitle: a.$3,
+                          amount: formatMoney(a.$4, Currency.ars),
+                          caption: '${(a.$5 * 100).round()}% del total',
+                          share: a.$5,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'selectable (37)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: Column(
+                    children: [
+                      for (final a in _demoAccounts)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: UiAccountRow(
+                            variant: UiAccountRowVariant.selectable,
+                            selected: a.$2 == 'Banco Nación',
+                            icon: a.$1,
+                            name: a.$2,
+                            subtitle: a.$3,
+                            amount: formatMoney(a.$4, Currency.ars),
+                            caption: '${(a.$5 * 100).round()}% del total',
+                            onTap: () {},
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'archived (51)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: UiAccountRow(
+                    variant: UiAccountRowVariant.archived,
+                    icon: UiIcons.landmark,
+                    name: 'Brubank',
+                    subtitle: 'Banco · archivada el 12 ago',
+                    amount: formatMoney(0, Currency.ars),
+                    trailing: UiChip(
+                      label: 'Restaurar',
+                      selected: true,
+                      size: UiChipSize.compact,
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PlanRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'active and inactive (16)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiPlanRow(
+                      title: 'Mi plan',
+                      subtitle: r'Solo vos · pesos ($)',
+                      active: true,
+                      icon: UiIcons.wallet,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiPlanRow(
+                      title: 'Casa con Juli',
+                      subtitle: r'Compartido · 2 miembros · pesos ($)',
+                      initials: const ['SO', 'JU'],
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiPlanRow(
+                      title: 'Viaje a Chile',
+                      subtitle: r'Solo vos · dólares (US$)',
+                      initials: const ['SO'],
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'MemberRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'owner and editor (16)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: Column(
+                    children: [
+                      UiMemberRow(
+                        initials: 'SO',
+                        name: 'Sofía (vos)',
+                        email: 'sofia@correo.com',
+                        role: 'Dueña',
+                      ),
+                      SizedBox(height: 8),
+                      UiMemberRow(
+                        initials: 'JU',
+                        name: 'Julián',
+                        email: 'julian@correo.com',
+                        role: 'Puede editar',
+                        avatarColor: UiColors.chartreuse,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CurrencySelector',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'pesos selected (20)',
+            builder: (context) => stage(const _CurrencyDemo()),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'FieldRow',
         useCases: [
           WidgetbookUseCase(
@@ -359,6 +521,34 @@ class _ToastLive extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+const _demoAccounts = [
+  (UiIcons.landmark, 'Banco Nación', 'Cuenta sueldo', 842300, 0.84),
+  (UiIcons.smartphone, 'Mercado Pago', 'Billetera virtual', 121200, 0.12),
+  (UiIcons.banknote, 'Efectivo', 'Billetera', 36500, 0.04),
+];
+
+class _CurrencyDemo extends StatefulWidget {
+  const _CurrencyDemo();
+
+  @override
+  State<_CurrencyDemo> createState() => _CurrencyDemoState();
+}
+
+class _CurrencyDemoState extends State<_CurrencyDemo> {
+  Currency _selected = Currency.ars;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 380,
+      child: UiCurrencySelector(
+        selected: _selected,
+        onChanged: (currency) => setState(() => _selected = currency),
+      ),
     );
   }
 }

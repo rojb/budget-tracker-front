@@ -106,6 +106,56 @@ WidgetbookFolder organismsFolder() {
           ),
         ],
       ),
+      WidgetbookComponent(
+        name: 'Sheet',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'title and close (37)',
+            builder: (context) => stage(
+              Container(
+                width: 390,
+                decoration: const BoxDecoration(
+                  color: UiColors.bg,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                  boxShadow: [
+                    BoxShadow(color: Color(0x22000000), blurRadius: 20),
+                  ],
+                ),
+                child: const UiSheet(
+                  title: 'Elegí una cuenta',
+                  child: UiCard(child: SizedBox(height: 120)),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'open as modal',
+            builder: (context) => stage(
+              Builder(
+                builder: (context) => SizedBox(
+                  width: 300,
+                  child: UiButton(
+                    label: 'Abrir hoja',
+                    onPressed: () => showUiSheet<void>(
+                      context,
+                      builder: (_) => const UiSheet(
+                        title: '¿Archivar "Banco Nación"?',
+                        showClose: false,
+                        child: UiInfoNote(
+                          variant: UiInfoNoteVariant.lavender,
+                          icon: UiIcons.cornerDownRight,
+                          title: 'Deja de sumar al saldo total.',
+                          text: 'Sus movimientos se conservan.',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }
