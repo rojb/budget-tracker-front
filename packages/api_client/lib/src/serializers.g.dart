@@ -19,6 +19,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(CreateInvitationRequest.serializer)
       ..add(CreatePayeeRequest.serializer)
       ..add(CreatePlanRequest.serializer)
+      ..add(CreateTransactionRequest.serializer)
+      ..add(CreateTransactionSplit.serializer)
       ..add(CreateTransferRequest.serializer)
       ..add(Currency.serializer)
       ..add(CurrencyCode.serializer)
@@ -53,6 +55,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ReorderEnvelopesRequest.serializer)
       ..add(TemplateEnvelope.serializer)
       ..add(TemplateGroup.serializer)
+      ..add(Transaction.serializer)
+      ..add(TransactionDirection.serializer)
+      ..add(TransactionPage.serializer)
+      ..add(TransactionSplit.serializer)
       ..add(Transfer.serializer)
       ..add(TransferPage.serializer)
       ..add(UpdateAccountRequest.serializer)
@@ -65,6 +71,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ValidationError.serializer)
       ..add(ValidationErrorErrorEnum.serializer)
       ..add(ValidationErrorStatusCodeEnum.serializer)
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(CreateTransactionSplit)]),
+          () => ListBuilder<CreateTransactionSplit>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(EnvelopeGroup)]),
           () => ListBuilder<EnvelopeGroup>())
@@ -101,6 +111,12 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TemplateGroup)]),
           () => ListBuilder<TemplateGroup>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Transaction)]),
+          () => ListBuilder<Transaction>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(TransactionSplit)]),
+          () => ListBuilder<TransactionSplit>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Transfer)]),
           () => ListBuilder<Transfer>()))

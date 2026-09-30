@@ -14,6 +14,7 @@ part 'envelope_line.g.dart';
 /// Properties:
 /// * [envelope] 
 /// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [spentMinor] - Net outflow of the month (expenses minus income sent to the envelope); negative when income exceeds expenses.
 /// * [availableMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
 @BuiltValue()
 abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> {
@@ -23,6 +24,10 @@ abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> 
   /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'assignedMinor')
   int get assignedMinor;
+
+  /// Net outflow of the month (expenses minus income sent to the envelope); negative when income exceeds expenses.
+  @BuiltValueField(wireName: r'spentMinor')
+  int get spentMinor;
 
   /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'availableMinor')
@@ -59,6 +64,11 @@ class _$EnvelopeLineSerializer implements PrimitiveSerializer<EnvelopeLine> {
     yield r'assignedMinor';
     yield serializers.serialize(
       object.assignedMinor,
+      specifiedType: const FullType(int),
+    );
+    yield r'spentMinor';
+    yield serializers.serialize(
+      object.spentMinor,
       specifiedType: const FullType(int),
     );
     yield r'availableMinor';
@@ -102,6 +112,13 @@ class _$EnvelopeLineSerializer implements PrimitiveSerializer<EnvelopeLine> {
             specifiedType: const FullType(int),
           ) as int;
           result.assignedMinor = valueDes;
+          break;
+        case r'spentMinor':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.spentMinor = valueDes;
           break;
         case r'availableMinor':
           final valueDes = serializers.deserialize(
