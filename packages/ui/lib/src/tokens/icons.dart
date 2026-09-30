@@ -55,4 +55,43 @@ abstract final class UiIcons {
   static const IconData chevronUp = LucideIcons.chevronUp300;
   static const IconData arrowDown = LucideIcons.arrowDown300;
   static const IconData clock = LucideIcons.clock300;
+
+  // Envelope icons (the API's closed `EnvelopeIcon` set, plus the two helpers of 31 and 32).
+  static const IconData tag = LucideIcons.tag300;
+  static const IconData bus = LucideIcons.bus300;
+  static const IconData utensils = LucideIcons.utensils300;
+  static const IconData heartPulse = LucideIcons.heartPulse300;
+  static const IconData gift = LucideIcons.gift300;
+  static const IconData cart = LucideIcons.shoppingCart300;
+  static const IconData pill = LucideIcons.pill300;
+  static const IconData wifi = LucideIcons.wifi300;
+  static const IconData settings = LucideIcons.settings300;
+  static const IconData ticket = LucideIcons.ticket300;
+  static const IconData repeat = LucideIcons.repeat300;
+  static const IconData lifeBuoy = LucideIcons.lifeBuoy300;
+  static const IconData plane = LucideIcons.plane300;
+  static const IconData ellipsis = LucideIcons.ellipsis300;
+  static const IconData grip = LucideIcons.gripVertical300;
 }
+
+/// Icon of each envelope icon name of the API (`EnvelopeIcon`), in the order
+/// the icon selector of 31 shows them.
+const Map<String, IconData> uiEnvelopeIcons = {
+  'tag': UiIcons.tag,
+  'home': UiIcons.house,
+  'bus': UiIcons.bus,
+  'utensils': UiIcons.utensils,
+  'heartPulse': UiIcons.heartPulse,
+  'gift': UiIcons.gift,
+  'cart': UiIcons.cart,
+  'pill': UiIcons.pill,
+  'wifi': UiIcons.wifi,
+  'settings': UiIcons.settings,
+  'ticket': UiIcons.ticket,
+  'repeat': UiIcons.repeat,
+  'lifeBuoy': UiIcons.lifeBuoy,
+  'plane': UiIcons.plane,
+};
+
+/// Glyph for an envelope icon name, `tag` when the name is unknown.
+IconData uiEnvelopeIcon(String? name) => uiEnvelopeIcons[name] ?? UiIcons.tag;

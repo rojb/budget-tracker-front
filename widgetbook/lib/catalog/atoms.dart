@@ -9,6 +9,26 @@ WidgetbookFolder atomsFolder() {
     name: 'atoms',
     children: [
       WidgetbookComponent(
+        name: 'SectionLabel',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'uppercase divider (35, 46)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 340,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UiSectionLabel('Obligaciones'),
+                    UiSectionLabel('Día a día'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'IconButton',
         useCases: [
           for (final v in UiIconButtonVariant.values)

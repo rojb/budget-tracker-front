@@ -46,7 +46,7 @@ WidgetbookFolder foundationsFolder() {
 }
 
 Widget _icons() {
-  const icons = <String, IconData>{
+  final icons = <String, IconData>{
     'house': UiIcons.house,
     'wallet': UiIcons.wallet,
     'arrowLeftRight': UiIcons.arrowLeftRight,
@@ -83,6 +83,9 @@ Widget _icons() {
     'clock': UiIcons.clock,
     'info': UiIcons.info,
     'logOut': UiIcons.logOut,
+    for (final e in uiEnvelopeIcons.entries) 'envelope:${e.key}': e.value,
+    'ellipsis': UiIcons.ellipsis,
+    'grip': UiIcons.grip,
   };
   return Wrap(
     spacing: 16,
