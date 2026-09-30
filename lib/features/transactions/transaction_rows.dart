@@ -11,7 +11,8 @@ import 'transactions_repository.dart';
 /// - subtitle: envelope and time ("Supermercado · 14:32"), "N sobres · time" for
 ///   a split, "Listo para asignar · time" for an income without envelope;
 /// - amount: `−$ X` for an expense, `+$ X` in a lavender capsule for an income;
-/// - caption: the account (10 only; 14 already is the account);
+/// - caption: the account in 10; in 14 (which already is the account) the group
+///   of the envelope, or "A + B" with the envelope names of a split;
 /// - icon: the envelope's, a split icon for a split, an arrow for an income to
 ///   Ready to Assign.
 UiTxRow transactionRow(
@@ -47,10 +48,31 @@ UiTxRow transactionRow(
         transaction.payeeName ?? transaction.description ?? 'Sin beneficiario',
     subtitle: '$destination · $time',
     amount: transaction.isExpense ? '−$money' : '+$money',
-    caption: showAccount ? transaction.accountName : null,
+    caption: showAccount
+        ? transaction.accountName
+        : _envelopeCaption(transaction, envelopes),
     variant: transaction.isExpense
         ? UiTxRowVariant.expense
         : UiTxRowVariant.income,
     onTap: onTap,
   );
+}
+
+// Under the amount in 14: "Día a día" for one envelope, "Farmacia + Súper" for a split.
+String? _envelopeCaption(
+  TransactionData transaction,
+  EnvelopesController envelopes,
+) {
+  final splits = transaction.splits;
+  if (splits.length > 1) {
+    final names = [
+      for (final split in splits)
+        if (split.envelopeName != null) split.envelopeName!,
+    ];
+    return names.isEmpty ? null : names.join(' + ');
+  }
+  final id = splits.firstOrNull?.envelopeId;
+  final line = id == null ? null : envelopes.lineById(id);
+  if (line == null) return null;
+  return envelopes.groupById(line.envelope.groupId)?.name ?? 'Sin grupo';
 }
