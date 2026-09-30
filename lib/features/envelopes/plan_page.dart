@@ -5,8 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
+import '../../core/api/api_failure.dart';
+import '../common/feedback.dart';
 import '../common/months.dart';
 import '../plans/plans_controller.dart';
+import 'delete_envelope_sheet.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 
@@ -70,10 +73,40 @@ class _PlanPageState extends State<PlanPage> {
             '${formatMoney(line.assignedMinor, currency)}',
         amount: formatMoney(line.availableMinor, currency),
         progress: line.assignedMinor > 0 ? spent / line.assignedMinor : 0,
-        // 22 Detalle de sobre arrives with add-envelope-goals.
+        // 22 Detalle de sobre arrives with add-envelope-goals; so does the
+        // real entry to 43 (the trash of 23), so a long press opens it meanwhile.
         onTap: () => context.push(AppRoutes.envelopeDetail(line.envelope.id)),
+        longPressLabel: 'Eliminar sobre',
+        onLongPress: () => _delete(context, line),
       ),
     );
+  }
+
+  Future<void> _delete(BuildContext context, EnvelopeLineData line) async {
+    final group = widget.envelopes.groupById(line.envelope.groupId);
+    final confirmed = await showDeleteEnvelopeSheet(
+      context,
+      line: line,
+      groupName: group?.name,
+      currency: widget.plans.currency,
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await widget.envelopes.deleteEnvelope(line.envelope.id);
+      if (!context.mounted) return;
+      showUiToast(
+        context,
+        variant: UiToastVariant.info,
+        title: 'Sobre eliminado',
+        detail: 'Su disponible volvió a Listo para asignar.',
+        bottomOffset: 100,
+      );
+    } on ApiFailure catch (failure) {
+      if (!context.mounted) return;
+      failure.kind == ApiFailureKind.forbidden
+          ? showForbidden(context)
+          : showConnectionProblem(context);
+    }
   }
 
   @override
