@@ -161,6 +161,25 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     if (value != null) _draft.setDescription(value);
   }
 
+  // The split icon of the SaveBar: 08 needs a positive total to divide.
+  Future<void> _openSplit() async {
+    if (_draft.amount.isInvalid(_draft.minorUnits)) {
+      setState(() => _error = 'Revisá la operación.');
+      return;
+    }
+    final total = _draft.amountMinor;
+    if (total == null || total <= 0) {
+      setState(() => _error = 'Ingresá un monto mayor a cero.');
+      return;
+    }
+    _draft.startSplit();
+    final saved = await context.push<bool>(
+      AppRoutes.splitTransaction,
+      extra: _draft,
+    );
+    if (saved == true && mounted) context.pop();
+  }
+
   Future<void> _save() async {
     if (_saving) return;
     final error = _draft.validate();
@@ -367,7 +386,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
             leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
             onConfirm: _save,
             onCalculatorPressed: expense
-                ? null
+                ? _openSplit
                 : () => setState(() => _incomePad = !_padVisible),
           ),
         ),

@@ -29,6 +29,8 @@ import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
 import '../features/transactions/new_transaction_page.dart';
+import '../features/transactions/split_page.dart';
+import '../features/transactions/transaction_draft.dart';
 import '../features/sharing/invite_controller.dart';
 import '../features/sharing/invite_page.dart';
 import '../features/sharing/join_link_page.dart';
@@ -296,6 +298,19 @@ GoRouter createRouter(Dependencies dependencies) {
           transactions: dependencies.transactionsController,
           payees: PayeesRepository(dependencies.apiGateway),
         ),
+        routes: [
+          GoRoute(
+            path: 'split',
+            parentNavigatorKey: rootKey,
+            builder: (context, state) => SplitPage(
+              draft: state.extra! as TransactionDraft,
+              plans: plans,
+              accounts: dependencies.accountsController,
+              envelopes: dependencies.envelopesController,
+              transactions: dependencies.transactionsController,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.newEnvelope,
