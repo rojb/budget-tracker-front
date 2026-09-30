@@ -26,26 +26,28 @@ class UiFieldRow extends StatelessWidget {
       onTap: onTap,
       semanticLabel: '$label: $value',
       minWidth: 0,
-      child: SizedBox(
-        height: UiSizes.touchTarget,
-        width: double.infinity,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: UiTypography.custom(14, color: UiColors.inkMuted),
+      child: ExcludeSemantics(
+        child: SizedBox(
+          height: UiSizes.touchTarget,
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: UiTypography.custom(14, color: UiColors.inkMuted),
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Text(value, style: UiTypography.custom(15, weight: 500)),
-            const SizedBox(width: 4),
-            const Icon(
-              UiIcons.chevronRight,
-              size: 14,
-              color: UiColors.inkMuted,
-            ),
-          ],
+              const SizedBox(width: 10),
+              Text(value, style: UiTypography.custom(15, weight: 500)),
+              const SizedBox(width: 4),
+              const Icon(
+                UiIcons.chevronRight,
+                size: 14,
+                color: UiColors.inkMuted,
+              ),
+            ],
+          ),
         ),
       ),
     );

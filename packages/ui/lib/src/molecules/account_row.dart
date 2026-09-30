@@ -77,38 +77,46 @@ class UiAccountRow extends StatelessWidget {
         ),
         const SizedBox(width: 14),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: UiTypography.custom(18, color: ink),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: UiTypography.custom(14, color: UiColors.inkMuted),
-              ),
-            ],
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: UiTypography.custom(18, color: ink),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  maxLines: archived ? 2 : 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: UiTypography.custom(14, color: UiColors.inkMuted),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              amount,
-              style: UiTypography.custom(17, weight: 500, color: ink),
+            // Texts are already in the row's label; only [trailing] (a chip
+            // with its own action) stays in the semantics tree.
+            ExcludeSemantics(
+              child: Text(
+                amount,
+                style: UiTypography.custom(17, weight: 500, color: ink),
+              ),
             ),
             if (caption != null) ...[
               const SizedBox(height: 2),
-              Text(
-                caption!,
-                style: UiTypography.custom(13, color: UiColors.inkMuted),
+              ExcludeSemantics(
+                child: Text(
+                  caption!,
+                  style: UiTypography.custom(13, color: UiColors.inkMuted),
+                ),
               ),
             ],
             if (trailing != null) ...[const SizedBox(height: 6), trailing!],
@@ -136,7 +144,7 @@ class UiAccountRow extends StatelessWidget {
       semanticLabel: [name, subtitle, amount, ?caption].join(', '),
       selected: variant == UiAccountRowVariant.selectable ? selected : null,
       minWidth: 0,
-      child: ExcludeSemantics(child: content),
+      child: content,
     );
   }
 }

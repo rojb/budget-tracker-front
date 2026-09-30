@@ -29,32 +29,37 @@ class UiMenuRow extends StatelessWidget {
       onTap: onTap,
       semanticLabel: label,
       minWidth: 0,
-      child: SizedBox(
-        height: 68,
-        width: double.infinity,
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: destructive ? UiColors.dangerSoft : UiColors.bg,
-                shape: BoxShape.circle,
+      child: ExcludeSemantics(
+        child: SizedBox(
+          height: 68,
+          width: double.infinity,
+          child: Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: destructive ? UiColors.dangerSoft : UiColors.bg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 22, color: color),
               ),
-              child: Icon(icon, size: 22, color: color),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(label, style: UiTypography.custom(18, color: color)),
-            ),
-            if (!destructive)
-              const Icon(
-                UiIcons.chevronRight,
-                size: 18,
-                color: UiColors.inkMuted,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  label,
+                  style: UiTypography.custom(18, color: color),
+                ),
               ),
-          ],
+              if (!destructive)
+                const Icon(
+                  UiIcons.chevronRight,
+                  size: 18,
+                  color: UiColors.inkMuted,
+                ),
+            ],
+          ),
         ),
       ),
     );
