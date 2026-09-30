@@ -72,6 +72,11 @@ abstract final class UiIcons {
   static const IconData plane = LucideIcons.plane300;
   static const IconData ellipsis = LucideIcons.ellipsis300;
   static const IconData grip = LucideIcons.gripVertical300;
+
+  // Movements (07, 08, 09, 10).
+  static const IconData split = LucideIcons.split300;
+  static const IconData inbox = LucideIcons.inbox300;
+  static const IconData arrowDownLeft = LucideIcons.arrowDownLeft300;
 }
 
 /// Icon of each envelope icon name of the API (`EnvelopeIcon`), in the order
