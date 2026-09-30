@@ -59,7 +59,7 @@ class UiPlanRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    maxLines: 1,
+                    maxLines: onTap == null ? 2 : 1,
                     overflow: TextOverflow.ellipsis,
                     style: UiTypography.custom(14, color: UiColors.inkMuted),
                   ),
