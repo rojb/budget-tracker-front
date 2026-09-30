@@ -14,6 +14,7 @@ export 'src/atoms/stripe_bar.dart';
 export 'src/atoms/toggle.dart';
 export 'src/molecules/account_row.dart';
 export 'src/molecules/amount_capsule.dart';
+export 'src/molecules/code_card.dart';
 export 'src/molecules/currency_selector.dart';
 export 'src/molecules/field_row.dart';
 export 'src/molecules/hero_card.dart';

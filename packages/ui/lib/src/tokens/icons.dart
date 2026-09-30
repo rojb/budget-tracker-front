@@ -46,4 +46,10 @@ abstract final class UiIcons {
   static const IconData lightbulb = LucideIcons.lightbulb300;
   static const IconData history = LucideIcons.history300;
   static const IconData trash = LucideIcons.trash2300;
+  static const IconData copy = LucideIcons.copy300;
+  static const IconData share = LucideIcons.share2300;
+  static const IconData refresh = LucideIcons.refreshCw300;
+  static const IconData hash = LucideIcons.hash300;
+  static const IconData logIn = LucideIcons.logIn300;
+  static const IconData chevronDown = LucideIcons.chevronDown300;
 }

@@ -72,6 +72,12 @@ Widget _icons() {
     'lightbulb': UiIcons.lightbulb,
     'history': UiIcons.history,
     'trash': UiIcons.trash,
+    'copy': UiIcons.copy,
+    'share': UiIcons.share,
+    'refresh': UiIcons.refresh,
+    'hash': UiIcons.hash,
+    'logIn': UiIcons.logIn,
+    'chevronDown': UiIcons.chevronDown,
     'info': UiIcons.info,
     'logOut': UiIcons.logOut,
   };

@@ -265,6 +265,7 @@ WidgetbookFolder moleculesFolder() {
                         email: 'julian@correo.com',
                         role: 'Puede editar',
                         avatarColor: UiColors.chartreuse,
+                        onRoleTap: _noop,
                       ),
                     ],
                   ),
@@ -316,6 +317,15 @@ WidgetbookFolder moleculesFolder() {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CodeCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'code with QR slot (21)',
+            builder: (context) => stage(const _CodeCardDemo()),
           ),
         ],
       ),
@@ -632,6 +642,38 @@ class _CurrencyDemoState extends State<_CurrencyDemo> {
       child: UiCurrencySelector(
         selected: _selected,
         onChanged: (currency) => setState(() => _selected = currency),
+      ),
+    );
+  }
+}
+
+void _noop() {}
+
+class _CodeCardDemo extends StatefulWidget {
+  const _CodeCardDemo();
+
+  @override
+  State<_CodeCardDemo> createState() => _CodeCardDemoState();
+}
+
+class _CodeCardDemoState extends State<_CodeCardDemo> {
+  bool _copied = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 380,
+      child: UiCodeCard(
+        code: 'K7M-4QX',
+        copied: _copied,
+        caption: 'Vence en 24 h · un solo uso',
+        qr: Container(width: 180, height: 180, color: UiColors.soft),
+        onCopy: () {
+          setState(() => _copied = true);
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            if (mounted) setState(() => _copied = false);
+          });
+        },
       ),
     );
   }
