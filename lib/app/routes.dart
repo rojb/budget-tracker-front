@@ -17,7 +17,9 @@ abstract final class AppRoutes {
   static const joinPlan = '/plans/join'; // 30 placeholder
   static const invite = '/plans/invite'; // 21 placeholder
   static const newTransaction = '/transactions/new'; // 07 placeholder
-  static const payees = '/payees'; // 15 placeholder
+  static const payees = '/payees'; // 15 Beneficiarios
+  static const newPayee = '/payees/new'; // 41 Nuevo beneficiario
+  static String payee(String id) => '/payees/$id'; // 41 Editar beneficiario
   static const newAccount = '/accounts/new'; // 28 Nueva cuenta
   static String accountDetail(String id) => '/accounts/$id'; // 14
   static String editAccount(String id) => '/accounts/$id/edit'; // 42

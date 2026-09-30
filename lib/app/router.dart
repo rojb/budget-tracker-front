@@ -12,6 +12,10 @@ import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/home/home_page.dart';
+import '../features/payees/payee_form_page.dart';
+import '../features/payees/payees_controller.dart';
+import '../features/payees/payees_page.dart';
+import '../features/payees/payees_repository.dart';
 import '../features/placeholder/placeholder_page.dart';
 import '../features/plans/empty_plan_page.dart';
 import '../features/plans/new_plan_page.dart';
@@ -246,10 +250,39 @@ GoRouter createRouter(Dependencies dependencies) {
           builder: (context, state) =>
               _placeholder(context, title, 'Llega con $change.'),
         ),
-      GoRoute(
-        path: AppRoutes.payees,
-        builder: (context, state) =>
-            _placeholder(context, '15 Beneficiarios', 'Llega con add-payees.'),
+      ShellRoute(
+        // One PayeesController per visit to 15, shared with 41.
+        builder: (context, state, child) => _PayeesScope(
+          create: () => PayeesController(
+            PayeesRepository(dependencies.apiGateway),
+            plans,
+          ),
+          child: child,
+        ),
+        routes: [
+          GoRoute(
+            path: AppRoutes.payees,
+            builder: (context, state) =>
+                PayeesPage(controller: _PayeesScope.of(context)),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) =>
+                    PayeeFormPage(controller: _PayeesScope.of(context)),
+              ),
+              GoRoute(
+                path: ':payeeId',
+                builder: (context, state) {
+                  final controller = _PayeesScope.of(context);
+                  return PayeeFormPage(
+                    controller: controller,
+                    payee: controller.byId(state.pathParameters['payeeId']!),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
@@ -307,4 +340,31 @@ class _SplashPage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Owns the [PayeesController] of one visit to 15 → 41.
+class _PayeesScope extends StatefulWidget {
+  const _PayeesScope({required this.create, required this.child});
+
+  final PayeesController Function() create;
+  final Widget child;
+
+  static PayeesController of(BuildContext context) =>
+      context.findAncestorStateOfType<_PayeesScopeState>()!.controller;
+
+  @override
+  State<_PayeesScope> createState() => _PayeesScopeState();
+}
+
+class _PayeesScopeState extends State<_PayeesScope> {
+  late final PayeesController controller = widget.create();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

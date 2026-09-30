@@ -42,4 +42,8 @@ abstract final class UiIcons {
   static const IconData contact = LucideIcons.squareUserRound300;
   static const IconData cornerDownRight = LucideIcons.cornerDownRight300;
   static const IconData wand = LucideIcons.wandSparkles300;
+  static const IconData userPlus = LucideIcons.userPlus300;
+  static const IconData lightbulb = LucideIcons.lightbulb300;
+  static const IconData history = LucideIcons.history300;
+  static const IconData trash = LucideIcons.trash2300;
 }

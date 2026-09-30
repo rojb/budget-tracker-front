@@ -3,50 +3,49 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
+import 'package:api_client/src/model/page_meta.dart';
+import 'package:api_client/src/model/payee.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-part 'page_meta.g.dart';
+part 'payee_page.g.dart';
 
-/// Pagination envelope. A list response is `allOf: [PageMeta, { properties: { items: { type: array, items: <resource> } } }]`. 
+/// PayeePage
 ///
 /// Properties:
 /// * [page] 
 /// * [pageSize] 
 /// * [total] - Count of all matching items across pages.
-@BuiltValue(instantiable: false)
-abstract class PageMeta  {
-  @BuiltValueField(wireName: r'page')
-  int get page;
+/// * [items] 
+@BuiltValue()
+abstract class PayeePage implements PageMeta, Built<PayeePage, PayeePageBuilder> {
+  @BuiltValueField(wireName: r'items')
+  BuiltList<Payee> get items;
 
-  @BuiltValueField(wireName: r'pageSize')
-  int get pageSize;
+  PayeePage._();
 
-  /// Count of all matching items across pages.
-  @BuiltValueField(wireName: r'total')
-  int get total;
+  factory PayeePage([void updates(PayeePageBuilder b)]) = _$PayeePage;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _defaults(PayeePageBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PageMeta> get serializer => _$PageMetaSerializer();
+  static Serializer<PayeePage> get serializer => _$PayeePageSerializer();
 }
 
-class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
+class _$PayeePageSerializer implements PrimitiveSerializer<PayeePage> {
   @override
-  final Iterable<Type> types = const [PageMeta];
+  final Iterable<Type> types = const [PayeePage, _$PayeePage];
 
   @override
-  final String wireName = r'PageMeta';
+  final String wireName = r'PayeePage';
 
   Iterable<Object?> _serializeProperties(
     Serializers serializers,
-    PageMeta object, {
+    PayeePage object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'page';
-    yield serializers.serialize(
-      object.page,
-      specifiedType: const FullType(int),
-    );
     yield r'pageSize';
     yield serializers.serialize(
       object.pageSize,
@@ -57,56 +56,25 @@ class _$PageMetaSerializer implements PrimitiveSerializer<PageMeta> {
       object.total,
       specifiedType: const FullType(int),
     );
+    yield r'page';
+    yield serializers.serialize(
+      object.page,
+      specifiedType: const FullType(int),
+    );
+    yield r'items';
+    yield serializers.serialize(
+      object.items,
+      specifiedType: const FullType(BuiltList, [FullType(Payee)]),
+    );
   }
 
   @override
   Object serialize(
     Serializers serializers,
-    PageMeta object, {
+    PayeePage object, {
     FullType specifiedType = FullType.unspecified,
   }) {
     return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  @override
-  PageMeta deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.deserialize(serialized, specifiedType: FullType($PageMeta)) as $PageMeta;
-  }
-}
-
-
-/// a concrete implementation of [PageMeta], since [PageMeta] is not instantiable
-@BuiltValue(instantiable: true)
-abstract class $PageMeta implements PageMeta, Built<$PageMeta, $PageMetaBuilder> {
-  $PageMeta._();
-
-  factory $PageMeta([void Function($PageMetaBuilder)? updates]) = _$$PageMeta;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults($PageMetaBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<$PageMeta> get serializer => _$$PageMetaSerializer();
-}
-
-class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
-  @override
-  final Iterable<Type> types = const [$PageMeta, _$$PageMeta];
-
-  @override
-  final String wireName = r'$PageMeta';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    $PageMeta object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.serialize(object, specifiedType: FullType(PageMeta))!;
   }
 
   void _deserializeProperties(
@@ -114,20 +82,13 @@ class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
     required List<Object?> serializedList,
-    required PageMetaBuilder result,
+    required PayeePageBuilder result,
     required List<Object?> unhandled,
   }) {
     for (var i = 0; i < serializedList.length; i += 2) {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'page':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.page = valueDes;
-          break;
         case r'pageSize':
           final valueDes = serializers.deserialize(
             value,
@@ -142,6 +103,20 @@ class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
           ) as int;
           result.total = valueDes;
           break;
+        case r'page':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.page = valueDes;
+          break;
+        case r'items':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(Payee)]),
+          ) as BuiltList<Payee>;
+          result.items.replace(valueDes);
+          break;
         default:
           unhandled.add(key);
           unhandled.add(value);
@@ -151,12 +126,12 @@ class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
   }
 
   @override
-  $PageMeta deserialize(
+  PayeePage deserialize(
     Serializers serializers,
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final result = $PageMetaBuilder();
+    final result = PayeePageBuilder();
     final serializedList = (serialized as Iterable<Object?>).toList();
     final unhandled = <Object?>[];
     _deserializeProperties(
@@ -170,4 +145,5 @@ class _$$PageMetaSerializer implements PrimitiveSerializer<$PageMeta> {
     return result.build();
   }
 }
+
 
