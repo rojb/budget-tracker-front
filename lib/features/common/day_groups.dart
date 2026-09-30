@@ -5,7 +5,7 @@ import 'dates.dart';
 
 /// Movements grouped by local day, newest first, each group under its header
 /// ("Hoy · martes 29", "Ayer · lunes 28", then "Sábado 26", PRD-ux-spec.md
-/// 6.1 rule 5) with its rows in one white card. [items] must already be
+/// 6.1 rule 5) with each row in its own white card. [items] must already be
 /// ordered newest first. Shared by 10 Movimientos and 14 Detalle de cuenta.
 List<Widget> buildDayGroups<T>(
   List<T> items, {
@@ -15,34 +15,26 @@ List<Widget> buildDayGroups<T>(
 }) {
   final widgets = <Widget>[];
   String? group;
-  var rows = <Widget>[];
-  void flush() {
-    if (group == null) return;
-    widgets
-      ..add(
+  for (final item in items) {
+    final label = dayGroupLabel(occurredAt(item), now: now);
+    if (label != group) {
+      group = label;
+      widgets.add(
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-          child: Text(group, style: UiTypography.custom(19)),
+          child: Text(label, style: UiTypography.custom(19)),
         ),
-      )
+      );
+    }
+    // Each movement is its own white card, as the renders of 10 and 14 draw it.
+    widgets
       ..add(
         UiCard(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Column(children: rows),
+          child: rowBuilder(item),
         ),
       )
       ..add(const SizedBox(height: 8));
   }
-
-  for (final item in items) {
-    final label = dayGroupLabel(occurredAt(item), now: now);
-    if (label != group) {
-      flush();
-      group = label;
-      rows = [];
-    }
-    rows.add(rowBuilder(item));
-  }
-  flush();
   return widgets;
 }
