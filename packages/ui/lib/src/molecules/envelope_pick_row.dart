@@ -142,7 +142,7 @@ class UiEnvelopePickRow extends StatelessWidget {
       minWidth: 0,
       child: ExcludeSemantics(
         child: SizedBox(
-          height: 76,
+          height: 72,
           width: double.infinity,
           child: Row(
             children: [

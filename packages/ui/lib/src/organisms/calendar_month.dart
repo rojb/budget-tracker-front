@@ -52,7 +52,7 @@ class UiCalendarMonth extends StatelessWidget {
           children: [
             UiIconButton(
               icon: UiIcons.chevronLeft,
-              size: 44,
+              size: 48,
               semanticLabel: 'Mes anterior',
               onPressed: onPrevious,
             ),
@@ -66,7 +66,7 @@ class UiCalendarMonth extends StatelessWidget {
             ),
             UiIconButton(
               icon: UiIcons.chevronRight,
-              size: 44,
+              size: 48,
               semanticLabel: 'Mes siguiente',
               onPressed: onNext,
             ),
