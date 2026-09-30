@@ -70,7 +70,7 @@ class PlansRepository {
 
   Future<List<PlanData>> list() => guardApi(() async {
     final response = await _plans.listPlans();
-    return (response.data ?? const <api.Plan>[]).map(_toData).toList();
+    return (response.data ?? const <api.Plan>[]).map(toData).toList();
   });
 
   Future<PlanData> create({
@@ -91,10 +91,10 @@ class PlansRepository {
         }
       }),
     );
-    return _toData(response.data!);
+    return toData(response.data!);
   });
 
-  static PlanData _toData(api.Plan plan) => PlanData(
+  static PlanData toData(api.Plan plan) => PlanData(
     id: plan.id,
     name: plan.name,
     currency: currencyOf(plan.currency.code),

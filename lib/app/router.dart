@@ -22,6 +22,9 @@ import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
+import '../features/sharing/invite_controller.dart';
+import '../features/sharing/invite_page.dart';
+import '../features/sharing/sharing_repository.dart';
 import '../features/shell/account_menu_sheet.dart';
 import '../features/shell/app_shell.dart';
 import 'dependencies.dart';
@@ -225,11 +228,16 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.invite,
-        builder: (context, state) => _placeholder(
-          context,
-          '21 Invitar miembro',
-          'Llega con add-plan-sharing.',
-        ),
+        builder: (context, state) {
+          final plan = plans.activePlan!;
+          return InvitePage(
+            planName: plan.name,
+            controllerFactory: () => InviteController(
+              SharingRepository(dependencies.apiGateway),
+              plan.id,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.newTransaction,
