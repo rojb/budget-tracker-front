@@ -73,7 +73,7 @@ class UiCodeCard extends StatelessWidget {
               if (copied)
                 Positioned(
                   left: 0,
-                  top: -14,
+                  top: -26,
                   child: Semantics(
                     liveRegion: true,
                     child: Container(
