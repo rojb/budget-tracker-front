@@ -81,6 +81,8 @@ Future<T?> showUiSheet<T>(
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
+    // Above the tab bar, whichever navigator the caller lives in.
+    useRootNavigator: true,
     useSafeArea: true,
     backgroundColor: UiColors.bg,
     barrierColor: const Color(0x66000000),
