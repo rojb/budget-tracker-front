@@ -3,11 +3,14 @@ library;
 
 export 'src/atoms/avatar.dart';
 export 'src/atoms/button.dart';
+export 'src/atoms/checklist_row.dart';
 export 'src/atoms/chip.dart';
 export 'src/atoms/form_message.dart';
 export 'src/atoms/icon_button.dart';
+export 'src/atoms/info_note.dart';
 export 'src/atoms/key.dart';
 export 'src/atoms/link_row.dart';
+export 'src/atoms/stripe_bar.dart';
 export 'src/atoms/toggle.dart';
 export 'src/molecules/amount_capsule.dart';
 export 'src/molecules/field_row.dart';

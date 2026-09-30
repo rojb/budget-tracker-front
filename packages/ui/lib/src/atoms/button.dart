@@ -6,9 +6,11 @@ import '../tokens/shape.dart';
 import '../tokens/typography.dart';
 import 'hit_target.dart';
 
-enum UiButtonVariant { primary, secondary }
+enum UiButtonVariant { primary, secondary, white, danger }
 
-/// Full-width pill button: Primary (chartreuse, 56) or Secondary (bg, 52).
+/// Full-width pill button: Primary (chartreuse, 56), Secondary (bg, 52), White
+/// (surface, 56, e.g. "Cancelar" on a confirmation sheet) or Danger (solid
+/// `danger` with white text, 56; PRD-ux-spec.md 6.1 rule 2).
 class UiButton extends StatelessWidget {
   const UiButton({
     required this.label,
@@ -29,11 +31,24 @@ class UiButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = variant == UiButtonVariant.primary;
-    final height = primary
+    final large = variant != UiButtonVariant.secondary;
+    final height = large
         ? UiSizes.buttonPrimaryHeight
         : UiSizes.buttonSecondaryHeight;
-    final style = UiTypography.custom(primary ? 16 : 15, weight: 500);
+    final foreground = variant == UiButtonVariant.danger
+        ? UiColors.surface
+        : UiColors.ink;
+    final background = switch (variant) {
+      UiButtonVariant.primary => UiColors.chartreuse,
+      UiButtonVariant.secondary => UiColors.bg,
+      UiButtonVariant.white => UiColors.surface,
+      UiButtonVariant.danger => UiColors.danger,
+    };
+    final style = UiTypography.custom(
+      large ? 16 : 15,
+      weight: 500,
+      color: foreground,
+    );
     return UiHitTarget(
       onTap: loading ? null : onPressed,
       semanticLabel: loading ? '$label, cargando' : label,
@@ -43,23 +58,23 @@ class UiButton extends StatelessWidget {
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: primary ? UiColors.chartreuse : UiColors.bg,
+          color: background,
           borderRadius: BorderRadius.circular(height / 2),
         ),
         child: loading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: UiColors.ink,
+                  color: foreground,
                 ),
               )
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, size: 18, color: UiColors.ink),
+                    Icon(icon, size: 18, color: foreground),
                     const SizedBox(width: 8),
                   ],
                   ExcludeSemantics(child: Text(label, style: style)),

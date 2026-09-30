@@ -29,4 +29,17 @@ abstract final class UiIcons {
   static const IconData info = LucideIcons.info300;
   static const IconData warning = LucideIcons.triangleAlert300;
   static const IconData error = LucideIcons.circleX300;
+  static const IconData chevronLeft = LucideIcons.chevronLeft300;
+  static const IconData close = LucideIcons.x300;
+  static const IconData search = LucideIcons.search300;
+  static const IconData layers = LucideIcons.layers300;
+  static const IconData pencil = LucideIcons.pencil300;
+  static const IconData archive = LucideIcons.archive300;
+  static const IconData landmark = LucideIcons.landmark300;
+  static const IconData smartphone = LucideIcons.smartphone300;
+  static const IconData banknote = LucideIcons.banknote300;
+  static const IconData keyRound = LucideIcons.keyRound300;
+  static const IconData contact = LucideIcons.squareUserRound300;
+  static const IconData cornerDownRight = LucideIcons.cornerDownRight300;
+  static const IconData wand = LucideIcons.wandSparkles300;
 }
