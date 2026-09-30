@@ -14,7 +14,12 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:api_client/src/date_serializer.dart';
 import 'package:api_client/src/model/date.dart';
 
+import 'package:api_client/src/model/account.dart';
+import 'package:api_client/src/model/account_detail.dart';
+import 'package:api_client/src/model/account_type.dart';
 import 'package:api_client/src/model/auth_session.dart';
+import 'package:api_client/src/model/create_account_request.dart';
+import 'package:api_client/src/model/create_plan_request.dart';
 import 'package:api_client/src/model/currency.dart';
 import 'package:api_client/src/model/currency_code.dart';
 import 'package:api_client/src/model/error.dart';
@@ -22,14 +27,24 @@ import 'package:api_client/src/model/error_message.dart';
 import 'package:api_client/src/model/health_status.dart';
 import 'package:api_client/src/model/login_request.dart';
 import 'package:api_client/src/model/page_meta.dart';
+import 'package:api_client/src/model/plan.dart';
+import 'package:api_client/src/model/plan_member.dart';
+import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
+import 'package:api_client/src/model/update_account_request.dart';
+import 'package:api_client/src/model/update_plan_request.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/validation_error.dart';
 
 part 'serializers.g.dart';
 
 @SerializersFor([
+  Account,$Account,
+  AccountDetail,
+  AccountType,
   AuthSession,
+  CreateAccountRequest,
+  CreatePlanRequest,
   Currency,
   CurrencyCode,
   Error,
@@ -37,15 +52,33 @@ part 'serializers.g.dart';
   HealthStatus,
   LoginRequest,
   PageMeta,
+  Plan,
+  PlanMember,
+  PlanRole,
   RegisterRequest,
+  UpdateAccountRequest,
+  UpdatePlanRequest,
   User,
   ValidationError,
 ])
 Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Plan)]),
+        () => ListBuilder<Plan>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(PlanMember)]),
+        () => ListBuilder<PlanMember>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),
         () => ListBuilder<String>(),
       )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Account)]),
+        () => ListBuilder<Account>(),
+      )
+      ..add(Account.serializer)
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
       ..add(const DateSerializer())
