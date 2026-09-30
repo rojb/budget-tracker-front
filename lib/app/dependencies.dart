@@ -58,5 +58,6 @@ class Dependencies {
   RegisterController createRegisterController() =>
       RegisterController(authController);
 
-  HomeController createHomeController() => HomeController(authController);
+  HomeController createHomeController() =>
+      HomeController(authController, plansController);
 }

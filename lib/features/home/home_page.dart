@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
+import '../shell/account_menu_sheet.dart';
 import 'home_controller.dart';
 
-/// Container widget: owns the controller and maps its state to `packages/ui`.
-/// Placeholder for screens 01/02 with a minimal sign-out affordance.
+/// Screen 01 Inicio, minimal shell: the avatar opens 39 Menú de cuenta.
+/// The goal carousel and the month card are added by later changes.
 class HomePage extends StatefulWidget {
-  const HomePage({required this.controllerFactory, super.key});
+  const HomePage({
+    required this.controllerFactory,
+    required this.menu,
+    super.key,
+  });
 
   final HomeController Function() controllerFactory;
+  final AccountMenu menu;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,37 +31,36 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: ListenableBuilder(
-            listenable: _controller,
-            builder: (context, _) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Spacer(),
-                Text(_controller.greeting, style: UiTypography.headline),
-                const SizedBox(height: 8),
-                if (_controller.email != null)
-                  Text(_controller.email!, style: UiTypography.caption),
-                const SizedBox(height: 12),
-                Text(
-                  'Inicio (pantallas 01/02) llega con add-plans-and-accounts.',
-                  style: UiTypography.custom(16, color: UiColors.inkMuted),
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) => ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        children: [
+          Row(
+            children: [
+              Semantics(
+                button: true,
+                label: 'Menú de cuenta',
+                child: GestureDetector(
+                  onTap: () => widget.menu.show(context),
+                  child: UiAvatar(initials: _controller.initials),
                 ),
-                const SizedBox(height: 32),
-                UiButton(
-                  label: 'Cerrar sesión',
-                  icon: UiIcons.logOut,
-                  variant: UiButtonVariant.secondary,
-                  onPressed: _controller.logout,
-                ),
-                const Spacer(flex: 2),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
+          const SizedBox(height: 24),
+          Text(_controller.greeting, style: UiTypography.headline),
+          if (_controller.planName != null) ...[
+            const SizedBox(height: 6),
+            Text(_controller.planName!, style: UiTypography.caption),
+          ],
+          const SizedBox(height: 24),
+          const UiInfoNote(
+            text:
+                'Tus metas y el resumen del mes aparecen acá cuando crees tus '
+                'sobres.',
+          ),
+        ],
       ),
     );
   }
