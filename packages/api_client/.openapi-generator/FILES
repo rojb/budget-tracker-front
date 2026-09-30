@@ -4,6 +4,7 @@ lib/src/api.dart
 lib/src/api/accounts_api.dart
 lib/src/api/auth_api.dart
 lib/src/api/health_api.dart
+lib/src/api/payees_api.dart
 lib/src/api/plans_api.dart
 lib/src/api/users_api.dart
 lib/src/api_util.dart
@@ -18,6 +19,7 @@ lib/src/model/account_detail.dart
 lib/src/model/account_type.dart
 lib/src/model/auth_session.dart
 lib/src/model/create_account_request.dart
+lib/src/model/create_payee_request.dart
 lib/src/model/create_plan_request.dart
 lib/src/model/currency.dart
 lib/src/model/currency_code.dart
@@ -27,11 +29,14 @@ lib/src/model/error_message.dart
 lib/src/model/health_status.dart
 lib/src/model/login_request.dart
 lib/src/model/page_meta.dart
+lib/src/model/payee.dart
+lib/src/model/payee_page.dart
 lib/src/model/plan.dart
 lib/src/model/plan_member.dart
 lib/src/model/plan_role.dart
 lib/src/model/register_request.dart
 lib/src/model/update_account_request.dart
+lib/src/model/update_payee_request.dart
 lib/src/model/update_plan_request.dart
 lib/src/model/user.dart
 lib/src/model/validation_error.dart

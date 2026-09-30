@@ -19,6 +19,7 @@ import 'package:api_client/src/model/account_detail.dart';
 import 'package:api_client/src/model/account_type.dart';
 import 'package:api_client/src/model/auth_session.dart';
 import 'package:api_client/src/model/create_account_request.dart';
+import 'package:api_client/src/model/create_payee_request.dart';
 import 'package:api_client/src/model/create_plan_request.dart';
 import 'package:api_client/src/model/currency.dart';
 import 'package:api_client/src/model/currency_code.dart';
@@ -27,11 +28,14 @@ import 'package:api_client/src/model/error_message.dart';
 import 'package:api_client/src/model/health_status.dart';
 import 'package:api_client/src/model/login_request.dart';
 import 'package:api_client/src/model/page_meta.dart';
+import 'package:api_client/src/model/payee.dart';
+import 'package:api_client/src/model/payee_page.dart';
 import 'package:api_client/src/model/plan.dart';
 import 'package:api_client/src/model/plan_member.dart';
 import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
 import 'package:api_client/src/model/update_account_request.dart';
+import 'package:api_client/src/model/update_payee_request.dart';
 import 'package:api_client/src/model/update_plan_request.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/validation_error.dart';
@@ -44,6 +48,7 @@ part 'serializers.g.dart';
   AccountType,
   AuthSession,
   CreateAccountRequest,
+  CreatePayeeRequest,
   CreatePlanRequest,
   Currency,
   CurrencyCode,
@@ -51,12 +56,15 @@ part 'serializers.g.dart';
   ErrorMessage,
   HealthStatus,
   LoginRequest,
-  PageMeta,
+  PageMeta,$PageMeta,
+  Payee,
+  PayeePage,
   Plan,
   PlanMember,
   PlanRole,
   RegisterRequest,
   UpdateAccountRequest,
+  UpdatePayeeRequest,
   UpdatePlanRequest,
   User,
   ValidationError,
@@ -65,6 +73,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Plan)]),
         () => ListBuilder<Plan>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Payee)]),
+        () => ListBuilder<Payee>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(PlanMember)]),
@@ -79,6 +91,7 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<Account>(),
       )
       ..add(Account.serializer)
+      ..add(PageMeta.serializer)
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
       ..add(const DateSerializer())
