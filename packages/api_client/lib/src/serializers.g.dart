@@ -11,8 +11,11 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add($PageMeta.serializer)
       ..add(AccountDetail.serializer)
       ..add(AccountType.serializer)
+      ..add(ApplyEnvelopeTemplateRequest.serializer)
       ..add(AuthSession.serializer)
       ..add(CreateAccountRequest.serializer)
+      ..add(CreateEnvelopeGroupRequest.serializer)
+      ..add(CreateEnvelopeRequest.serializer)
       ..add(CreateInvitationRequest.serializer)
       ..add(CreatePayeeRequest.serializer)
       ..add(CreatePlanRequest.serializer)
@@ -22,10 +25,20 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(CurrencyMinorUnitsEnum.serializer)
       ..add(CurrencyNameEnum.serializer)
       ..add(CurrencySymbolEnum.serializer)
+      ..add(Envelope.serializer)
+      ..add(EnvelopeGroup.serializer)
+      ..add(EnvelopeIcon.serializer)
+      ..add(EnvelopeLine.serializer)
+      ..add(EnvelopeList.serializer)
+      ..add(EnvelopeTemplate.serializer)
+      ..add(EnvelopeTemplateResult.serializer)
       ..add(Error.serializer)
       ..add(ErrorMessage.serializer)
       ..add(HealthStatus.serializer)
       ..add(HealthStatusStatusEnum.serializer)
+      ..add(InitialAssignment.serializer)
+      ..add(InitialAssignmentRequest.serializer)
+      ..add(InitialAssignmentResult.serializer)
       ..add(Invitation.serializer)
       ..add(InvitationPreview.serializer)
       ..add(InvitationRole.serializer)
@@ -36,9 +49,15 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(PlanMember.serializer)
       ..add(PlanRole.serializer)
       ..add(RegisterRequest.serializer)
+      ..add(ReorderEnvelopeGroupsRequest.serializer)
+      ..add(ReorderEnvelopesRequest.serializer)
+      ..add(TemplateEnvelope.serializer)
+      ..add(TemplateGroup.serializer)
       ..add(Transfer.serializer)
       ..add(TransferPage.serializer)
       ..add(UpdateAccountRequest.serializer)
+      ..add(UpdateEnvelopeGroupRequest.serializer)
+      ..add(UpdateEnvelopeRequest.serializer)
       ..add(UpdateMemberRequest.serializer)
       ..add(UpdatePayeeRequest.serializer)
       ..add(UpdatePlanRequest.serializer)
@@ -46,6 +65,18 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ValidationError.serializer)
       ..add(ValidationErrorErrorEnum.serializer)
       ..add(ValidationErrorStatusCodeEnum.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(EnvelopeGroup)]),
+          () => ListBuilder<EnvelopeGroup>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Envelope)]),
+          () => ListBuilder<Envelope>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(EnvelopeLine)]),
+          () => ListBuilder<EnvelopeLine>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(InitialAssignment)]),
+          () => ListBuilder<InitialAssignment>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Payee)]),
           () => ListBuilder<Payee>())
@@ -55,6 +86,21 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(TemplateEnvelope)]),
+          () => ListBuilder<TemplateEnvelope>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(TemplateGroup)]),
+          () => ListBuilder<TemplateGroup>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Transfer)]),
           () => ListBuilder<Transfer>()))

@@ -8,6 +8,8 @@ import '../features/auth/auth_controller.dart';
 import '../features/auth/auth_repository.dart';
 import '../features/auth/login_controller.dart';
 import '../features/auth/register_controller.dart';
+import '../features/envelopes/envelopes_controller.dart';
+import '../features/envelopes/envelopes_repository.dart';
 import '../features/home/home_controller.dart';
 import '../features/plans/new_plan_controller.dart';
 import '../features/sharing/join_controller.dart';
@@ -27,6 +29,7 @@ class Dependencies {
     required this.authController,
     required this.plansController,
     required this.accountsController,
+    required this.envelopesController,
     required this.sharingRepository,
     required this.pendingInvite,
   });
@@ -53,6 +56,10 @@ class Dependencies {
         AccountsRepository(gateway),
         plans,
       ),
+      envelopesController: EnvelopesController(
+        EnvelopesRepository(gateway),
+        plans,
+      ),
       sharingRepository: SharingRepository(gateway),
       pendingInvite: PendingInvite(),
     );
@@ -71,6 +78,9 @@ class Dependencies {
 
   /// Accounts of the active plan (06, 13, 14, 51, 37).
   final AccountsController accountsController;
+
+  /// Groups and envelopes of the active plan (06 / 02, 31, 32, 35, 46).
+  final EnvelopesController envelopesController;
 
   final SharingRepository sharingRepository;
 

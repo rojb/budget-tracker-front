@@ -117,7 +117,7 @@ Cambio `add-plans-and-accounts` (RRG-46).
   (`showAccountPicker`, para movimientos y transferencias).
 - Errores de API mapeados una sola vez en `lib/core/api/api_failure.dart` (400 por campo, 403, 404,
   409, red).
-- Pantallas de cambios futuros (07, 10, 15, 21, 29, 30, 31, 32, 35) son rutas placeholder.
+- Pantallas de cambios futuros (por ejemplo 07, 10 y 22) son rutas placeholder.
 
 ## Beneficiarios
 
@@ -125,7 +125,7 @@ Cambio `add-payees` (RRG-48). Desde 39 Menú de cuenta → "Beneficiarios": 15 (
 el lugar), 41 (alta y edición) y 47 (hoja de confirmación). La baja es lógica: los movimientos
 pasados conservan el beneficiario (FR-05). Un `PayeesController` vive mientras 15 → 41 están
 abiertas (`ShellRoute` en `lib/app/router.dart`). El campo "Sobre" de 41 queda en "Sin sobre" hasta
-que `add-envelopes` traiga el selector 36, y los contadores de movimientos quedan en 0 hasta
+que `add-transactions` traiga el selector 36 (el back ya valida el sobre sugerido), y los contadores de movimientos quedan en 0 hasta
 `add-transactions`.
 
 ## Planes compartidos
@@ -153,6 +153,27 @@ flechas) se abre 29 Transferencia: origen y destino con el selector 37 (nunca of
 punta), monto con el teclado, fecha y hora con la hoja 38 (`lib/features/common/date_time_sheet.dart`,
 reutilizable por `add-transactions`). 14 lista las transferencias agrupadas por día con `UiTxRow`;
 tocar una permite eliminarla. Una transferencia no usa sobres.
+
+## Sobres y grupos
+
+Cambio `add-envelopes` (RRG-47). `lib/features/envelopes/`:
+
+- **Pestaña Plan** (`PlanTabPage`): 06 Plan vacío mientras el plan no tiene sobres y 02 Plan del mes
+  apenas tiene uno. `EnvelopesController` (app-scoped) carga grupos y sobres del plan activo, recarga
+  al cambiar de plan y después de cada cambio, porque las cifras (`assignedMinor`, `availableMinor`,
+  Listo para asignar) las deriva la API.
+- **Pantallas:** 02 (`layers` → 32, lupa que filtra en el lugar, encabezados de grupo con "+" → 31,
+  "Sin grupo" al final), 31 Nuevo sobre (el bloque "Objetivo" llega con `add-envelope-goals`), 52
+  Elegir grupo (hoja con "+ Nuevo grupo" expandible), 32 Grupos (arrastrar para reordenar, lápiz,
+  papelera → 44), 35 Plantilla sugerida (la plantilla sale de `GET /envelope-template`), 46 Asigná tu
+  dinero (asignación masiva) y las hojas 43 y 44.
+- **Límite con `add-monthly-assignment`:** la navegación de meses (las flechas del selector quedan
+  deshabilitadas), los chips de estado, el "+" de la tarjeta (→ 03) y el cierre de mes son de ese
+  cambio. `EnvelopeRow` ya dibuja Funded, Underfunded, Overspent y Empty; Underfunded lo produce
+  `add-envelope-goals`.
+- **Entrada provisoria a 43:** una pulsación larga sobre un sobre de 02 (la entrada real es la
+  papelera de 23, de `add-envelope-goals`); tocar el sobre abre el placeholder de 22.
+- Sin gasto derivado hasta `add-transactions`: las filas muestran "$ 0 de $ asignado".
 
 ## Widgetbook
 

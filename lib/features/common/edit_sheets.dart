@@ -10,32 +10,57 @@ Future<String?> showTextEditSheet(
   String initial = '',
   int maxLength = 60,
 }) {
-  final controller = TextEditingController(text: initial);
   return showUiSheet<String>(
     context,
     builder: (sheetContext) => UiSheet(
       title: title,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          UiTextField(
-            label: label,
-            controller: controller,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) =>
-                Navigator.of(sheetContext).pop(controller.text.trim()),
-          ),
-          const SizedBox(height: 16),
-          UiButton(
-            label: 'Listo',
-            onPressed: () =>
-                Navigator.of(sheetContext).pop(controller.text.trim()),
-          ),
-        ],
-      ),
+      child: _TextEditBody(label: label, initial: initial),
     ),
-  ).whenComplete(controller.dispose);
+  );
+}
+
+/// Owns the controller of the sheet, so it is disposed with the sheet's own
+/// element and not while the sheet is still animating out.
+class _TextEditBody extends StatefulWidget {
+  const _TextEditBody({required this.label, required this.initial});
+
+  final String label;
+  final String initial;
+
+  @override
+  State<_TextEditBody> createState() => _TextEditBodyState();
+}
+
+class _TextEditBodyState extends State<_TextEditBody> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initial,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _done() => Navigator.of(context).pop(_controller.text.trim());
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        UiTextField(
+          label: widget.label,
+          controller: _controller,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _done(),
+        ),
+        const SizedBox(height: 16),
+        UiButton(label: 'Listo', onPressed: _done),
+      ],
+    );
+  }
 }
 
 /// Amount editor: the `AmountCapsule` with the plan currency and a keypad of
