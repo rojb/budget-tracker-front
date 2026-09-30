@@ -119,6 +119,7 @@ class UiJoinedCard extends StatelessWidget {
     TextStyle labelStyle,
   ) {
     return Semantics(
+      container: true,
       label: '$value, $label',
       child: ExcludeSemantics(
         child: Column(
