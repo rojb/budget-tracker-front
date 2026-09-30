@@ -94,6 +94,35 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     }
   }
 
+  Widget _iconSelector(List<String> shown) {
+    final buttons = [
+      for (final name in shown)
+        UiIconButton(
+          icon: uiEnvelopeIcons[name]!,
+          variant: name == _icon
+              ? UiIconButtonVariant.lavender
+              : UiIconButtonVariant.white,
+          size: 48,
+          semanticLabel: 'Ícono $name',
+          onPressed: () => setState(() => _icon = name),
+        ),
+      if (!_moreIcons)
+        UiIconButton(
+          icon: UiIcons.ellipsis,
+          size: 48,
+          semanticLabel: 'Más íconos',
+          onPressed: () => setState(() => _moreIcons = true),
+        ),
+    ];
+    // One row of seven as in the design; the full set wraps once expanded.
+    return _moreIcons
+        ? Wrap(spacing: 8, runSpacing: 8, children: buttons)
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: buttons,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     final group = widget.envelopes.groupById(_groupId);
@@ -150,27 +179,7 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
               child: Text('Ícono', style: UiTypography.custom(19)),
             ),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final name in shown)
-                  UiIconButton(
-                    icon: uiEnvelopeIcons[name]!,
-                    variant: name == _icon
-                        ? UiIconButtonVariant.lavender
-                        : UiIconButtonVariant.white,
-                    semanticLabel: 'Ícono $name',
-                    onPressed: () => setState(() => _icon = name),
-                  ),
-                if (!_moreIcons)
-                  UiIconButton(
-                    icon: UiIcons.ellipsis,
-                    semanticLabel: 'Más íconos',
-                    onPressed: () => setState(() => _moreIcons = true),
-                  ),
-              ],
-            ),
+            _iconSelector(shown),
             const SizedBox(height: 28),
             UiSaveBar(
               label: 'Crear sobre',

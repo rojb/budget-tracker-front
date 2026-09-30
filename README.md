@@ -125,7 +125,7 @@ Cambio `add-payees` (RRG-48). Desde 39 Menú de cuenta → "Beneficiarios": 15 (
 el lugar), 41 (alta y edición) y 47 (hoja de confirmación). La baja es lógica: los movimientos
 pasados conservan el beneficiario (FR-05). Un `PayeesController` vive mientras 15 → 41 están
 abiertas (`ShellRoute` en `lib/app/router.dart`). El campo "Sobre" de 41 queda en "Sin sobre" hasta
-que `add-envelopes` traiga el selector 36, y los contadores de movimientos quedan en 0 hasta
+que `add-transactions` traiga el selector 36 (el back ya valida el sobre sugerido), y los contadores de movimientos quedan en 0 hasta
 `add-transactions`.
 
 ## Planes compartidos
