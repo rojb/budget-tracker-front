@@ -43,7 +43,9 @@ class _HomePageState extends State<HomePage> {
                 label: 'Menú de cuenta',
                 child: GestureDetector(
                   onTap: () => widget.menu.show(context),
-                  child: UiAvatar(initials: _controller.initials),
+                  child: ExcludeSemantics(
+                    child: UiAvatar(initials: _controller.initials),
+                  ),
                 ),
               ),
             ],
