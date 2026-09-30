@@ -12,6 +12,7 @@ import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/home/home_page.dart';
+import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
 import '../features/payees/payees_page.dart';
 import '../features/payees/payees_repository.dart';
@@ -263,6 +264,23 @@ GoRouter createRouter(Dependencies dependencies) {
             path: AppRoutes.payees,
             builder: (context, state) =>
                 PayeesPage(controller: _PayeesScope.of(context)),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) =>
+                    PayeeFormPage(controller: _PayeesScope.of(context)),
+              ),
+              GoRoute(
+                path: ':payeeId',
+                builder: (context, state) {
+                  final controller = _PayeesScope.of(context);
+                  return PayeeFormPage(
+                    controller: controller,
+                    payee: controller.byId(state.pathParameters['payeeId']!),
+                  );
+                },
+              ),
+            ],
           ),
         ],
       ),
