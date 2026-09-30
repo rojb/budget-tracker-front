@@ -17,17 +17,30 @@ import 'package:api_client/src/model/date.dart';
 import 'package:api_client/src/model/account.dart';
 import 'package:api_client/src/model/account_detail.dart';
 import 'package:api_client/src/model/account_type.dart';
+import 'package:api_client/src/model/apply_envelope_template_request.dart';
 import 'package:api_client/src/model/auth_session.dart';
 import 'package:api_client/src/model/create_account_request.dart';
+import 'package:api_client/src/model/create_envelope_group_request.dart';
+import 'package:api_client/src/model/create_envelope_request.dart';
 import 'package:api_client/src/model/create_invitation_request.dart';
 import 'package:api_client/src/model/create_payee_request.dart';
 import 'package:api_client/src/model/create_plan_request.dart';
 import 'package:api_client/src/model/create_transfer_request.dart';
 import 'package:api_client/src/model/currency.dart';
 import 'package:api_client/src/model/currency_code.dart';
+import 'package:api_client/src/model/envelope.dart';
+import 'package:api_client/src/model/envelope_group.dart';
+import 'package:api_client/src/model/envelope_icon.dart';
+import 'package:api_client/src/model/envelope_line.dart';
+import 'package:api_client/src/model/envelope_list.dart';
+import 'package:api_client/src/model/envelope_template.dart';
+import 'package:api_client/src/model/envelope_template_result.dart';
 import 'package:api_client/src/model/error.dart';
 import 'package:api_client/src/model/error_message.dart';
 import 'package:api_client/src/model/health_status.dart';
+import 'package:api_client/src/model/initial_assignment.dart';
+import 'package:api_client/src/model/initial_assignment_request.dart';
+import 'package:api_client/src/model/initial_assignment_result.dart';
 import 'package:api_client/src/model/invitation.dart';
 import 'package:api_client/src/model/invitation_preview.dart';
 import 'package:api_client/src/model/invitation_role.dart';
@@ -39,9 +52,15 @@ import 'package:api_client/src/model/plan.dart';
 import 'package:api_client/src/model/plan_member.dart';
 import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
+import 'package:api_client/src/model/reorder_envelope_groups_request.dart';
+import 'package:api_client/src/model/reorder_envelopes_request.dart';
+import 'package:api_client/src/model/template_envelope.dart';
+import 'package:api_client/src/model/template_group.dart';
 import 'package:api_client/src/model/transfer.dart';
 import 'package:api_client/src/model/transfer_page.dart';
 import 'package:api_client/src/model/update_account_request.dart';
+import 'package:api_client/src/model/update_envelope_group_request.dart';
+import 'package:api_client/src/model/update_envelope_request.dart';
 import 'package:api_client/src/model/update_member_request.dart';
 import 'package:api_client/src/model/update_payee_request.dart';
 import 'package:api_client/src/model/update_plan_request.dart';
@@ -54,17 +73,30 @@ part 'serializers.g.dart';
   Account,$Account,
   AccountDetail,
   AccountType,
+  ApplyEnvelopeTemplateRequest,
   AuthSession,
   CreateAccountRequest,
+  CreateEnvelopeGroupRequest,
+  CreateEnvelopeRequest,
   CreateInvitationRequest,
   CreatePayeeRequest,
   CreatePlanRequest,
   CreateTransferRequest,
   Currency,
   CurrencyCode,
+  Envelope,
+  EnvelopeGroup,
+  EnvelopeIcon,
+  EnvelopeLine,
+  EnvelopeList,
+  EnvelopeTemplate,
+  EnvelopeTemplateResult,
   Error,
   ErrorMessage,
   HealthStatus,
+  InitialAssignment,
+  InitialAssignmentRequest,
+  InitialAssignmentResult,
   Invitation,
   InvitationPreview,
   InvitationRole,
@@ -76,9 +108,15 @@ part 'serializers.g.dart';
   PlanMember,
   PlanRole,
   RegisterRequest,
+  ReorderEnvelopeGroupsRequest,
+  ReorderEnvelopesRequest,
+  TemplateEnvelope,
+  TemplateGroup,
   Transfer,
   TransferPage,
   UpdateAccountRequest,
+  UpdateEnvelopeGroupRequest,
+  UpdateEnvelopeRequest,
   UpdateMemberRequest,
   UpdatePayeeRequest,
   UpdatePlanRequest,
@@ -87,8 +125,20 @@ part 'serializers.g.dart';
 ])
 Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(TemplateGroup)]),
+        () => ListBuilder<TemplateGroup>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Envelope)]),
+        () => ListBuilder<Envelope>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Plan)]),
         () => ListBuilder<Plan>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(EnvelopeGroup)]),
+        () => ListBuilder<EnvelopeGroup>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Payee)]),
@@ -99,12 +149,24 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<Transfer>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(InitialAssignment)]),
+        () => ListBuilder<InitialAssignment>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(PlanMember)]),
         () => ListBuilder<PlanMember>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(TemplateEnvelope)]),
+        () => ListBuilder<TemplateEnvelope>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),
         () => ListBuilder<String>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(EnvelopeLine)]),
+        () => ListBuilder<EnvelopeLine>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Account)]),
