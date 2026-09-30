@@ -190,6 +190,7 @@ GoRouter createRouter(Dependencies dependencies) {
                       accountId: state.pathParameters['accountId']!,
                       accounts: dependencies.accountsController,
                       plans: plans,
+                      transfers: TransfersRepository(dependencies.apiGateway),
                     ),
                     routes: [
                       GoRoute(

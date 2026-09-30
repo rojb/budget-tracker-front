@@ -146,6 +146,14 @@ adb shell am start -a android.intent.action.VIEW -d "https://sobres.app/unirse/K
 
 El QR se lee con la cámara del teléfono (abre el enlace); la pestaña "Escanear QR" de 30 lo explica.
 
+## Transferencias
+
+Cambio `add-account-transfers` (RRG-55). Desde 14 Detalle de cuenta → "Transferir" (ícono de
+flechas) se abre 29 Transferencia: origen y destino con el selector 37 (nunca ofrece la otra
+punta), monto con el teclado, fecha y hora con la hoja 38 (`lib/features/common/date_time_sheet.dart`,
+reutilizable por `add-transactions`). 14 lista las transferencias agrupadas por día con `UiTxRow`;
+tocar una permite eliminarla. Una transferencia no usa sobres.
+
 ## Widgetbook
 
 ```bash

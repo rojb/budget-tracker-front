@@ -4,25 +4,32 @@ import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
 import '../../core/api/api_failure.dart';
+import '../common/confirm_sheet.dart';
+import '../common/dates.dart';
+import '../common/feedback.dart';
 import '../common/months.dart';
 import '../plans/plans_controller.dart';
 import 'accounts_controller.dart';
 import 'accounts_page.dart';
 import 'accounts_repository.dart';
+import 'transfers_repository.dart';
 
 /// Screen 14 Detalle de cuenta: balance, what entered and left this month and
-/// the account's movements (the list arrives with add-transactions).
+/// the account's movements: today its transfers, grouped by day (transactions
+/// join them with add-transactions).
 class AccountDetailPage extends StatefulWidget {
   const AccountDetailPage({
     required this.accountId,
     required this.accounts,
     required this.plans,
+    required this.transfers,
     super.key,
   });
 
   final String accountId;
   final AccountsController accounts;
   final PlansController plans;
+  final TransfersRepository transfers;
 
   @override
   State<AccountDetailPage> createState() => _AccountDetailPageState();
@@ -30,6 +37,7 @@ class AccountDetailPage extends StatefulWidget {
 
 class _AccountDetailPageState extends State<AccountDetailPage> {
   AccountDetailData? _detail;
+  List<TransferData> _transfers = const [];
   bool _failed = false;
 
   @override
@@ -47,8 +55,18 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
 
   Future<void> _load() async {
     try {
-      final detail = await widget.accounts.detail(widget.accountId);
-      if (mounted) setState(() => _detail = detail);
+      final results = await Future.wait([
+        widget.accounts.detail(widget.accountId),
+        widget.transfers.forAccount(
+          widget.plans.activePlan!.id,
+          widget.accountId,
+        ),
+      ]);
+      if (!mounted) return;
+      setState(() {
+        _detail = results[0] as AccountDetailData;
+        _transfers = results[1] as List<TransferData>;
+      });
     } on ApiFailure {
       if (mounted) setState(() => _failed = true);
     }
@@ -123,15 +141,90 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
             secondaryIsAmount: true,
           ),
           const SizedBox(height: 22),
-          UiCard(
-            padding: const EdgeInsets.all(22),
-            child: Text(
-              'Todavía no hay movimientos',
-              style: UiTypography.custom(16, color: UiColors.inkMuted),
-            ),
-          ),
+          if (_transfers.isEmpty)
+            UiCard(
+              padding: const EdgeInsets.all(22),
+              child: Text(
+                'Todavía no hay movimientos',
+                style: UiTypography.custom(16, color: UiColors.inkMuted),
+              ),
+            )
+          else
+            ..._movements(context, currency),
         ],
       ],
     );
+  }
+
+  // Transfers grouped by local day, newest first (PRD-ux-spec.md 6.1 rule 5).
+  List<Widget> _movements(BuildContext context, Currency currency) {
+    final widgets = <Widget>[];
+    String? group;
+    List<Widget> rows = [];
+    void flush() {
+      if (group == null) return;
+      widgets
+        ..add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            child: Text(group, style: UiTypography.custom(19)),
+          ),
+        )
+        ..add(
+          UiCard(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Column(children: rows),
+          ),
+        )
+        ..add(const SizedBox(height: 8));
+    }
+
+    for (final transfer in _transfers) {
+      final label = dayGroupLabel(transfer.occurredAt);
+      if (label != group) {
+        flush();
+        group = label;
+        rows = [];
+      }
+      final outgoing = transfer.fromAccountId == widget.accountId;
+      final other = widget.accounts.byId(
+        outgoing ? transfer.toAccountId : transfer.fromAccountId,
+      );
+      final amount = formatMoney(transfer.amountMinor, currency);
+      rows.add(
+        UiTxRow(
+          icon: UiIcons.arrowLeftRight,
+          title: outgoing
+              ? 'Transferencia a ${other?.name ?? 'otra cuenta'}'
+              : 'Transferencia de ${other?.name ?? 'otra cuenta'}',
+          subtitle: 'Sin sobre · ${timeLabel(transfer.occurredAt)}',
+          amount: outgoing ? '−$amount' : amount,
+          variant: outgoing ? UiTxRowVariant.expense : UiTxRowVariant.income,
+          onTap: () => _delete(context, transfer),
+        ),
+      );
+    }
+    flush();
+    return widgets;
+  }
+
+  Future<void> _delete(BuildContext context, TransferData transfer) async {
+    final confirmed = await confirmSheet(
+      context,
+      title: '¿Eliminar la transferencia?',
+      detail: 'Los saldos de las dos cuentas vuelven a como estaban.',
+      action: 'Eliminar',
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await widget.transfers.delete(widget.plans.activePlan!.id, transfer.id);
+      await widget.accounts.load();
+      if (context.mounted) showSaved(context, 'Transferencia eliminada');
+    } on ApiFailure catch (failure) {
+      if (!context.mounted) return;
+      failure.kind == ApiFailureKind.forbidden
+          ? showForbidden(context)
+          : showConnectionProblem(context);
+    }
   }
 }
