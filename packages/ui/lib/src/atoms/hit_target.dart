@@ -22,7 +22,10 @@ class UiHitTarget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // container: each tappable is its own node, so neighbouring controls do
+    // not merge into one button for screen readers.
     return Semantics(
+      container: true,
       button: true,
       enabled: onTap != null,
       selected: selected,

@@ -9,8 +9,10 @@ import 'package:api_client/src/auth/api_key_auth.dart';
 import 'package:api_client/src/auth/basic_auth.dart';
 import 'package:api_client/src/auth/bearer_auth.dart';
 import 'package:api_client/src/auth/oauth.dart';
+import 'package:api_client/src/api/accounts_api.dart';
 import 'package:api_client/src/api/auth_api.dart';
 import 'package:api_client/src/api/health_api.dart';
+import 'package:api_client/src/api/plans_api.dart';
 import 'package:api_client/src/api/users_api.dart';
 
 class ApiClient {
@@ -107,6 +109,12 @@ class ApiClient {
     }
   }
 
+  /// Get AccountsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AccountsApi getAccountsApi() {
+    return AccountsApi(dio, serializers);
+  }
+
   /// Get AuthApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   AuthApi getAuthApi() {
@@ -117,6 +125,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   HealthApi getHealthApi() {
     return HealthApi(dio, serializers);
+  }
+
+  /// Get PlansApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  PlansApi getPlansApi() {
+    return PlansApi(dio, serializers);
   }
 
   /// Get UsersApi instance, base route and serializer can be overridden by a given but be careful,
