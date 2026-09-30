@@ -128,6 +128,24 @@ abiertas (`ShellRoute` en `lib/app/router.dart`). El campo "Sobre" de 41 queda e
 que `add-envelopes` traiga el selector 36, y los contadores de movimientos quedan en 0 hasta
 `add-transactions`.
 
+## Planes compartidos
+
+Cambio `add-plan-sharing` (RRG-53). 21 Invitar miembro (desde 16, solo la titular: código, QR con
+`qr_flutter`, copiar, compartir con `share_plus`, generar otro, revocar), 30 Unirse a un plan (código
+con o sin guion) y 45 Unirse desde enlace. En 16 la titular cambia roles o quita miembros; el resto
+puede salir del plan.
+
+El enlace `https://sobres.app/unirse/<code>` abre 45 (intent filter en
+`android/app/src/main/AndroidManifest.xml`, `FlutterDeepLinkingEnabled` en iOS). Sin sesión, el
+router guarda el código (`PendingInvite`), pasa por 19 (o 18) y después abre 45. Para probarlo en
+un dispositivo:
+
+```bash
+adb shell am start -a android.intent.action.VIEW -d "https://sobres.app/unirse/K7M4QX"
+```
+
+El QR se lee con la cámara del teléfono (abre el enlace); la pestaña "Escanear QR" de 30 lo explica.
+
 ## Widgetbook
 
 ```bash

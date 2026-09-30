@@ -235,7 +235,11 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.plans,
-        builder: (context, state) => PlansPage(plans: plans, auth: auth),
+        builder: (context, state) => PlansPage(
+          plans: plans,
+          auth: auth,
+          sharing: dependencies.sharingRepository,
+        ),
       ),
       GoRoute(
         path: AppRoutes.joinPlan,

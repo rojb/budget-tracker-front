@@ -3,17 +3,27 @@ import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
+import '../../core/api/api_failure.dart';
 import '../auth/auth_controller.dart';
+import '../common/feedback.dart';
+import '../sharing/member_role_sheet.dart';
+import '../sharing/sharing_repository.dart';
 import 'plans_controller.dart';
 import 'plans_repository.dart';
 
 /// Screen 16 Planes y miembros: the user's plans (tap to make one active) and
 /// the members of the active plan. Invitations arrive with add-plan-sharing.
 class PlansPage extends StatelessWidget {
-  const PlansPage({required this.plans, required this.auth, super.key});
+  const PlansPage({
+    required this.plans,
+    required this.auth,
+    required this.sharing,
+    super.key,
+  });
 
   final PlansController plans;
   final AuthController auth;
+  final SharingRepository sharing;
 
   static const Map<Currency, String> _currencyNames = {
     Currency.ars: r'pesos ($)',
@@ -32,6 +42,45 @@ class PlansPage extends StatelessWidget {
         ? 'Solo vos'
         : 'Compartido · ${plan.members.length} miembros';
     return '$who · ${_currencyNames[plan.currency]}';
+  }
+
+  Future<void> _manage(
+    BuildContext context,
+    PlanData plan,
+    PlanMemberData member,
+  ) async {
+    final action = await showMemberRoleSheet(context, member);
+    if (action == null || !context.mounted) return;
+    try {
+      switch (action) {
+        case ChangeRole(:final role):
+          await sharing.updateMember(plan.id, member.userId, role);
+        case RemoveMember():
+          await sharing.removeMember(plan.id, member.userId);
+      }
+      await plans.load();
+    } on ApiFailure catch (failure) {
+      if (!context.mounted) return;
+      failure.kind == ApiFailureKind.forbidden
+          ? showForbidden(context)
+          : showConnectionProblem(context);
+    }
+  }
+
+  Future<void> _leave(BuildContext context, PlanData plan) async {
+    final confirmed = await confirmSheet(
+      context,
+      title: '¿Salir de ${plan.name}?',
+      detail: 'Dejás de ver el plan. Para volver necesitás un código nuevo.',
+      action: 'Salir',
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await sharing.removeMember(plan.id, auth.user!.id);
+      await plans.load();
+    } on ApiFailure {
+      if (context.mounted) showConnectionProblem(context);
+    }
   }
 
   Future<void> _open(BuildContext context, PlanData plan) async {
@@ -117,7 +166,21 @@ class PlansPage extends StatelessWidget {
                             avatarColor: i == 0
                                 ? UiColors.lavender
                                 : UiColors.chartreuse,
+                            onRoleTap:
+                                active.myRole == PlanRole.owner &&
+                                    member.role != PlanRole.owner
+                                ? () => _manage(context, active, member)
+                                : null,
                           ),
+                        if (active.myRole != PlanRole.owner) ...[
+                          const SizedBox(height: 14),
+                          UiButton(
+                            label: 'Salir del plan',
+                            icon: UiIcons.logOut,
+                            variant: UiButtonVariant.secondary,
+                            onPressed: () => _leave(context, active),
+                          ),
+                        ],
                         if (active.myRole == PlanRole.owner) ...[
                           const SizedBox(height: 14),
                           UiButton(
