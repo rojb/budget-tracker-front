@@ -12,6 +12,7 @@ import '../features/plans/empty_plan_page.dart';
 import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
+import '../features/plans/plans_page.dart';
 import '../features/shell/account_menu_sheet.dart';
 import '../features/shell/app_shell.dart';
 import 'dependencies.dart';
@@ -142,11 +143,7 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.plans,
-        builder: (context, state) => _placeholder(
-          context,
-          '16 Planes y miembros',
-          'Llega en la tarea 3.8 de add-plans-and-accounts.',
-        ),
+        builder: (context, state) => PlansPage(plans: plans, auth: auth),
       ),
       GoRoute(
         path: AppRoutes.joinPlan,
