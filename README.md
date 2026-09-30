@@ -61,7 +61,14 @@ cd packages/api_client && dart pub get && dart run build_runner build --delete-c
 ```
 
 Es lo mismo que `npx @openapitools/openapi-generator-cli generate -g dart-dio -i ../2do/openapi.yaml
--o packages/api_client`. Ajustá `inputSpec` en `openapitools.json` si tu checkout del repo de specs
+-o packages/api_client`. Si tu checkout de specs se llama `budget-tracker-specs`, pasá el contrato
+con `-i` sin tocar el pin de `openapitools.json`:
+
+```bash
+npx @openapitools/openapi-generator-cli generate -g dart-dio \
+  -i ../budget-tracker-specs/openapi.yaml -o packages/api_client \
+  --additional-properties=pubName=api_client,pubAuthor=budget-tracker
+``` Ajustá `inputSpec` en `openapitools.json` si tu checkout del repo de specs
 tiene otro nombre. Los `*.g.dart` generados se commitean, y `test/` y `doc/` no se generan (ver
 `packages/api_client/README.md`).
 
@@ -92,6 +99,25 @@ flutter run --dart-define=API_BASE_URL=http://localhost:4010
 
 Prism no valida el JWT ni las credenciales: sirve para los caminos felices (los 401 solo se ven con
 el backend real).
+
+## Planes, cuentas y pestañas
+
+Cambio `add-plans-and-accounts` (RRG-46).
+
+- **Pestañas** (`lib/features/shell/app_shell.dart`): `StatefulShellRoute` con Inicio (01, por ahora
+  solo el avatar que abre 39 Menú de cuenta), Plan (06 Plan vacío mientras no haya sobres), "+"
+  (07, placeholder) y Movimientos (10, placeholder) y Cuentas (13 → 14). El `UiNavCluster` va fijo
+  fuera del contenido que scrollea.
+- **Plan activo** (`PlansController`, app-scoped): carga `GET /plans` al iniciar sesión, recuerda el
+  plan elegido en `flutter_secure_storage` y se limpia al cerrar sesión. Sin planes, el router
+  manda a `/start` (crear 20 o unirse 30). Todo monto se formatea con la moneda del plan activo
+  (`formatMoney(minor, plans.currency)`).
+- **Cuentas** (`AccountsController`, app-scoped): cuentas activas y archivadas del plan activo;
+  pantallas 13, 14, 28/42 (mismo formulario), 48 (hoja de confirmación), 51 y el selector 37
+  (`showAccountPicker`, para movimientos y transferencias).
+- Errores de API mapeados una sola vez en `lib/core/api/api_failure.dart` (400 por campo, 403, 404,
+  409, red).
+- Pantallas de cambios futuros (07, 10, 15, 21, 29, 30, 31, 32, 35) son rutas placeholder.
 
 ## Widgetbook
 
