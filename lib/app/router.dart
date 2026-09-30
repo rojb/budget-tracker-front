@@ -13,9 +13,11 @@ import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
+import '../features/envelopes/assign_money_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
+import '../features/envelopes/template_page.dart';
 import '../features/home/home_page.dart';
 import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
@@ -304,15 +306,18 @@ GoRouter createRouter(Dependencies dependencies) {
         builder: (context, state) =>
             GroupsPage(envelopes: dependencies.envelopesController),
       ),
-      for (final (path, title, change) in const [
-        (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
-        (AppRoutes.assignMoney, '46 Asigná tu dinero', 'add-envelopes'),
-      ])
-        GoRoute(
-          path: path,
-          builder: (context, state) =>
-              _placeholder(context, title, 'Llega con $change.'),
+      GoRoute(
+        path: AppRoutes.template,
+        builder: (context, state) =>
+            TemplatePage(envelopes: dependencies.envelopesController),
+      ),
+      GoRoute(
+        path: AppRoutes.assignMoney,
+        builder: (context, state) => AssignMoneyPage(
+          plans: plans,
+          envelopes: dependencies.envelopesController,
         ),
+      ),
       GoRoute(
         path: '/envelopes/:envelopeId',
         builder: (context, state) => _placeholder(
