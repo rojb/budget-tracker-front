@@ -106,7 +106,7 @@ Cambio `add-plans-and-accounts` (RRG-46).
 
 - **Pestañas** (`lib/features/shell/app_shell.dart`): `StatefulShellRoute` con Inicio (01, por ahora
   solo el avatar que abre 39 Menú de cuenta), Plan (06 Plan vacío mientras no haya sobres), "+"
-  (07, placeholder) y Movimientos (10, placeholder) y Cuentas (13 → 14). El `UiNavCluster` va fijo
+  (07 Nuevo movimiento) y Movimientos (10) y Cuentas (13 → 14). El `UiNavCluster` va fijo
   fuera del contenido que scrollea.
 - **Plan activo** (`PlansController`, app-scoped): carga `GET /plans` al iniciar sesión, recuerda el
   plan elegido en `flutter_secure_storage` y se limpia al cerrar sesión. Sin planes, el router
@@ -117,7 +117,7 @@ Cambio `add-plans-and-accounts` (RRG-46).
   (`showAccountPicker`, para movimientos y transferencias).
 - Errores de API mapeados una sola vez en `lib/core/api/api_failure.dart` (400 por campo, 403, 404,
   409, red).
-- Pantallas de cambios futuros (por ejemplo 07, 10 y 22) son rutas placeholder.
+- Pantallas de cambios futuros (por ejemplo 22) son rutas placeholder.
 
 ## Beneficiarios
 
@@ -125,7 +125,8 @@ Cambio `add-payees` (RRG-48). Desde 39 Menú de cuenta → "Beneficiarios": 15 (
 el lugar), 41 (alta y edición) y 47 (hoja de confirmación). La baja es lógica: los movimientos
 pasados conservan el beneficiario (FR-05). Un `PayeesController` vive mientras 15 → 41 están
 abiertas (`ShellRoute` en `lib/app/router.dart`). El campo "Sobre" de 41 queda en "Sin sobre" hasta
-que `add-transactions` traiga el selector 36 (el back ya valida el sobre sugerido), y los contadores de movimientos quedan en 0 hasta
+que un cambio lo conecte al selector 36 (`showEnvelopePicker`, que ya trae `add-transactions`; el
+back valida el sobre sugerido). Los contadores de movimientos vienen de la API desde
 `add-transactions`.
 
 ## Planes compartidos
@@ -152,7 +153,8 @@ Cambio `add-account-transfers` (RRG-55). Desde 14 Detalle de cuenta → "Transfe
 flechas) se abre 29 Transferencia: origen y destino con el selector 37 (nunca ofrece la otra
 punta), monto con el teclado, fecha y hora con la hoja 38 (`lib/features/common/date_time_sheet.dart`,
 reutilizable por `add-transactions`). 14 lista las transferencias agrupadas por día con `UiTxRow`;
-tocar una permite eliminarla. Una transferencia no usa sobres.
+tocar una permite eliminarla. Una transferencia no usa sobres. Con `add-transactions`, 14 junta
+además los movimientos de la cuenta (`features/common/day_groups.dart`).
 
 ## Sobres y grupos
 
@@ -173,7 +175,29 @@ Cambio `add-envelopes` (RRG-47). `lib/features/envelopes/`:
   `add-envelope-goals`.
 - **Entrada provisoria a 43:** una pulsación larga sobre un sobre de 02 (la entrada real es la
   papelera de 23, de `add-envelope-goals`); tocar el sobre abre el placeholder de 22.
-- Sin gasto derivado hasta `add-transactions`: las filas muestran "$ 0 de $ asignado".
+- El gasto de cada fila viene de la API (`spentMinor`), así que "<gastado> de <asignado>" refleja los
+  movimientos.
+
+## Movimientos
+
+Cambio `add-transactions` (RRG-49). `lib/features/transactions/`:
+
+- **Pantallas:** 07 Nuevo movimiento y 09 Registrar ingreso (`NewTransactionPage`: una sola
+  página, el `UiToggle` cambia de modo y conserva lo tipeado), 08 Dividir pago (`SplitPage`, ícono
+  de dividir del `SaveBar`), 10 Movimientos (pestaña), y las hojas 36 Elegir sobre
+  (`showEnvelopePicker`) y 26 Elegir beneficiario (`showPayeePicker`); 37 y 38 se reutilizan tal
+  cual (`showAccountPicker`, `showDateTimeSheet`).
+- **Estado:** `TransactionsController` (app-scoped) guarda las páginas cargadas de 10 (más al
+  acercarse al final del scroll) y `TransactionDraft` el movimiento que se está armando (07, 09 y
+  08 lo comparten). Al guardar se recargan movimientos, sobres y cuentas, porque las cifras las
+  deriva la API.
+- **Calculadora (FR-18):** `AmountExpression` (Dart puro, sin floats) acepta `+ − × ÷` con
+  precedencia, muestra el resultado en la cápsula y la expresión debajo, y redondea al confirmar a
+  la unidad menor de la moneda. El teclado es `UiCalculatorPad` (`packages/ui`).
+- **Beneficiarios:** escribir un nombre nuevo en 26 lo manda como `payeeName` y la API lo crea al
+  guardar; elegir uno con sobre sugerido completa "Sobre" (salvo que ya se haya elegido a mano).
+- **Límite con `add-transaction-editing-and-filters`:** 10 no tiene búsqueda, filtros ni abre un
+  movimiento (11 y 12); 14 tampoco los abre. Las transferencias no aparecen en 10, solo en 14.
 
 ## Widgetbook
 

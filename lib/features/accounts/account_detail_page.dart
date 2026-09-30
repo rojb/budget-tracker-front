@@ -5,24 +5,31 @@ import 'package:ui/ui.dart';
 import '../../app/routes.dart';
 import '../../core/api/api_failure.dart';
 import '../common/confirm_sheet.dart';
+import '../common/day_groups.dart';
 import '../common/dates.dart';
 import '../common/feedback.dart';
 import '../common/months.dart';
+import '../envelopes/envelopes_controller.dart';
 import '../plans/plans_controller.dart';
+import '../transactions/transaction_rows.dart';
+import '../transactions/transactions_controller.dart';
+import '../transactions/transactions_repository.dart';
 import 'accounts_controller.dart';
 import 'accounts_page.dart';
 import 'accounts_repository.dart';
 import 'transfers_repository.dart';
 
 /// Screen 14 Detalle de cuenta: balance, what entered and left this month and
-/// the account's movements: today its transfers, grouped by day (transactions
-/// join them with add-transactions).
+/// the account's movements, its transactions and its transfers together,
+/// grouped by day.
 class AccountDetailPage extends StatefulWidget {
   const AccountDetailPage({
     required this.accountId,
     required this.accounts,
     required this.plans,
     required this.transfers,
+    required this.transactions,
+    required this.envelopes,
     super.key,
   });
 
@@ -30,6 +37,8 @@ class AccountDetailPage extends StatefulWidget {
   final AccountsController accounts;
   final PlansController plans;
   final TransfersRepository transfers;
+  final TransactionsController transactions;
+  final EnvelopesController envelopes;
 
   @override
   State<AccountDetailPage> createState() => _AccountDetailPageState();
@@ -37,7 +46,7 @@ class AccountDetailPage extends StatefulWidget {
 
 class _AccountDetailPageState extends State<AccountDetailPage> {
   AccountDetailData? _detail;
-  List<TransferData> _transfers = const [];
+  List<_Movement> _movements = const [];
   bool _failed = false;
 
   @override
@@ -61,11 +70,18 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           widget.plans.activePlan!.id,
           widget.accountId,
         ),
+        widget.transactions.forAccount(widget.accountId),
       ]);
+      final movements = <_Movement>[
+        for (final transfer in results[1] as List<TransferData>)
+          _Movement(transfer.occurredAt, transfer: transfer),
+        for (final transaction in results[2] as List<TransactionData>)
+          _Movement(transaction.occurredAt, transaction: transaction),
+      ]..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
       if (!mounted) return;
       setState(() {
         _detail = results[0] as AccountDetailData;
-        _transfers = results[1] as List<TransferData>;
+        _movements = movements;
       });
     } on ApiFailure {
       if (mounted) setState(() => _failed = true);
@@ -141,7 +157,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
             secondaryIsAmount: true,
           ),
           const SizedBox(height: 22),
-          if (_transfers.isEmpty)
+          if (_movements.isEmpty)
             UiCard(
               padding: const EdgeInsets.all(22),
               child: Text(
@@ -150,49 +166,37 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               ),
             )
           else
-            ..._movements(context, currency),
+            ..._movementGroups(context, currency),
         ],
       ],
     );
   }
 
   // Transfers grouped by local day, newest first (PRD-ux-spec.md 6.1 rule 5).
-  List<Widget> _movements(BuildContext context, Currency currency) {
-    final widgets = <Widget>[];
-    String? group;
-    List<Widget> rows = [];
-    void flush() {
-      if (group == null) return;
-      widgets
-        ..add(
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-            child: Text(group, style: UiTypography.custom(19)),
-          ),
-        )
-        ..add(
-          UiCard(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Column(children: rows),
-          ),
-        )
-        ..add(const SizedBox(height: 8));
-    }
-
-    for (final transfer in _transfers) {
-      final label = dayGroupLabel(transfer.occurredAt);
-      if (label != group) {
-        flush();
-        group = label;
-        rows = [];
-      }
-      final outgoing = transfer.fromAccountId == widget.accountId;
-      final other = widget.accounts.byId(
-        outgoing ? transfer.toAccountId : transfer.fromAccountId,
-      );
-      final amount = formatMoney(transfer.amountMinor, currency);
-      rows.add(
-        UiTxRow(
+  // Transactions and transfers together, newest first, grouped by day
+  // (PRD-ux-spec.md 6.1 rule 5). Opening a transaction belongs to
+  // add-transaction-editing-and-filters; a transfer still offers its deletion.
+  List<Widget> _movementGroups(BuildContext context, Currency currency) {
+    return buildDayGroups<_Movement>(
+      _movements,
+      occurredAt: (movement) => movement.occurredAt,
+      rowBuilder: (movement) {
+        final transaction = movement.transaction;
+        if (transaction != null) {
+          return transactionRow(
+            transaction,
+            currency: currency,
+            envelopes: widget.envelopes,
+            showAccount: false,
+          );
+        }
+        final transfer = movement.transfer!;
+        final outgoing = transfer.fromAccountId == widget.accountId;
+        final other = widget.accounts.byId(
+          outgoing ? transfer.toAccountId : transfer.fromAccountId,
+        );
+        final amount = formatMoney(transfer.amountMinor, currency);
+        return UiTxRow(
           icon: UiIcons.arrowLeftRight,
           title: outgoing
               ? 'Transferencia a ${other?.name ?? 'otra cuenta'}'
@@ -201,11 +205,9 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           amount: outgoing ? '−$amount' : amount,
           variant: outgoing ? UiTxRowVariant.expense : UiTxRowVariant.income,
           onTap: () => _delete(context, transfer),
-        ),
-      );
-    }
-    flush();
-    return widgets;
+        );
+      },
+    );
   }
 
   Future<void> _delete(BuildContext context, TransferData transfer) async {
@@ -227,4 +229,13 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           : showConnectionProblem(context);
     }
   }
+}
+
+/// A transaction or a transfer of the account, ordered together in 14.
+class _Movement {
+  const _Movement(this.occurredAt, {this.transfer, this.transaction});
+
+  final DateTime occurredAt;
+  final TransferData? transfer;
+  final TransactionData? transaction;
 }
