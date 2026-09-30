@@ -18,6 +18,7 @@ export 'src/molecules/currency_selector.dart';
 export 'src/molecules/field_row.dart';
 export 'src/molecules/hero_card.dart';
 export 'src/molecules/member_row.dart';
+export 'src/molecules/menu_row.dart';
 export 'src/molecules/month_switch.dart';
 export 'src/molecules/option_card.dart';
 export 'src/molecules/plan_row.dart';

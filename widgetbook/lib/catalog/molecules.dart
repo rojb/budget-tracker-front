@@ -236,6 +236,51 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'MenuRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'default and destructive (39)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiCard(
+                      child: Column(
+                        children: [
+                          UiMenuRow(
+                            icon: UiIcons.layers,
+                            label: 'Planes y miembros',
+                            onTap: () {},
+                          ),
+                          UiMenuRow(
+                            icon: UiIcons.contact,
+                            label: 'Beneficiarios',
+                            onTap: () {},
+                          ),
+                          UiMenuRow(
+                            icon: UiIcons.keyRound,
+                            label: 'Unirme con código',
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    UiMenuRow(
+                      icon: UiIcons.logOut,
+                      label: 'Cerrar sesión',
+                      destructive: true,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'CurrencySelector',
         useCases: [
           WidgetbookUseCase(
