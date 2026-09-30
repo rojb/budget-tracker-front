@@ -10,6 +10,8 @@ void showSaved(BuildContext context, String title, {String detail = ''}) {
     title: title,
     detail: detail,
     duration: const Duration(milliseconds: 1500),
+    // Saves return to tab screens: float over the tab bar (PRD-ux-spec.md §8).
+    bottomOffset: 100,
   );
 }
 

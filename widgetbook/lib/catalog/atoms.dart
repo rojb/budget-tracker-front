@@ -316,6 +316,34 @@ WidgetbookFolder atomsFolder() {
           ),
         ],
       ),
+      WidgetbookComponent(
+        name: 'Stepper',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'hour and minute (38)',
+            builder: (context) => stage(
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  UiStepper(
+                    value: '14',
+                    label: 'Hora',
+                    onIncrement: () {},
+                    onDecrement: () {},
+                  ),
+                  const SizedBox(width: 12),
+                  UiStepper(
+                    value: '32',
+                    label: 'Minutos',
+                    onIncrement: () {},
+                    onDecrement: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }

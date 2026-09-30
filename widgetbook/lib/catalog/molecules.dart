@@ -203,6 +203,42 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'TxRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'expense and income (14)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiTxRow(
+                        icon: UiIcons.arrowLeftRight,
+                        title: 'Transferencia a Mercado Pago',
+                        subtitle: 'Sin sobre · 15:04',
+                        amount: '−${formatMoney(20000, Currency.ars)}',
+                        onTap: () {},
+                      ),
+                      UiTxRow(
+                        icon: UiIcons.arrowLeftRight,
+                        title: 'Transferencia de Banco Nación',
+                        subtitle: 'Sin sobre · 15:04',
+                        amount: formatMoney(20000, Currency.ars),
+                        variant: UiTxRowVariant.income,
+                        caption: 'Entró',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'PayeeRow',
         useCases: [
           WidgetbookUseCase(

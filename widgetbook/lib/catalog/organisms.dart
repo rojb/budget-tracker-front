@@ -156,6 +156,28 @@ WidgetbookFolder organismsFolder() {
           ),
         ],
       ),
+      WidgetbookComponent(
+        name: 'CalendarMonth',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'september 2026, 29 selected (38)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCalendarMonth(
+                  month: DateTime(2026, 9),
+                  monthLabel: 'Septiembre 2026',
+                  selected: DateTime(2026, 9, 29),
+                  today: DateTime(2026, 9, 29),
+                  onDaySelected: (_) {},
+                  onPrevious: () {},
+                  onNext: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }

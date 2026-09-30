@@ -6,6 +6,8 @@ import '../features/accounts/account_detail_page.dart';
 import '../features/accounts/account_form_controller.dart';
 import '../features/accounts/account_form_page.dart';
 import '../features/accounts/archived_accounts_page.dart';
+import '../features/accounts/transfer_page.dart';
+import '../features/accounts/transfers_repository.dart';
 import '../features/accounts/accounts_page.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/login_page.dart';
@@ -188,8 +190,21 @@ GoRouter createRouter(Dependencies dependencies) {
                       accountId: state.pathParameters['accountId']!,
                       accounts: dependencies.accountsController,
                       plans: plans,
+                      transfers: TransfersRepository(dependencies.apiGateway),
                     ),
                     routes: [
+                      GoRoute(
+                        path: 'transfer',
+                        parentNavigatorKey: rootKey,
+                        builder: (context, state) => TransferPage(
+                          fromAccountId: state.pathParameters['accountId']!,
+                          accounts: dependencies.accountsController,
+                          plans: plans,
+                          repository: TransfersRepository(
+                            dependencies.apiGateway,
+                          ),
+                        ),
+                      ),
                       GoRoute(
                         path: 'edit',
                         parentNavigatorKey: rootKey,
@@ -278,7 +293,6 @@ GoRouter createRouter(Dependencies dependencies) {
         (AppRoutes.groups, '32 Grupos', 'add-envelopes'),
         (AppRoutes.template, '35 Plantilla sugerida', 'add-envelopes'),
         (AppRoutes.newEnvelope, '31 Nuevo sobre', 'add-envelopes'),
-        (AppRoutes.transfer, '29 Transferencia', 'add-account-transfers'),
       ])
         GoRoute(
           path: path,

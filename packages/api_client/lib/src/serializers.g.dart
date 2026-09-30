@@ -16,6 +16,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(CreateInvitationRequest.serializer)
       ..add(CreatePayeeRequest.serializer)
       ..add(CreatePlanRequest.serializer)
+      ..add(CreateTransferRequest.serializer)
       ..add(Currency.serializer)
       ..add(CurrencyCode.serializer)
       ..add(CurrencyMinorUnitsEnum.serializer)
@@ -35,6 +36,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(PlanMember.serializer)
       ..add(PlanRole.serializer)
       ..add(RegisterRequest.serializer)
+      ..add(Transfer.serializer)
+      ..add(TransferPage.serializer)
       ..add(UpdateAccountRequest.serializer)
       ..add(UpdateMemberRequest.serializer)
       ..add(UpdatePayeeRequest.serializer)
@@ -51,7 +54,10 @@ Serializers _$serializers = (Serializers().toBuilder()
           () => ListBuilder<PlanMember>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
-          () => ListBuilder<String>()))
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Transfer)]),
+          () => ListBuilder<Transfer>()))
     .build();
 
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint
