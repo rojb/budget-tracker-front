@@ -9,6 +9,144 @@ WidgetbookFolder moleculesFolder() {
     name: 'molecules',
     children: [
       WidgetbookComponent(
+        name: 'EnvelopeRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'variants (02)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiEnvelopeRow(
+                      variant: UiEnvelopeRowVariant.overspent,
+                      icon: UiIcons.bus,
+                      name: 'Transporte',
+                      subtitle: r'$ 51.200 de $ 45.000',
+                      amount: formatMoney(-6200, Currency.ars),
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiEnvelopeRow(
+                      icon: UiIcons.cart,
+                      name: 'Supermercado',
+                      subtitle: r'$ 132.450 de $ 180.000',
+                      amount: formatMoney(47550, Currency.ars),
+                      progress: 0.74,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiEnvelopeRow(
+                      variant: UiEnvelopeRowVariant.underfunded,
+                      icon: UiIcons.pill,
+                      name: 'Farmacia',
+                      subtitle: r'$ 0 de $ 30.000',
+                      amount: formatMoney(12000, Currency.ars),
+                      caption: r'Falta $ 18.000',
+                      progress: 0.4,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    UiEnvelopeRow(
+                      variant: UiEnvelopeRowVariant.empty,
+                      icon: UiIcons.wifi,
+                      name: 'Internet y celular',
+                      subtitle: r'$ 0 de $ 0',
+                      amount: formatMoney(0, Currency.ars),
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'summary without amounts (43)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 380,
+                child: UiCard(
+                  child: UiEnvelopeRow(
+                    card: false,
+                    icon: UiIcons.cart,
+                    name: 'Supermercado',
+                    subtitle: r'Día a día · $ 47.550 disponible',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'EnvelopeTickRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'ticked and unticked (35)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    const UiSectionLabel('Día a día'),
+                    UiEnvelopeTickRow(
+                      icon: UiIcons.bus,
+                      name: 'Transporte',
+                      ticked: true,
+                      onTap: () {},
+                    ),
+                    UiEnvelopeTickRow(
+                      icon: UiIcons.cart,
+                      name: 'Supermercado',
+                      ticked: true,
+                      onTap: () {},
+                    ),
+                    UiEnvelopeTickRow(
+                      icon: UiIcons.pill,
+                      name: 'Farmacia',
+                      ticked: false,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'EnvelopeAmountRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'assigned and empty (46)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    const UiSectionLabel('Obligaciones'),
+                    UiEnvelopeAmountRow(
+                      icon: UiIcons.house,
+                      name: 'Alquiler',
+                      amount: formatMoney(280000, Currency.ars),
+                      assigned: true,
+                      onTap: () {},
+                    ),
+                    UiEnvelopeAmountRow(
+                      icon: UiIcons.settings,
+                      name: 'Servicios',
+                      amount: formatMoney(0, Currency.ars),
+                      assigned: false,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'GroupHeader',
         useCases: [
           WidgetbookUseCase(
