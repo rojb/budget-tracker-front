@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 enum Currency {
   ars(code: 'ARS', symbol: r'$', minorUnits: 0),
   usd(code: 'USD', symbol: r'US$', minorUnits: 2),
-  eur(code: 'EUR', symbol: '€', minorUnits: 2);
+  eur(code: 'EUR', symbol: '€', minorUnits: 2),
+  bob(code: 'BOB', symbol: 'Bs.', minorUnits: 2);
 
   const Currency({
     required this.code,
@@ -24,7 +25,8 @@ final NumberFormat _grouping = NumberFormat.decimalPattern('es_AR');
 ///
 /// `.` groups thousands, `,` separates decimals, decimals follow the
 /// currency's minor units, and a negative amount gets a `−` (U+2212) before
-/// the symbol: `$ 48.200`, `US$ 1.250,50`, `€ 980,00`, `−US$ 12,50`.
+/// the symbol: `$ 48.200`, `US$ 1.250,50`, `€ 980,00`, `Bs. 1.250,50`,
+/// `−US$ 12,50`, `−Bs. 12,50`.
 /// Integer arithmetic only: the amount never goes through a double.
 String formatMoney(int minor, Currency currency) {
   final negative = minor < 0;
