@@ -61,6 +61,10 @@ class _AssignPageState extends State<AssignPage> {
   /// False while the amount follows the chosen envelope's need.
   bool _amountEdited = false;
   bool _typing = false;
+
+  /// True until the first key in 53: typing writes a new amount instead of
+  /// appending to the suggested one.
+  bool _freshTyping = false;
   bool _saving = false;
   String? _error;
 
@@ -156,12 +160,15 @@ class _AssignPageState extends State<AssignPage> {
   }
 
   void _setQuick(int minor) => setState(() {
+    _freshTyping = false;
     _amountEdited = true;
     _error = null;
     _amount.setMinor(minor, _units);
   });
 
   void _onKey(String key) => setState(() {
+    if (_freshTyping) _amount.clear();
+    _freshTyping = false;
     _amountEdited = true;
     _error = null;
     if (key == ',') {
@@ -173,7 +180,13 @@ class _AssignPageState extends State<AssignPage> {
     }
   });
 
+  void _setTyping(bool typing) => setState(() {
+    _freshTyping = typing && !_typing;
+    _typing = typing;
+  });
+
   void _onDelete() => setState(() {
+    _freshTyping = false;
     _amountEdited = true;
     _amount.delete();
   });
@@ -266,7 +279,7 @@ class _AssignPageState extends State<AssignPage> {
             button: true,
             label: 'Monto, mostrar calculadora',
             child: GestureDetector(
-              onTap: () => setState(() => _typing = true),
+              onTap: () => _setTyping(true),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: UiAmountCapsule(
@@ -322,11 +335,7 @@ class _AssignPageState extends State<AssignPage> {
         children: [
           Text('Elegí un sobre', style: UiTypography.custom(20)),
           const Spacer(),
-          if (_lines.length > 1)
-            UiPageDots(
-              count: _lines.length,
-              index: math.max(0, _indexOf(_envelopeId)),
-            ),
+          if (_lines.length > 1) _dots(),
         ],
       ),
       const SizedBox(height: 16),
@@ -364,6 +373,17 @@ class _AssignPageState extends State<AssignPage> {
         ),
       ),
     ];
+  }
+
+  /// At most five page dots (as in the render): the position of the chosen
+  /// envelope is scaled onto them.
+  Widget _dots() {
+    final count = math.min(_lines.length, 5);
+    final index = math.max(0, _indexOf(_envelopeId));
+    return UiPageDots(
+      count: count,
+      index: (index * (count - 1) / (_lines.length - 1)).round(),
+    );
   }
 
   /// Share of the envelope's need the amount covers ("100%"); none without a
@@ -427,7 +447,7 @@ class _AssignPageState extends State<AssignPage> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                 children: [
-                  Text('Asignar\ndinero', style: UiTypography.custom(46)),
+                  Text('Asignar\ndinero', style: UiTypography.custom(42)),
                   const SizedBox(height: 22),
                   _capsule(),
                   _quickChips(line),
@@ -456,7 +476,7 @@ class _AssignPageState extends State<AssignPage> {
                 enabled: !_saving && line != null,
                 leadingIcon: UiIcons.calculator,
                 onConfirm: _confirm,
-                onCalculatorPressed: () => setState(() => _typing = !_typing),
+                onCalculatorPressed: () => _setTyping(!_typing),
               ),
             ),
           ],
