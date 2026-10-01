@@ -49,6 +49,7 @@ export 'src/molecules/split_row.dart';
 export 'src/molecules/text_field.dart';
 export 'src/molecules/tx_row.dart';
 export 'src/molecules/toast.dart';
+export 'src/organisms/bar_chart.dart';
 export 'src/organisms/calculator_pad.dart';
 export 'src/organisms/calendar_month.dart';
 export 'src/organisms/joined_card.dart';
