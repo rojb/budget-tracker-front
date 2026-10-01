@@ -10,6 +10,7 @@ class TransferData {
     required this.toAccountId,
     required this.amountMinor,
     required this.occurredAt,
+    required this.createdAt,
   });
 
   final String id;
@@ -17,6 +18,9 @@ class TransferData {
   final String toAccountId;
   final int amountMinor;
   final DateTime occurredAt;
+
+  /// When it was registered: 14 orders and groups its movements by it.
+  final DateTime createdAt;
 }
 
 /// Wraps the generated transfer operations; every error surfaces as [ApiFailure].
@@ -68,5 +72,6 @@ class TransfersRepository {
     toAccountId: transfer.toAccountId,
     amountMinor: transfer.amountMinor,
     occurredAt: transfer.occurredAt,
+    createdAt: transfer.createdAt,
   );
 }

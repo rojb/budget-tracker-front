@@ -26,6 +26,7 @@ class TransactionData {
     required this.accountName,
     required this.amountMinor,
     required this.occurredAt,
+    required this.createdAt,
     required this.splits,
     this.payeeId,
     this.payeeName,
@@ -40,6 +41,9 @@ class TransactionData {
   /// Positive; [isExpense] gives the sign.
   final int amountMinor;
   final DateTime occurredAt;
+
+  /// When it was registered: the lists are ordered and grouped by it.
+  final DateTime createdAt;
   final String? payeeId;
   final String? payeeName;
   final String? description;
@@ -53,6 +57,7 @@ class TransactionData {
         accountName: transaction.accountName,
         amountMinor: transaction.amountMinor,
         occurredAt: transaction.occurredAt,
+        createdAt: transaction.createdAt,
         payeeId: transaction.payeeId,
         payeeName: transaction.payeeName,
         description: transaction.description,

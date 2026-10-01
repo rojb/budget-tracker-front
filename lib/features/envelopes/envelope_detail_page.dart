@@ -218,7 +218,7 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
       else
         ...buildDayGroups(
           detail.activity,
-          occurredAt: (item) => item.occurredAt,
+          registeredAt: (item) => item.createdAt,
           rowBuilder: (item) => transactionRow(
             item,
             currency: currency,

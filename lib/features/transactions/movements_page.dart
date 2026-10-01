@@ -310,7 +310,7 @@ class _MovementsPageState extends State<MovementsPage> {
     return [
       ...buildDayGroups(
         transactions.items,
-        occurredAt: (item) => item.occurredAt,
+        registeredAt: (item) => item.createdAt,
         rowBuilder: (item) => transactionRow(
           item,
           currency: currency,

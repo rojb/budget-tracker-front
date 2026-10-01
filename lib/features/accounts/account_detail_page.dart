@@ -75,10 +75,10 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
       ]);
       final movements = <_Movement>[
         for (final transfer in results[1] as List<TransferData>)
-          _Movement(transfer.occurredAt, transfer: transfer),
+          _Movement(transfer.createdAt, transfer: transfer),
         for (final transaction in results[2] as List<TransactionData>)
-          _Movement(transaction.occurredAt, transaction: transaction),
-      ]..sort((a, b) => b.occurredAt.compareTo(a.occurredAt));
+          _Movement(transaction.createdAt, transaction: transaction),
+      ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
       if (!mounted) return;
       setState(() {
         _detail = results[0] as AccountDetailData;
@@ -180,7 +180,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
   List<Widget> _movementGroups(BuildContext context, Currency currency) {
     return buildDayGroups<_Movement>(
       _movements,
-      occurredAt: (movement) => movement.occurredAt,
+      registeredAt: (movement) => movement.createdAt,
       rowBuilder: (movement) {
         final transaction = movement.transaction;
         if (transaction != null) {
@@ -210,7 +210,8 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           title: outgoing
               ? 'Transferencia a ${other?.name ?? 'otra cuenta'}'
               : 'Transferencia de ${other?.name ?? 'otra cuenta'}',
-          subtitle: 'Sin sobre · ${timeLabel(transfer.occurredAt)}',
+          subtitle:
+              'Sin sobre · ${movementTimeLabel(transfer.occurredAt, transfer.createdAt)}',
           amount: outgoing ? '−$amount' : amount,
           variant: outgoing ? UiTxRowVariant.expense : UiTxRowVariant.income,
           onTap: () => _delete(context, transfer),
@@ -242,9 +243,9 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
 
 /// A transaction or a transfer of the account, ordered together in 14.
 class _Movement {
-  const _Movement(this.occurredAt, {this.transfer, this.transaction});
+  const _Movement(this.createdAt, {this.transfer, this.transaction});
 
-  final DateTime occurredAt;
+  final DateTime createdAt;
   final TransferData? transfer;
   final TransactionData? transaction;
 }
