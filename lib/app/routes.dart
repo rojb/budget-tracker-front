@@ -8,6 +8,7 @@ abstract final class AppRoutes {
 
   // Tabs.
   static const home = '/home'; // 01 Inicio
+  static const reports = '/home/reports'; // 17 Reportes
   static const plan =
       '/plan'; // 06 Plan vacío, or 02 Plan del mes with envelopes
   static const transactions = '/transactions'; // 10 Movimientos

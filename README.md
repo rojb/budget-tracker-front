@@ -281,6 +281,21 @@ Cambio `add-monthly-assignment` (RRG-51). `lib/features/plan/`:
   "Empezar <mes>", que confirma el cierre (`POST .../close`) y muestra el toast "Mes de <mes>
   abierto". La cruz lo deja pendiente.
 
+## Reportes
+
+Cambio `add-reports` (RRG-54). `lib/features/reports/`: **17 Reportes** (`/home/reports`, hija de la
+rama de Inicio, así la barra de navegación queda en Inicio) se abre con el ícono de gráfico de 01.
+
+- `ReportsController` (uno por visita) pide los tres reportes del rango en paralelo (`spending`,
+  `income-expense`, `net-worth`) y los junta por mes; la pestaña y el mes elegido solo cambian lo que
+  se dibuja. Rango por defecto: últimos 6 meses hasta el actual; el calendario abre la hoja con 3, 6
+  y 12 meses.
+- **Gastos**: total del mes, barras por mes y "Dónde se fue" (`UiGoalRow` por sobre con "$ X · N%").
+  **Ingresos**: ingreso del mes, barras de ingresos e "Ingresos y gastos" con lo que sobró o faltó.
+  **Patrimonio**: Σ cuentas activas al cierre del mes y el cambio contra el mes anterior.
+- Gráfico: `UiBarChart` de `packages/ui`, sin biblioteca de gráficos (una sola serie con los tokens
+  del diseño); tocar una barra elige ese mes, que lleva el valor abreviado ("$ 265k") arriba.
+
 ## Widgetbook
 
 ```bash

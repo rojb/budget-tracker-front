@@ -28,6 +28,9 @@ import '../features/plan/assign_page.dart';
 import '../features/plan/month_close_page.dart';
 import '../features/plan/months_repository.dart';
 import '../features/payees/payee_form_page.dart';
+import '../features/reports/reports_controller.dart';
+import '../features/reports/reports_page.dart';
+import '../features/reports/reports_repository.dart';
 import '../features/payees/payees_controller.dart';
 import '../features/payees/payees_page.dart';
 import '../features/payees/payees_repository.dart';
@@ -152,6 +155,18 @@ GoRouter createRouter(Dependencies dependencies) {
                   plans: plans,
                   envelopes: dependencies.envelopesController,
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'reports',
+                    builder: (context, state) => ReportsPage(
+                      plans: plans,
+                      controllerFactory: () => ReportsController(
+                        ReportsRepository(dependencies.apiGateway),
+                        plans,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

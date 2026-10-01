@@ -13,8 +13,8 @@ import 'home_controller.dart';
 /// Screen 01 Inicio: the avatar (→ 39), the greeting and the "Metas" carousel
 /// of this change (a `GoalCard` per envelope with a goal that has a date → 05,
 /// "+ Nueva meta" → 31 with the group Metas and "Con fecha"). The "+" of the
-/// Ready to Assign card opens 03 (`add-monthly-assignment`); Reportes
-/// (`add-reports`) is not built here.
+/// Ready to Assign card opens 03 (`add-monthly-assignment`) and the bar-chart
+/// button 17 Reportes (`add-reports`).
 class HomePage extends StatefulWidget {
   const HomePage({
     required this.controllerFactory,
@@ -143,14 +143,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Spacer(),
-              // Reportes (→ 17) belongs to add-reports: muted and inert until it exists.
-              const Opacity(
-                opacity: 0.4,
-                child: UiIconButton(
-                  icon: UiIcons.barChart,
-                  semanticLabel: 'Reportes (todavía no disponible)',
-                  onPressed: null,
-                ),
+              UiIconButton(
+                icon: UiIcons.barChart,
+                semanticLabel: 'Reportes',
+                onPressed: () => context.push(AppRoutes.reports),
               ),
             ],
           ),
