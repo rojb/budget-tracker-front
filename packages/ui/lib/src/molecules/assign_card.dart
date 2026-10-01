@@ -86,7 +86,7 @@ class UiAssignCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   caption!,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: UiTypography.custom(13, color: UiColors.inkMuted),
                 ),

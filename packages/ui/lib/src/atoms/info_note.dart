@@ -86,14 +86,14 @@ class UiInfoNote extends StatelessWidget {
             ),
           ),
           if (actionLabel != null && onAction != null) ...[
-            const SizedBox(width: 10),
+            const SizedBox(width: 8),
             UiHitTarget(
               onTap: onAction,
               semanticLabel: actionLabel!,
               minWidth: 0,
               child: Container(
                 height: 44,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: UiColors.ink,
