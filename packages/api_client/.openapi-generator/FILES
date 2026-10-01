@@ -5,6 +5,7 @@ lib/src/api/accounts_api.dart
 lib/src/api/auth_api.dart
 lib/src/api/envelopes_api.dart
 lib/src/api/health_api.dart
+lib/src/api/months_api.dart
 lib/src/api/payees_api.dart
 lib/src/api/plans_api.dart
 lib/src/api/sharing_api.dart
@@ -22,7 +23,10 @@ lib/src/model/account_detail.dart
 lib/src/model/account_type.dart
 lib/src/model/affected_months.dart
 lib/src/model/apply_envelope_template_request.dart
+lib/src/model/assign_money_request.dart
+lib/src/model/assign_money_result.dart
 lib/src/model/auth_session.dart
+lib/src/model/close_line.dart
 lib/src/model/create_account_request.dart
 lib/src/model/create_envelope_group_request.dart
 lib/src/model/create_envelope_request.dart
@@ -57,6 +61,8 @@ lib/src/model/invitation.dart
 lib/src/model/invitation_preview.dart
 lib/src/model/invitation_role.dart
 lib/src/model/login_request.dart
+lib/src/model/month_close.dart
+lib/src/model/month_summary.dart
 lib/src/model/move_money_request.dart
 lib/src/model/move_money_result.dart
 lib/src/model/page_meta.dart

@@ -19,7 +19,10 @@ import 'package:api_client/src/model/account_detail.dart';
 import 'package:api_client/src/model/account_type.dart';
 import 'package:api_client/src/model/affected_months.dart';
 import 'package:api_client/src/model/apply_envelope_template_request.dart';
+import 'package:api_client/src/model/assign_money_request.dart';
+import 'package:api_client/src/model/assign_money_result.dart';
 import 'package:api_client/src/model/auth_session.dart';
+import 'package:api_client/src/model/close_line.dart';
 import 'package:api_client/src/model/create_account_request.dart';
 import 'package:api_client/src/model/create_envelope_group_request.dart';
 import 'package:api_client/src/model/create_envelope_request.dart';
@@ -53,6 +56,8 @@ import 'package:api_client/src/model/invitation.dart';
 import 'package:api_client/src/model/invitation_preview.dart';
 import 'package:api_client/src/model/invitation_role.dart';
 import 'package:api_client/src/model/login_request.dart';
+import 'package:api_client/src/model/month_close.dart';
+import 'package:api_client/src/model/month_summary.dart';
 import 'package:api_client/src/model/move_money_request.dart';
 import 'package:api_client/src/model/move_money_result.dart';
 import 'package:api_client/src/model/page_meta.dart';
@@ -94,7 +99,10 @@ part 'serializers.g.dart';
   AccountType,
   AffectedMonths,$AffectedMonths,
   ApplyEnvelopeTemplateRequest,
+  AssignMoneyRequest,
+  AssignMoneyResult,
   AuthSession,
+  CloseLine,
   CreateAccountRequest,
   CreateEnvelopeGroupRequest,
   CreateEnvelopeRequest,
@@ -128,6 +136,8 @@ part 'serializers.g.dart';
   InvitationPreview,
   InvitationRole,
   LoginRequest,
+  MonthClose,
+  MonthSummary,
   MoveMoneyRequest,
   MoveMoneyResult,
   PageMeta,$PageMeta,
@@ -177,6 +187,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(TemplateEnvelope)]),
         () => ListBuilder<TemplateEnvelope>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(CloseLine)]),
+        () => ListBuilder<CloseLine>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Account)]),

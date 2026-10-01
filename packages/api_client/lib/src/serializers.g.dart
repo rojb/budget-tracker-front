@@ -13,7 +13,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(AccountDetail.serializer)
       ..add(AccountType.serializer)
       ..add(ApplyEnvelopeTemplateRequest.serializer)
+      ..add(AssignMoneyRequest.serializer)
+      ..add(AssignMoneyResult.serializer)
       ..add(AuthSession.serializer)
+      ..add(CloseLine.serializer)
       ..add(CreateAccountRequest.serializer)
       ..add(CreateEnvelopeGroupRequest.serializer)
       ..add(CreateEnvelopeRequest.serializer)
@@ -51,6 +54,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(InvitationPreview.serializer)
       ..add(InvitationRole.serializer)
       ..add(LoginRequest.serializer)
+      ..add(MonthClose.serializer)
+      ..add(MonthSummary.serializer)
       ..add(MoveMoneyRequest.serializer)
       ..add(MoveMoneyResult.serializer)
       ..add(Payee.serializer)
@@ -84,6 +89,12 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ValidationError.serializer)
       ..add(ValidationErrorErrorEnum.serializer)
       ..add(ValidationErrorStatusCodeEnum.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CloseLine)]),
+          () => ListBuilder<CloseLine>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CloseLine)]),
+          () => ListBuilder<CloseLine>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(CreateTransactionSplit)]),
