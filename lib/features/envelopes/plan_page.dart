@@ -54,11 +54,6 @@ class _PlanPageState extends State<PlanPage> {
     // Spending comes from the engine (transactions), not from assigned − available, which
     // carryover and income sent to an envelope would falsify.
     final spent = math.max(0, line.spentMinor);
-    // With a goal the stripes show how much of the month's requirement is
-    // assigned (PRD-ux-spec.md 5, state "Sobre"); without one, the share spent.
-    final progress = line.goalStatus != null
-        ? goalCoverage(line)
-        : (line.assignedMinor > 0 ? spent / line.assignedMinor : 0.0);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: UiEnvelopeRow(
@@ -70,7 +65,9 @@ class _PlanPageState extends State<PlanPage> {
             '${formatMoney(line.assignedMinor, currency)}',
         amount: formatMoney(line.availableMinor, currency),
         caption: rowCaption(line, currency),
-        progress: progress,
+        // With a goal the stripes show how much of the month's requirement is
+        // assigned (PRD-ux-spec.md 5, state "Sobre"); without one, the share spent.
+        progress: rowProgress(line),
         onTap: () => context.push(AppRoutes.envelopeDetail(line.envelope.id)),
       ),
     );

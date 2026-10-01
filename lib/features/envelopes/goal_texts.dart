@@ -35,6 +35,14 @@ double goalCoverage(EnvelopeLineData line) {
   return (line.assignedMinor / status.requiredMinor).clamp(0, 1).toDouble();
 }
 
+/// Share (0..1) of the stripes of an `EnvelopeRow` (02, 24): with a goal, how
+/// much of the month's requirement is assigned; without one, the share spent.
+double rowProgress(EnvelopeLineData line) {
+  if (line.goalStatus != null) return goalCoverage(line);
+  final spent = line.spentMinor < 0 ? 0 : line.spentMinor;
+  return line.assignedMinor > 0 ? spent / line.assignedMinor : 0.0;
+}
+
 /// The goal row of 22 for [line]: "Objetivo mensual" or "Meta ... · mes", its
 /// value and the stripe bar, plus "Falta ... este mes" when underfunded.
 UiGoalRow goalRow(EnvelopeLineData line, Currency currency) {

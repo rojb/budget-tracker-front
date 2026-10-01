@@ -18,6 +18,7 @@ import '../features/envelopes/envelope_detail_page.dart';
 import '../features/envelopes/envelope_edit_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
 import '../features/envelopes/envelopes_repository.dart' show GoalKind;
+import '../features/envelopes/move_money_page.dart';
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
@@ -386,6 +387,14 @@ GoRouter createRouter(Dependencies dependencies) {
             path: 'edit',
             builder: (context, state) => EnvelopeEditPage(
               envelopeId: state.pathParameters['envelopeId']!,
+              plans: plans,
+              envelopes: dependencies.envelopesController,
+            ),
+          ),
+          GoRoute(
+            path: 'move',
+            builder: (context, state) => MoveMoneyPage(
+              fromEnvelopeId: state.pathParameters['envelopeId']!,
               plans: plans,
               envelopes: dependencies.envelopesController,
             ),
