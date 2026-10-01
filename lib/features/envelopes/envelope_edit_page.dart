@@ -2,51 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
+import '../../app/routes.dart';
 import '../../core/api/api_failure.dart';
 import '../common/edit_sheets.dart';
 import '../common/feedback.dart';
 import '../plans/plans_controller.dart';
+import 'delete_envelope_sheet.dart';
 import 'envelope_icon_selector.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 import 'goal_fields.dart';
 import 'group_picker_sheet.dart';
 
-/// Screen 31 Nuevo sobre: name, group (→ 52), icon and the optional objective
-/// ("Objetivo": none, monthly or by a date). "+ Nueva meta" in 01 opens it with
-/// the group Metas and "Con fecha" preselected.
-class EnvelopeFormPage extends StatefulWidget {
-  const EnvelopeFormPage({
-    required this.envelopes,
+/// Screen 23 Editar sobre: name, group (→ 52), icon, the objective (type,
+/// target and due date) and the trash that opens 43 (the only entry to the
+/// deletion, PRD-ux-spec.md 6.1 rule 2). Saving sends the changed name, group
+/// and icon and sets or removes the goal, then returns to 22.
+class EnvelopeEditPage extends StatefulWidget {
+  const EnvelopeEditPage({
+    required this.envelopeId,
     required this.plans,
-    this.initialGroupId,
-    this.initialGoalKind,
+    required this.envelopes,
     super.key,
   });
 
-  final EnvelopesController envelopes;
+  final String envelopeId;
   final PlansController plans;
-
-  /// Group preselected by the "+" of a group header in 02 or by "+ Nueva meta".
-  final String? initialGroupId;
-
-  /// Objective preselected by "+ Nueva meta" ("Con fecha").
-  final GoalKind? initialGoalKind;
+  final EnvelopesController envelopes;
 
   @override
-  State<EnvelopeFormPage> createState() => _EnvelopeFormPageState();
+  State<EnvelopeEditPage> createState() => _EnvelopeEditPageState();
 }
 
-class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
-  late String? _groupId = widget.envelopes.groupById(widget.initialGroupId)?.id;
-  String _name = '';
-  String _icon = 'tag';
-  late GoalDraft _goal = widget.initialGoalKind == null
-      ? const GoalDraft()
-      : const GoalDraft().withKind(
-          widget.initialGoalKind,
-          widget.plans.currency,
-        );
+class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
+  late final EnvelopeLineData? _line = widget.envelopes.lineById(
+    widget.envelopeId,
+  );
+  late String _name = _line?.envelope.name ?? '';
+  late String? _groupId = _line?.envelope.groupId;
+  late String _icon = _line?.envelope.icon ?? 'tag';
+  late GoalDraft _goal = GoalDraft.of(_line?.envelope.goal);
   String? _nameError;
   String? _dateError;
   bool _saving = false;
@@ -84,7 +79,12 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
   }
 
   Future<void> _save() async {
-    if (_saving) return;
+    final line = _line;
+    if (_saving || line == null) return;
+    if (!(widget.plans.activePlan?.canEdit ?? false)) {
+      showForbidden(context);
+      return;
+    }
     if (_name.trim().isEmpty) {
       setState(() => _nameError = 'Poné un nombre para el sobre.');
       return;
@@ -93,13 +93,16 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
       setState(() => _dateError = 'Elegí una fecha límite.');
       return;
     }
+    final envelope = line.envelope;
     setState(() => _saving = true);
     try {
-      await widget.envelopes.createEnvelope(
-        name: _name.trim(),
-        groupId: _groupId,
-        icon: _icon,
+      await widget.envelopes.saveEnvelope(
+        envelope.id,
+        name: _name.trim() == envelope.name ? null : _name.trim(),
+        icon: _icon == envelope.icon ? null : _icon,
+        groupId: _groupId == envelope.groupId ? null : _groupId,
         goal: _goal.toGoal(),
+        hadGoal: envelope.goal != null,
       );
       if (!mounted) return;
       showSaved(context, 'Guardado');
@@ -126,32 +129,86 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     }
   }
 
+  Future<void> _delete() async {
+    final line = _line;
+    if (line == null) return;
+    final group = widget.envelopes.groupById(line.envelope.groupId);
+    final confirmed = await showDeleteEnvelopeSheet(
+      context,
+      line: line,
+      groupName: group?.name,
+      currency: widget.plans.currency,
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await widget.envelopes.deleteEnvelope(line.envelope.id);
+      if (!mounted) return;
+      context.go(AppRoutes.plan);
+      showUiToast(
+        context,
+        variant: UiToastVariant.info,
+        title: 'Sobre eliminado',
+        detail: 'Su disponible volvió a Listo para asignar.',
+        bottomOffset: 100,
+      );
+    } on ApiFailure catch (failure) {
+      if (!mounted) return;
+      failure.kind == ApiFailureKind.forbidden
+          ? showForbidden(context)
+          : showConnectionProblem(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final line = _line;
+    if (line == null) {
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UiIconButton(
+                  icon: UiIcons.chevronLeft,
+                  variant: UiIconButtonVariant.soft,
+                  semanticLabel: 'Volver',
+                  onPressed: () => context.pop(),
+                ),
+                const SizedBox(height: 24),
+                Text('No encontramos el sobre', style: UiTypography.title),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     final group = widget.envelopes.groupById(_groupId);
     return Scaffold(
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: UiIconButton(
-                icon: UiIcons.chevronLeft,
-                variant: UiIconButtonVariant.soft,
-                semanticLabel: 'Volver',
-                onPressed: () => context.pop(),
-              ),
+            Row(
+              children: [
+                UiIconButton(
+                  icon: UiIcons.chevronLeft,
+                  variant: UiIconButtonVariant.soft,
+                  semanticLabel: 'Volver',
+                  onPressed: () => context.pop(),
+                ),
+                const Spacer(),
+                UiIconButton(
+                  icon: UiIcons.trash,
+                  variant: UiIconButtonVariant.danger,
+                  semanticLabel: 'Eliminar sobre',
+                  onPressed: _delete,
+                ),
+              ],
             ),
             const SizedBox(height: 22),
-            Text('Nuevo sobre', style: UiTypography.custom(36)),
-            const SizedBox(height: 6),
-            Text(
-              group == null
-                  ? 'Sumá un sobre a tu plan.'
-                  : 'Sumá un sobre a ${group.name}.',
-              style: UiTypography.custom(16, color: UiColors.inkMuted),
-            ),
+            Text('Editar sobre', style: UiTypography.custom(36)),
             const SizedBox(height: 18),
             UiCard(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
@@ -188,7 +245,6 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
             GoalFields(
               draft: _goal,
               currency: widget.plans.currency,
-              title: 'Objetivo (opcional)',
               error: _dateError,
               onChanged: (next) => setState(() {
                 _goal = next;
@@ -197,7 +253,7 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
             ),
             const SizedBox(height: 28),
             UiSaveBar(
-              label: 'Crear sobre',
+              label: 'Guardar cambios',
               enabled: !_saving,
               onConfirm: _save,
             ),

@@ -15,7 +15,9 @@ import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/envelopes/assign_money_page.dart';
 import '../features/envelopes/envelope_detail_page.dart';
+import '../features/envelopes/envelope_edit_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
+import '../features/envelopes/envelopes_repository.dart' show GoalKind;
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
@@ -346,7 +348,11 @@ GoRouter createRouter(Dependencies dependencies) {
         path: AppRoutes.newEnvelope,
         builder: (context, state) => EnvelopeFormPage(
           envelopes: dependencies.envelopesController,
+          plans: plans,
           initialGroupId: state.uri.queryParameters['groupId'],
+          initialGoalKind: state.uri.queryParameters['goal'] == 'targetByDate'
+              ? GoalKind.targetByDate
+              : null,
         ),
       ),
       GoRoute(
@@ -375,6 +381,16 @@ GoRouter createRouter(Dependencies dependencies) {
           transactions: dependencies.transactionsController,
           accounts: dependencies.accountsController,
         ),
+        routes: [
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) => EnvelopeEditPage(
+              envelopeId: state.pathParameters['envelopeId']!,
+              plans: plans,
+              envelopes: dependencies.envelopesController,
+            ),
+          ),
+        ],
       ),
       ShellRoute(
         // One PayeesController per visit to 15, shared with 41.
