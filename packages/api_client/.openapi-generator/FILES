@@ -20,6 +20,7 @@ lib/src/date_serializer.dart
 lib/src/model/account.dart
 lib/src/model/account_detail.dart
 lib/src/model/account_type.dart
+lib/src/model/affected_months.dart
 lib/src/model/apply_envelope_template_request.dart
 lib/src/model/auth_session.dart
 lib/src/model/create_account_request.dart
@@ -63,9 +64,11 @@ lib/src/model/reorder_envelopes_request.dart
 lib/src/model/template_envelope.dart
 lib/src/model/template_group.dart
 lib/src/model/transaction.dart
+lib/src/model/transaction_change.dart
 lib/src/model/transaction_direction.dart
 lib/src/model/transaction_page.dart
 lib/src/model/transaction_split.dart
+lib/src/model/transaction_summary.dart
 lib/src/model/transfer.dart
 lib/src/model/transfer_page.dart
 lib/src/model/update_account_request.dart

@@ -77,6 +77,11 @@ abstract final class UiIcons {
   static const IconData split = LucideIcons.split300;
   static const IconData inbox = LucideIcons.inbox300;
   static const IconData arrowDownLeft = LucideIcons.arrowDownLeft300;
+
+  // Filters (10, 11).
+  static const IconData sliders = LucideIcons.slidersHorizontal300;
+  static const IconData calendar = LucideIcons.calendar300;
+  static const IconData store = LucideIcons.store300;
 }
 
 /// Icon of each envelope icon name of the API (`EnvelopeIcon`), in the order

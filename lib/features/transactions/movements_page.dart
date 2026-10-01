@@ -1,26 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
+import '../accounts/accounts_controller.dart';
 import '../common/day_groups.dart';
 import '../envelopes/envelopes_controller.dart';
+import '../payees/payees_repository.dart';
 import '../plans/plans_controller.dart';
+import 'filter_sheet.dart';
+import 'transaction_change.dart';
+import 'transaction_filter.dart';
 import 'transaction_rows.dart';
 import 'transactions_controller.dart';
 
 /// Screen 10 Movimientos: the plan's transactions newest first, grouped by day,
-/// with more pages loaded as the list is scrolled. Search, filters and opening
-/// a movement (11, 12) belong to `add-transaction-editing-and-filters`.
+/// with more pages loaded as the list is scrolled. The header has the search
+/// (a field that opens in place, FR-22) and the filters button (→ 11); every
+/// active filter shows as a removable chip, and while any filter or search is on
+/// a summary card shows what left and what came in over every movement it
+/// selects. Tapping a movement opens 12.
 class MovementsPage extends StatefulWidget {
   const MovementsPage({
     required this.transactions,
     required this.envelopes,
+    required this.accounts,
     required this.plans,
+    required this.payees,
     super.key,
   });
 
   final TransactionsController transactions;
   final EnvelopesController envelopes;
+  final AccountsController accounts;
   final PlansController plans;
+  final PayeesRepository payees;
 
   @override
   State<MovementsPage> createState() => _MovementsPageState();
@@ -28,26 +42,75 @@ class MovementsPage extends StatefulWidget {
 
 class _MovementsPageState extends State<MovementsPage> {
   final ScrollController _scroll = ScrollController();
+  final TextEditingController _search = TextEditingController();
+  Timer? _debounce;
+  late bool _searching = widget.transactions.filter.query.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
     _scroll.addListener(_onScroll);
+    _search.text = widget.transactions.filter.query;
     // A tab visit shows fresh movements; the list is cheap (one page).
     widget.transactions.refresh();
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _scroll
       ..removeListener(_onScroll)
       ..dispose();
+    _search.dispose();
     super.dispose();
   }
 
   void _onScroll() {
     if (!_scroll.hasClients) return;
     if (_scroll.position.extentAfter < 400) widget.transactions.loadMore();
+  }
+
+  TransactionFilter get _filter => widget.transactions.filter;
+
+  // The list follows the text once the user pauses typing.
+  void _onQuery(String text) {
+    _debounce?.cancel();
+    _debounce = Timer(
+      const Duration(milliseconds: 350),
+      () => widget.transactions.setFilter(_filter.withQuery(text)),
+    );
+  }
+
+  void _toggleSearch() {
+    setState(() => _searching = !_searching);
+    if (!_searching) {
+      _debounce?.cancel();
+      _search.clear();
+      widget.transactions.setFilter(_filter.withQuery(''));
+    }
+  }
+
+  Future<void> _openFilters() async {
+    final plan = widget.plans.activePlan;
+    if (plan == null) return;
+    final filter = await showFilterSheet(
+      context,
+      initial: _filter,
+      transactions: widget.transactions,
+      envelopes: widget.envelopes,
+      accounts: widget.accounts,
+      payees: widget.payees,
+      planId: plan.id,
+      currency: widget.plans.currency,
+    );
+    widget.transactions.setFilter(filter);
+  }
+
+  void _clearAll() {
+    _debounce?.cancel();
+    _search.clear();
+    setState(() => _searching = false);
+    widget.transactions.setFilter(TransactionFilter.none);
   }
 
   @override
@@ -61,6 +124,7 @@ class _MovementsPageState extends State<MovementsPage> {
       builder: (context, _) {
         final transactions = widget.transactions;
         final currency = widget.plans.currency;
+        final filter = transactions.filter;
         return RefreshIndicator(
           onRefresh: transactions.refresh,
           child: ListView(
@@ -68,9 +132,26 @@ class _MovementsPageState extends State<MovementsPage> {
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             children: [
-              Text('Movimientos', style: UiTypography.custom(36)),
+              _header(filter),
+              ..._chips(filter),
+              if (filter.isActive && transactions.loaded) ...[
+                const SizedBox(height: 16),
+                UiJoinedCard(
+                  primaryValue: formatMoney(
+                    transactions.outflowMinor,
+                    currency,
+                  ),
+                  primaryLabel: 'Salió en la franja',
+                  secondaryValue: formatMoney(
+                    transactions.inflowMinor,
+                    currency,
+                  ),
+                  secondaryLabel: 'Entró',
+                  secondaryIsAmount: true,
+                ),
+              ],
               const SizedBox(height: 14),
-              ..._body(context, currency),
+              ..._body(context, currency, filter),
             ],
           ),
         );
@@ -78,7 +159,94 @@ class _MovementsPageState extends State<MovementsPage> {
     );
   }
 
-  List<Widget> _body(BuildContext context, Currency currency) {
+  Widget _header(TransactionFilter filter) {
+    return Row(
+      children: [
+        Expanded(
+          child: _searching
+              ? UiTextField(
+                  label: 'Buscar movimiento',
+                  controller: _search,
+                  textInputAction: TextInputAction.search,
+                  onChanged: _onQuery,
+                )
+              : Text('Movimientos', style: UiTypography.custom(36)),
+        ),
+        const SizedBox(width: 10),
+        UiIconButton(
+          icon: _searching ? UiIcons.close : UiIcons.search,
+          semanticLabel: _searching ? 'Cerrar búsqueda' : 'Buscar',
+          onPressed: _toggleSearch,
+        ),
+        const SizedBox(width: 8),
+        UiIconButton(
+          icon: UiIcons.sliders,
+          variant: filter.hasFilters
+              ? UiIconButtonVariant.lavender
+              : UiIconButtonVariant.white,
+          semanticLabel: 'Filtros',
+          onPressed: _openFilters,
+        ),
+      ],
+    );
+  }
+
+  // One removable chip per active filter (the search text has its own field).
+  List<Widget> _chips(TransactionFilter filter) {
+    final transactions = widget.transactions;
+    final chips = <Widget>[
+      if (filter.dateLabel != null)
+        UiFilterChip(
+          icon: UiIcons.calendar,
+          label: filter.dateLabel!,
+          onRemove: () => transactions.setFilter(filter.withDates(null, null)),
+        ),
+      if (filter.timeLabel != null)
+        UiFilterChip(
+          icon: UiIcons.clock,
+          label: filter.timeLabel!,
+          onRemove: () => transactions.setFilter(filter.withTimes(null, null)),
+        ),
+      if (filter.kind != TransactionKind.all)
+        UiFilterChip(
+          icon: UiIcons.arrowLeftRight,
+          label: filter.kind == TransactionKind.expense ? 'Gastos' : 'Ingresos',
+          onRemove: () =>
+              transactions.setFilter(filter.withKind(TransactionKind.all)),
+        ),
+      if (filter.payeeId != null)
+        UiFilterChip(
+          icon: UiIcons.store,
+          label: filter.payeeName ?? 'Beneficiario',
+          onRemove: () => transactions.setFilter(filter.withPayee(null, null)),
+        ),
+      if (filter.envelopeId != null)
+        UiFilterChip(
+          icon: UiIcons.wallet,
+          label: filter.envelopeName ?? 'Sobre',
+          onRemove: () =>
+              transactions.setFilter(filter.withEnvelope(null, null)),
+        ),
+      if (filter.accountId != null)
+        UiFilterChip(
+          icon: UiIcons.creditCard,
+          label: filter.accountName ?? 'Cuenta',
+          onRemove: () =>
+              transactions.setFilter(filter.withAccount(null, null)),
+        ),
+    ];
+    if (chips.isEmpty) return const [];
+    return [
+      const SizedBox(height: 14),
+      Wrap(spacing: 8, runSpacing: 8, children: chips),
+    ];
+  }
+
+  List<Widget> _body(
+    BuildContext context,
+    Currency currency,
+    TransactionFilter filter,
+  ) {
     final transactions = widget.transactions;
     if (!transactions.loaded) {
       if (transactions.failed) {
@@ -107,6 +275,28 @@ class _MovementsPageState extends State<MovementsPage> {
       return const [_SkeletonRows()];
     }
     if (transactions.items.isEmpty) {
+      if (filter.isActive) {
+        return [
+          UiCard(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'No hay movimientos con estos filtros',
+                  style: UiTypography.custom(16, color: UiColors.inkMuted),
+                ),
+                const SizedBox(height: 16),
+                UiButton(
+                  label: 'Limpiar filtros',
+                  variant: UiButtonVariant.secondary,
+                  onPressed: _clearAll,
+                ),
+              ],
+            ),
+          ),
+        ];
+      }
       return [
         UiCard(
           padding: const EdgeInsets.all(22),
@@ -125,6 +315,13 @@ class _MovementsPageState extends State<MovementsPage> {
           item,
           currency: currency,
           envelopes: widget.envelopes,
+          onTap: () => openTransaction(
+            context,
+            item,
+            transactions: transactions,
+            envelopes: widget.envelopes,
+            accounts: widget.accounts,
+          ),
         ),
       ),
       if (transactions.loadingMore)

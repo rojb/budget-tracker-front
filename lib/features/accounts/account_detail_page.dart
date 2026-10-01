@@ -11,6 +11,7 @@ import '../common/feedback.dart';
 import '../common/months.dart';
 import '../envelopes/envelopes_controller.dart';
 import '../plans/plans_controller.dart';
+import '../transactions/transaction_change.dart';
 import '../transactions/transaction_rows.dart';
 import '../transactions/transactions_controller.dart';
 import '../transactions/transactions_repository.dart';
@@ -174,8 +175,8 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
 
   // Transfers grouped by local day, newest first (PRD-ux-spec.md 6.1 rule 5).
   // Transactions and transfers together, newest first, grouped by day
-  // (PRD-ux-spec.md 6.1 rule 5). Opening a transaction belongs to
-  // add-transaction-editing-and-filters; a transfer still offers its deletion.
+  // (PRD-ux-spec.md 6.1 rule 5). A transaction opens 12 Editar movimiento; a
+  // transfer offers its deletion.
   List<Widget> _movementGroups(BuildContext context, Currency currency) {
     return buildDayGroups<_Movement>(
       _movements,
@@ -188,6 +189,14 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
             currency: currency,
             envelopes: widget.envelopes,
             showAccount: false,
+            onTap: () => openTransaction(
+              context,
+              transaction,
+              transactions: widget.transactions,
+              envelopes: widget.envelopes,
+              accounts: widget.accounts,
+              onChanged: _load,
+            ),
           );
         }
         final transfer = movement.transfer!;

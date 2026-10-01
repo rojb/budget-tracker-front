@@ -28,10 +28,12 @@ import '../features/plans/new_plan_page.dart';
 import '../features/plans/no_plan_page.dart';
 import '../features/plans/plans_controller.dart';
 import '../features/plans/plans_page.dart';
+import '../features/transactions/edit_transaction_page.dart';
 import '../features/transactions/movements_page.dart';
 import '../features/transactions/new_transaction_page.dart';
 import '../features/transactions/split_page.dart';
 import '../features/transactions/transaction_draft.dart';
+import '../features/transactions/transactions_repository.dart';
 import '../features/sharing/invite_controller.dart';
 import '../features/sharing/invite_page.dart';
 import '../features/sharing/join_link_page.dart';
@@ -162,7 +164,9 @@ GoRouter createRouter(Dependencies dependencies) {
                 builder: (context, state) => MovementsPage(
                   transactions: dependencies.transactionsController,
                   envelopes: dependencies.envelopesController,
+                  accounts: dependencies.accountsController,
                   plans: plans,
+                  payees: PayeesRepository(dependencies.apiGateway),
                 ),
               ),
             ],
@@ -315,6 +319,27 @@ GoRouter createRouter(Dependencies dependencies) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/transactions/:transactionId/edit',
+        builder: (context, state) {
+          final transaction = state.extra;
+          if (transaction is! TransactionData) {
+            return _placeholder(
+              context,
+              'Movimiento no encontrado',
+              'Abrilo desde la lista de movimientos.',
+            );
+          }
+          return EditTransactionPage(
+            transaction: transaction,
+            plans: plans,
+            accounts: dependencies.accountsController,
+            envelopes: dependencies.envelopesController,
+            transactions: dependencies.transactionsController,
+            payees: PayeesRepository(dependencies.apiGateway),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.newEnvelope,

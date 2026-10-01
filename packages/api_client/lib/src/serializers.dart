@@ -17,6 +17,7 @@ import 'package:api_client/src/model/date.dart';
 import 'package:api_client/src/model/account.dart';
 import 'package:api_client/src/model/account_detail.dart';
 import 'package:api_client/src/model/account_type.dart';
+import 'package:api_client/src/model/affected_months.dart';
 import 'package:api_client/src/model/apply_envelope_template_request.dart';
 import 'package:api_client/src/model/auth_session.dart';
 import 'package:api_client/src/model/create_account_request.dart';
@@ -59,9 +60,11 @@ import 'package:api_client/src/model/reorder_envelopes_request.dart';
 import 'package:api_client/src/model/template_envelope.dart';
 import 'package:api_client/src/model/template_group.dart';
 import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/transaction_change.dart';
 import 'package:api_client/src/model/transaction_direction.dart';
 import 'package:api_client/src/model/transaction_page.dart';
 import 'package:api_client/src/model/transaction_split.dart';
+import 'package:api_client/src/model/transaction_summary.dart';
 import 'package:api_client/src/model/transfer.dart';
 import 'package:api_client/src/model/transfer_page.dart';
 import 'package:api_client/src/model/update_account_request.dart';
@@ -79,6 +82,7 @@ part 'serializers.g.dart';
   Account,$Account,
   AccountDetail,
   AccountType,
+  AffectedMonths,$AffectedMonths,
   ApplyEnvelopeTemplateRequest,
   AuthSession,
   CreateAccountRequest,
@@ -121,9 +125,11 @@ part 'serializers.g.dart';
   TemplateEnvelope,
   TemplateGroup,
   Transaction,
+  TransactionChange,
   TransactionDirection,
   TransactionPage,
   TransactionSplit,
+  TransactionSummary,
   Transfer,
   TransferPage,
   UpdateAccountRequest,
@@ -197,6 +203,7 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<EnvelopeLine>(),
       )
       ..add(Account.serializer)
+      ..add(AffectedMonths.serializer)
       ..add(PageMeta.serializer)
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
