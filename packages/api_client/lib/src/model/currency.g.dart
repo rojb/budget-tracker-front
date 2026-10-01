@@ -12,6 +12,8 @@ const CurrencySymbolEnum _$currencySymbolEnum_uSDollar =
     const CurrencySymbolEnum._('uSDollar');
 const CurrencySymbolEnum _$currencySymbolEnum_euro =
     const CurrencySymbolEnum._('euro');
+const CurrencySymbolEnum _$currencySymbolEnum_bsPeriod =
+    const CurrencySymbolEnum._('bsPeriod');
 
 CurrencySymbolEnum _$currencySymbolEnumValueOf(String name) {
   switch (name) {
@@ -21,6 +23,8 @@ CurrencySymbolEnum _$currencySymbolEnumValueOf(String name) {
       return _$currencySymbolEnum_uSDollar;
     case 'euro':
       return _$currencySymbolEnum_euro;
+    case 'bsPeriod':
+      return _$currencySymbolEnum_bsPeriod;
     default:
       throw ArgumentError(name);
   }
@@ -31,6 +35,7 @@ final BuiltSet<CurrencySymbolEnum> _$currencySymbolEnumValues =
   _$currencySymbolEnum_dollar,
   _$currencySymbolEnum_uSDollar,
   _$currencySymbolEnum_euro,
+  _$currencySymbolEnum_bsPeriod,
 ]);
 
 const CurrencyNameEnum _$currencyNameEnum_pesos =
@@ -39,6 +44,8 @@ const CurrencyNameEnum _$currencyNameEnum_dlares =
     const CurrencyNameEnum._('dlares');
 const CurrencyNameEnum _$currencyNameEnum_euros =
     const CurrencyNameEnum._('euros');
+const CurrencyNameEnum _$currencyNameEnum_bolivianos =
+    const CurrencyNameEnum._('bolivianos');
 
 CurrencyNameEnum _$currencyNameEnumValueOf(String name) {
   switch (name) {
@@ -48,6 +55,8 @@ CurrencyNameEnum _$currencyNameEnumValueOf(String name) {
       return _$currencyNameEnum_dlares;
     case 'euros':
       return _$currencyNameEnum_euros;
+    case 'bolivianos':
+      return _$currencyNameEnum_bolivianos;
     default:
       throw ArgumentError(name);
   }
@@ -58,6 +67,7 @@ final BuiltSet<CurrencyNameEnum> _$currencyNameEnumValues =
   _$currencyNameEnum_pesos,
   _$currencyNameEnum_dlares,
   _$currencyNameEnum_euros,
+  _$currencyNameEnum_bolivianos,
 ]);
 
 const CurrencyMinorUnitsEnum _$currencyMinorUnitsEnum_number0 =
@@ -95,11 +105,13 @@ class _$CurrencySymbolEnumSerializer
     'dollar': '\$',
     'uSDollar': 'US\$',
     'euro': '€',
+    'bsPeriod': 'Bs.',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     '\$': 'dollar',
     'US\$': 'uSDollar',
     '€': 'euro',
+    'Bs.': 'bsPeriod',
   };
 
   @override
@@ -125,11 +137,13 @@ class _$CurrencyNameEnumSerializer
     'pesos': 'pesos',
     'dlares': 'dólares',
     'euros': 'euros',
+    'bolivianos': 'bolivianos',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'pesos': 'pesos',
     'dólares': 'dlares',
     'euros': 'euros',
+    'bolivianos': 'bolivianos',
   };
 
   @override

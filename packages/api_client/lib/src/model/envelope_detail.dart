@@ -16,8 +16,8 @@ part 'envelope_detail.g.dart';
 /// Properties:
 /// * [month] - Budget month as YYYY-MM.
 /// * [line] 
-/// * [carryoverMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
-/// * [activity] - Transactions of the month with a portion on the envelope, newest first, at most 100.
+/// * [carryoverMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [activity] - Transactions of the month with a portion on the envelope, newest first by `createdAt` (ties by id), at most 100.
 /// * [activityTotal] - Number of transactions of the month with a portion on the envelope.
 @BuiltValue()
 abstract class EnvelopeDetail implements Built<EnvelopeDetail, EnvelopeDetailBuilder> {
@@ -28,11 +28,11 @@ abstract class EnvelopeDetail implements Built<EnvelopeDetail, EnvelopeDetailBui
   @BuiltValueField(wireName: r'line')
   EnvelopeLine get line;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'carryoverMinor')
   int get carryoverMinor;
 
-  /// Transactions of the month with a portion on the envelope, newest first, at most 100.
+  /// Transactions of the month with a portion on the envelope, newest first by `createdAt` (ties by id), at most 100.
   @BuiltValueField(wireName: r'activity')
   BuiltList<Transaction> get activity;
 

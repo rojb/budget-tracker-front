@@ -10,7 +10,7 @@ import 'package:built_value/serializer.dart';
 
 part 'currency.g.dart';
 
-/// Currency of a plan, one of exactly three options. ARS: symbol `$`, name `pesos`, 0 minor units. USD: symbol `US$`, name `dólares`, 2 minor units. EUR: symbol `€`, name `euros`, 2 minor units. Clients format amounts (es-AR: `.` thousands, `,` decimal, `−` before the symbol for negatives); the API never returns pre-formatted money strings. 
+/// Currency of a plan, one of exactly four options. ARS: symbol `$`, name `pesos`, 0 minor units. USD: symbol `US$`, name `dólares`, 2 minor units. EUR: symbol `€`, name `euros`, 2 minor units. BOB: symbol `Bs.`, name `bolivianos`, 2 minor units. Clients format amounts (es-AR: `.` thousands, `,` decimal, `−` before the symbol for negatives); the API never returns pre-formatted money strings. 
 ///
 /// Properties:
 /// * [code] 
@@ -21,16 +21,16 @@ part 'currency.g.dart';
 abstract class Currency implements Built<Currency, CurrencyBuilder> {
   @BuiltValueField(wireName: r'code')
   CurrencyCode get code;
-  // enum codeEnum {  ARS,  USD,  EUR,  };
+  // enum codeEnum {  ARS,  USD,  EUR,  BOB,  };
 
   @BuiltValueField(wireName: r'symbol')
   CurrencySymbolEnum get symbol;
-  // enum symbolEnum {  $,  US$,  €,  };
+  // enum symbolEnum {  $,  US$,  €,  Bs.,  };
 
   /// Spanish display name shown next to the symbol, e.g. \"pesos ($)\".
   @BuiltValueField(wireName: r'name')
   CurrencyNameEnum get name;
-  // enum nameEnum {  pesos,  dólares,  euros,  };
+  // enum nameEnum {  pesos,  dólares,  euros,  bolivianos,  };
 
   /// Decimal digits of the minor unit.
   @BuiltValueField(wireName: r'minorUnits')
@@ -169,6 +169,8 @@ class CurrencySymbolEnum extends EnumClass {
   static const CurrencySymbolEnum uSDollar = _$currencySymbolEnum_uSDollar;
   @BuiltValueEnumConst(wireName: r'€')
   static const CurrencySymbolEnum euro = _$currencySymbolEnum_euro;
+  @BuiltValueEnumConst(wireName: r'Bs.')
+  static const CurrencySymbolEnum bsPeriod = _$currencySymbolEnum_bsPeriod;
 
   static Serializer<CurrencySymbolEnum> get serializer => _$currencySymbolEnumSerializer;
 
@@ -187,6 +189,8 @@ class CurrencyNameEnum extends EnumClass {
   static const CurrencyNameEnum dlares = _$currencyNameEnum_dlares;
   @BuiltValueEnumConst(wireName: r'euros')
   static const CurrencyNameEnum euros = _$currencyNameEnum_euros;
+  @BuiltValueEnumConst(wireName: r'bolivianos')
+  static const CurrencyNameEnum bolivianos = _$currencyNameEnum_bolivianos;
 
   static Serializer<CurrencyNameEnum> get serializer => _$currencyNameEnumSerializer;
 

@@ -9,6 +9,7 @@ part of 'currency_code.dart';
 const CurrencyCode _$ARS = const CurrencyCode._('ARS');
 const CurrencyCode _$USD = const CurrencyCode._('USD');
 const CurrencyCode _$EUR = const CurrencyCode._('EUR');
+const CurrencyCode _$BOB = const CurrencyCode._('BOB');
 
 CurrencyCode _$valueOf(String name) {
   switch (name) {
@@ -18,6 +19,8 @@ CurrencyCode _$valueOf(String name) {
       return _$USD;
     case 'EUR':
       return _$EUR;
+    case 'BOB':
+      return _$BOB;
     default:
       throw ArgumentError(name);
   }
@@ -28,6 +31,7 @@ final BuiltSet<CurrencyCode> _$values =
   _$ARS,
   _$USD,
   _$EUR,
+  _$BOB,
 ]);
 
 class _$CurrencyCodeMeta {
@@ -35,6 +39,7 @@ class _$CurrencyCodeMeta {
   CurrencyCode get ARS => _$ARS;
   CurrencyCode get USD => _$USD;
   CurrencyCode get EUR => _$EUR;
+  CurrencyCode get BOB => _$BOB;
   CurrencyCode valueOf(String name) => _$valueOf(name);
   BuiltSet<CurrencyCode> get values => _$values;
 }
@@ -51,11 +56,13 @@ class _$CurrencyCodeSerializer implements PrimitiveSerializer<CurrencyCode> {
     'ARS': 'ARS',
     'USD': 'USD',
     'EUR': 'EUR',
+    'BOB': 'BOB',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'ARS': 'ARS',
     'USD': 'USD',
     'EUR': 'EUR',
+    'BOB': 'BOB',
   };
 
   @override

@@ -17,9 +17,9 @@ part 'month_close.g.dart';
 /// * [toMonth] - Budget month as YYYY-MM.
 /// * [carried] - Envelopes whose positive Available carries into the next month.
 /// * [deducted] - Overspent envelopes, deducted from the next month's Ready to Assign; they restart at 0.
-/// * [totalDeductedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
-/// * [readyToAssignFromMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
-/// * [readyToAssignToMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [totalDeductedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [readyToAssignFromMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [readyToAssignToMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [balanceMinor] - Σ account balances at the end of the next month.
 /// * [availableMinor] - Σ Available of the next month.
 /// * [futureAssignedMinor] - Σ Assigned after the next month; balance − available − this = readyToAssignTo.
@@ -42,15 +42,15 @@ abstract class MonthClose implements Built<MonthClose, MonthCloseBuilder> {
   @BuiltValueField(wireName: r'deducted')
   BuiltList<CloseLine> get deducted;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'totalDeductedMinor')
   int get totalDeductedMinor;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'readyToAssignFromMinor')
   int get readyToAssignFromMinor;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'readyToAssignToMinor')
   int get readyToAssignToMinor;
 

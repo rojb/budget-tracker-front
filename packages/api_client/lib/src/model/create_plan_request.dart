@@ -24,7 +24,7 @@ abstract class CreatePlanRequest implements Built<CreatePlanRequest, CreatePlanR
 
   @BuiltValueField(wireName: r'currencyCode')
   CurrencyCode get currencyCode;
-  // enum currencyCodeEnum {  ARS,  USD,  EUR,  };
+  // enum currencyCodeEnum {  ARS,  USD,  EUR,  BOB,  };
 
   /// IANA time zone; defaults to America/Argentina/Buenos_Aires.
   @BuiltValueField(wireName: r'timeZone')

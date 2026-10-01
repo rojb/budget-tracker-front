@@ -53,6 +53,7 @@ class _PlansPageState extends State<PlansPage> with WidgetsBindingObserver {
     Currency.ars: r'pesos ($)',
     Currency.usd: r'dólares (US$)',
     Currency.eur: 'euros (€)',
+    Currency.bob: 'bolivianos (Bs.)',
   };
 
   @override

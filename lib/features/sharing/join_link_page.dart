@@ -40,6 +40,7 @@ class _JoinLinkPageState extends State<JoinLinkPage> {
     Currency.ars: r'pesos ($)',
     Currency.usd: r'dólares (US$)',
     Currency.eur: 'euros (€)',
+    Currency.bob: 'bolivianos (Bs.)',
   };
 
   String get _displayCode {

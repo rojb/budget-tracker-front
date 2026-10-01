@@ -122,5 +122,6 @@ class PlansRepository {
 Currency currencyOf(api.CurrencyCode code) => switch (code) {
   api.CurrencyCode.USD => Currency.usd,
   api.CurrencyCode.EUR => Currency.eur,
+  api.CurrencyCode.BOB => Currency.bob,
   _ => Currency.ars,
 };

@@ -12,7 +12,7 @@ part 'initial_assignment_result.g.dart';
 ///
 /// Properties:
 /// * [month] - Budget month as YYYY-MM.
-/// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [readyToAssignMinor] - Ready to Assign of the month after the assignment; negative when over-assigned.
 @BuiltValue()
 abstract class InitialAssignmentResult implements Built<InitialAssignmentResult, InitialAssignmentResultBuilder> {
@@ -20,7 +20,7 @@ abstract class InitialAssignmentResult implements Built<InitialAssignmentResult,
   @BuiltValueField(wireName: r'month')
   String get month;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'assignedMinor')
   int get assignedMinor;
 

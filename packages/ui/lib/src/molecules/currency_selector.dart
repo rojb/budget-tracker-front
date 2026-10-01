@@ -7,9 +7,10 @@ import '../tokens/icons.dart';
 import '../tokens/shape.dart';
 import '../tokens/typography.dart';
 
-/// Three-option currency card of 20 Nuevo plan (FR-40): Pesos $, Dólares US$,
-/// Euros €. The chosen option is a lavender pill with a white symbol badge and
-/// a check; the others show the symbol as plain text.
+/// Four-option currency card of 20 Nuevo plan (FR-40): Pesos $, Dólares US$,
+/// Euros €, Bolivianos Bs. One row per currency, as in the render. The chosen
+/// option is a lavender pill with a white symbol badge and a check; the others
+/// show the symbol as plain text.
 class UiCurrencySelector extends StatelessWidget {
   const UiCurrencySelector({
     required this.selected,
@@ -24,6 +25,7 @@ class UiCurrencySelector extends StatelessWidget {
     Currency.ars: 'Pesos (ARS)',
     Currency.usd: 'Dólares (USD)',
     Currency.eur: 'Euros (EUR)',
+    Currency.bob: 'Bolivianos (BOB)',
   };
 
   @override
