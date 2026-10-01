@@ -11,6 +11,7 @@ import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 import 'goal_fields.dart';
 import 'group_picker_sheet.dart';
+import '../goals/goal_photo_sheet.dart';
 
 /// Screen 31 Nuevo sobre: name, group (→ 52), icon and the optional objective
 /// ("Objetivo": none, monthly or by a date). "+ Nueva meta" in 01 opens it with
@@ -50,6 +51,30 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
   String? _nameError;
   String? _dateError;
   bool _saving = false;
+  PhotoChoice? _photo;
+
+  /// The "Foto" row is for goals: group Metas or an objective with a date.
+  bool get _showPhotoRow =>
+      _goal.kind == GoalKind.targetByDate ||
+      (widget.envelopes.groupById(_groupId)?.name.toLowerCase() == 'metas');
+
+  String get _photoLabel => switch (_photo) {
+    SuggestedChoice(:final suggestion) => suggestion.name,
+    PickedChoice() => 'Tu foto',
+    _ => 'Sin foto',
+  };
+
+  Future<void> _pickPhoto() async {
+    final choice = await showGoalPhotoSheet(
+      context,
+      envelopes: widget.envelopes,
+      icon: uiEnvelopeIcon(_icon),
+      draftChoice: _photo,
+    );
+    if (choice != null) {
+      setState(() => _photo = choice is NoPhotoChoice ? null : choice);
+    }
+  }
 
   Future<void> _editName() async {
     final value = await showTextEditSheet(
@@ -95,14 +120,34 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     }
     setState(() => _saving = true);
     try {
-      await widget.envelopes.createEnvelope(
+      final created = await widget.envelopes.createEnvelope(
         name: _name.trim(),
         groupId: _groupId,
         icon: _icon,
         goal: _goal.toGoal(),
       );
       if (!mounted) return;
-      showSaved(context, 'Guardado');
+      final photo = _photo;
+      var photoFailed = false;
+      if (photo != null && photo is! NoPhotoChoice) {
+        // The chosen photo is applied once the envelope exists.
+        try {
+          await applyPhotoChoice(widget.envelopes, created.id, photo);
+        } on ApiFailure {
+          photoFailed = true;
+        }
+      }
+      if (!mounted) return;
+      if (photoFailed) {
+        showUiToast(
+          context,
+          variant: UiToastVariant.warning,
+          title: 'El sobre se creó, pero no pudimos subir la foto',
+          detail: 'Podés cambiarla desde las opciones de la meta.',
+        );
+      } else {
+        showSaved(context, 'Guardado');
+      }
       context.pop();
     } on ApiFailure catch (failure) {
       if (!mounted) return;
@@ -167,6 +212,12 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
                     value: group?.name ?? 'Sin grupo',
                     onTap: _pickGroup,
                   ),
+                  if (_showPhotoRow)
+                    UiFieldRow(
+                      label: 'Foto',
+                      value: _photoLabel,
+                      onTap: _pickPhoto,
+                    ),
                 ],
               ),
             ),

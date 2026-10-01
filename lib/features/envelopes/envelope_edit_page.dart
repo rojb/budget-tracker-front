@@ -13,6 +13,7 @@ import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 import 'goal_fields.dart';
 import 'group_picker_sheet.dart';
+import '../goals/goal_photo_sheet.dart';
 
 /// Screen 23 Editar sobre: name, group (→ 52), icon, the objective (type,
 /// target and due date) and the trash that opens 43 (the only entry to the
@@ -45,6 +46,11 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
   String? _nameError;
   String? _dateError;
   bool _saving = false;
+
+  /// The "Foto" row is for goals: group Metas or an objective with a date.
+  bool get _showPhotoRow =>
+      _goal.kind == GoalKind.targetByDate ||
+      (widget.envelopes.groupById(_groupId)?.name.toLowerCase() == 'metas');
 
   Future<void> _editName() async {
     final value = await showTextEditSheet(
@@ -224,6 +230,19 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
                     value: group?.name ?? 'Sin grupo',
                     onTap: _pickGroup,
                   ),
+                  if (_showPhotoRow)
+                    UiFieldRow(
+                      label: 'Foto',
+                      value: line.envelope.photoUrl == null
+                          ? 'Elegir'
+                          : 'Cambiar',
+                      onTap: () => showGoalPhotoSheet(
+                        context,
+                        envelopes: widget.envelopes,
+                        icon: uiEnvelopeIcon(_icon),
+                        envelopeId: line.envelope.id,
+                      ),
+                    ),
                 ],
               ),
             ),
