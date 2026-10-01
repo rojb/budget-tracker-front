@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         SizedBox(
-          height: 340,
+          height: 360,
           child: PageView.builder(
             controller: _pages,
             itemCount: count,
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
   ) {
     if (index == goals.length) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
         child: _NewGoalCard(label: '+ Nueva meta', onTap: _newGoal),
       );
     }
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
     final goal = line.envelope.goal!;
     final status = line.goalStatus;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
       child: UiGoalCard(
         name: line.envelope.name,
         subtitle: goalSubtitle(goal, currency),

@@ -84,7 +84,7 @@ class UiGoalCard extends StatelessWidget {
                     stops: const [0.4, 1],
                     colors: [
                       UiColors.ink.withAlpha(0),
-                      UiColors.ink.withAlpha(150),
+                      UiColors.ink.withAlpha(185),
                     ],
                   ),
                 ),
