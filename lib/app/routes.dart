@@ -21,6 +21,8 @@ abstract final class AppRoutes {
   static const invite = '/plans/invite'; // 21 Invitar miembro
   static const newTransaction = '/transactions/new'; // 07 / 09
   static const splitTransaction = '/transactions/new/split'; // 08 Dividir pago
+  static String editTransaction(String id) =>
+      '/transactions/$id/edit'; // 12 Editar movimiento
   static const payees = '/payees'; // 15 Beneficiarios
   static const newPayee = '/payees/new'; // 41 Nuevo beneficiario
   static String payee(String id) => '/payees/$id'; // 41 Editar beneficiario

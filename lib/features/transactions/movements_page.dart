@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
+import '../accounts/accounts_controller.dart';
 import '../common/day_groups.dart';
 import '../envelopes/envelopes_controller.dart';
 import '../plans/plans_controller.dart';
+import 'transaction_change.dart';
 import 'transaction_rows.dart';
 import 'transactions_controller.dart';
 
 /// Screen 10 Movimientos: the plan's transactions newest first, grouped by day,
-/// with more pages loaded as the list is scrolled. Search, filters and opening
-/// a movement (11, 12) belong to `add-transaction-editing-and-filters`.
+/// with more pages loaded as the list is scrolled. Tapping a movement opens 12.
 class MovementsPage extends StatefulWidget {
   const MovementsPage({
     required this.transactions,
     required this.envelopes,
+    required this.accounts,
     required this.plans,
     super.key,
   });
 
   final TransactionsController transactions;
   final EnvelopesController envelopes;
+  final AccountsController accounts;
   final PlansController plans;
 
   @override
@@ -125,6 +128,13 @@ class _MovementsPageState extends State<MovementsPage> {
           item,
           currency: currency,
           envelopes: widget.envelopes,
+          onTap: () => openTransaction(
+            context,
+            item,
+            transactions: transactions,
+            envelopes: widget.envelopes,
+            accounts: widget.accounts,
+          ),
         ),
       ),
       if (transactions.loadingMore)

@@ -17,7 +17,9 @@ import 'transactions_controller.dart';
 /// Screen 08 Dividir pago: the expense of 07 shared between two or more
 /// envelopes (FR-14). The `SaveBar` stays Disabled ("Faltan $ X" / "Sobran
 /// $ X") until the portions add up exactly to the total; saving records the
-/// whole expense and returns to the screen that opened 07.
+/// whole expense and returns to the screen that opened 07. When the draft is the
+/// edit of a movement (12), the SaveBar reads "Guardar cambios" and only
+/// confirms the portions: it returns true and 12 sends the edit.
 class SplitPage extends StatefulWidget {
   const SplitPage({
     required this.draft,
@@ -93,6 +95,10 @@ class _SplitPageState extends State<SplitPage> {
 
   Future<void> _save() async {
     if (_saving || !_draft.splitValid) return;
+    if (_draft.isEdit) {
+      context.pop(true);
+      return;
+    }
     setState(() {
       _saving = true;
       _error = null;
@@ -143,7 +149,9 @@ class _SplitPageState extends State<SplitPage> {
         ? 'Faltan ${_money(remaining)}'
         : (remaining < 0
               ? 'Sobran ${_money(-remaining)}'
-              : (draft.splitValid ? 'Guardar gasto' : 'Elegí los sobres'));
+              : (draft.splitValid
+                    ? (draft.isEdit ? 'Guardar cambios' : 'Guardar gasto')
+                    : 'Elegí los sobres'));
     final payee = draft.payee?.name ?? 'Sin beneficiario';
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),

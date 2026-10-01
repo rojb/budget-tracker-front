@@ -15,16 +15,21 @@ import 'transactions_repository.dart';
 ///   of the envelope, or "A + B" with the envelope names of a split;
 /// - icon: the envelope's, a split icon for a split, an arrow for an income to
 ///   Ready to Assign.
+///
+/// [timeWithDay] draws the time as "Hoy, 14:32" (the confirmation of 27).
 UiTxRow transactionRow(
   TransactionData transaction, {
   required Currency currency,
   required EnvelopesController envelopes,
   bool showAccount = true,
+  bool timeWithDay = false,
   VoidCallback? onTap,
 }) {
   final money = formatMoney(transaction.amountMinor, currency);
   final splits = transaction.splits;
-  final time = timeLabel(transaction.occurredAt);
+  final time = timeWithDay
+      ? dateTimeLabel(transaction.occurredAt)
+      : timeLabel(transaction.occurredAt);
   final first = splits.isEmpty ? null : splits.first;
   final String destination;
   final IconData icon;
