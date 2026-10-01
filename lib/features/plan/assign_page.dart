@@ -404,6 +404,7 @@ class _AssignPageState extends State<AssignPage> {
         subtitle:
             '${_money(line.availableMinor)} disponible → quedaría en '
             '${_money(line.availableMinor + _amountMinor)}',
+        subtitleMaxLines: 2,
       ),
     const SizedBox(height: 18),
     Text(
