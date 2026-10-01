@@ -53,7 +53,7 @@ class GoalDraft {
 }
 
 /// Quick amounts of the objective, in minor units of [currency]: ARS 20.000,
-/// 50.000, 100.000 and 200.000; USD and EUR 50, 100, 250 and 500.
+/// 50.000, 100.000 and 200.000; USD, EUR and BOB 50, 100, 250 and 500.
 List<int> quickAmounts(Currency currency) {
   final factor = math.pow(10, currency.minorUnits).toInt();
   final major = currency == Currency.ars
