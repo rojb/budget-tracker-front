@@ -8,6 +8,8 @@ part of 'transaction_page.dart';
 
 class _$TransactionPage extends TransactionPage {
   @override
+  final TransactionSummary summary;
+  @override
   final BuiltList<Transaction> items;
   @override
   final int page;
@@ -20,7 +22,8 @@ class _$TransactionPage extends TransactionPage {
       (TransactionPageBuilder()..update(updates))._build();
 
   _$TransactionPage._(
-      {required this.items,
+      {required this.summary,
+      required this.items,
       required this.page,
       required this.pageSize,
       required this.total})
@@ -36,6 +39,7 @@ class _$TransactionPage extends TransactionPage {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is TransactionPage &&
+        summary == other.summary &&
         items == other.items &&
         page == other.page &&
         pageSize == other.pageSize &&
@@ -45,6 +49,7 @@ class _$TransactionPage extends TransactionPage {
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, summary.hashCode);
     _$hash = $jc(_$hash, items.hashCode);
     _$hash = $jc(_$hash, page.hashCode);
     _$hash = $jc(_$hash, pageSize.hashCode);
@@ -56,6 +61,7 @@ class _$TransactionPage extends TransactionPage {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'TransactionPage')
+          ..add('summary', summary)
           ..add('items', items)
           ..add('page', page)
           ..add('pageSize', pageSize)
@@ -69,6 +75,12 @@ class TransactionPageBuilder
         Builder<TransactionPage, TransactionPageBuilder>,
         PageMetaBuilder {
   _$TransactionPage? _$v;
+
+  TransactionSummaryBuilder? _summary;
+  TransactionSummaryBuilder get summary =>
+      _$this._summary ??= TransactionSummaryBuilder();
+  set summary(covariant TransactionSummaryBuilder? summary) =>
+      _$this._summary = summary;
 
   ListBuilder<Transaction>? _items;
   ListBuilder<Transaction> get items =>
@@ -94,6 +106,7 @@ class TransactionPageBuilder
   TransactionPageBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _summary = $v.summary.toBuilder();
       _items = $v.items.toBuilder();
       _page = $v.page;
       _pageSize = $v.pageSize;
@@ -121,6 +134,7 @@ class TransactionPageBuilder
     try {
       _$result = _$v ??
           _$TransactionPage._(
+            summary: summary.build(),
             items: items.build(),
             page: BuiltValueNullFieldError.checkNotNull(
                 page, r'TransactionPage', 'page'),
@@ -132,6 +146,8 @@ class TransactionPageBuilder
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'summary';
+        summary.build();
         _$failedField = 'items';
         items.build();
       } catch (e) {

@@ -6,6 +6,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/page_meta.dart';
 import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/transaction_summary.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -18,8 +19,12 @@ part 'transaction_page.g.dart';
 /// * [pageSize] 
 /// * [total] - Count of all matching items across pages.
 /// * [items] 
+/// * [summary] 
 @BuiltValue()
 abstract class TransactionPage implements PageMeta, Built<TransactionPage, TransactionPageBuilder> {
+  @BuiltValueField(wireName: r'summary')
+  TransactionSummary get summary;
+
   @BuiltValueField(wireName: r'items')
   BuiltList<Transaction> get items;
 
@@ -46,6 +51,11 @@ class _$TransactionPageSerializer implements PrimitiveSerializer<TransactionPage
     TransactionPage object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    yield r'summary';
+    yield serializers.serialize(
+      object.summary,
+      specifiedType: const FullType(TransactionSummary),
+    );
     yield r'pageSize';
     yield serializers.serialize(
       object.pageSize,
@@ -89,6 +99,13 @@ class _$TransactionPageSerializer implements PrimitiveSerializer<TransactionPage
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'summary':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(TransactionSummary),
+          ) as TransactionSummary;
+          result.summary.replace(valueDes);
+          break;
         case r'pageSize':
           final valueDes = serializers.deserialize(
             value,

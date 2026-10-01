@@ -8,6 +8,7 @@ part of 'serializers.dart';
 
 Serializers _$serializers = (Serializers().toBuilder()
       ..add($Account.serializer)
+      ..add($AffectedMonths.serializer)
       ..add($PageMeta.serializer)
       ..add(AccountDetail.serializer)
       ..add(AccountType.serializer)
@@ -56,9 +57,11 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(TemplateEnvelope.serializer)
       ..add(TemplateGroup.serializer)
       ..add(Transaction.serializer)
+      ..add(TransactionChange.serializer)
       ..add(TransactionDirection.serializer)
       ..add(TransactionPage.serializer)
       ..add(TransactionSplit.serializer)
+      ..add(TransactionSummary.serializer)
       ..add(Transfer.serializer)
       ..add(TransferPage.serializer)
       ..add(UpdateAccountRequest.serializer)
@@ -93,6 +96,12 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(PlanMember)]),
           () => ListBuilder<PlanMember>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => ListBuilder<String>())
