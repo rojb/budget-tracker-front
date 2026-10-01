@@ -19,18 +19,20 @@ class HomeController extends ChangeNotifier {
   final PlansController _plans;
   final EnvelopesController _envelopes;
 
-  String get greeting {
-    final name = _auth.user?.name.split(' ').first;
-    return name == null ? 'Hola' : 'Hola, $name';
-  }
+  /// First name for the two-line greeting of 01 ("Hola" / "Sofía!"), null
+  /// while the session has no user.
+  String? get firstName => _auth.user?.name.trim().split(' ').first;
+
+  /// Ready to Assign and the number of envelopes of the loaded month (the
+  /// joined card of 01); the API derives them.
+  int get readyToAssignMinor => _envelopes.readyToAssignMinor;
+  int get envelopeCount => _envelopes.envelopeCount;
 
   String get initials {
     final name = _auth.user?.name.trim() ?? '';
     if (name.isEmpty) return '?';
     return name.substring(0, name.length < 2 ? 1 : 2).toUpperCase();
   }
-
-  String? get planName => _plans.activePlan?.name;
 
   /// The goals ("Metas") in the order of the envelope list.
   List<EnvelopeLineData> get goals => _envelopes.goalLines;

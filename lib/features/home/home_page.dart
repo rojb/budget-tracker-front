@@ -4,6 +4,7 @@ import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
 import '../envelopes/envelopes_controller.dart';
+import '../envelopes/envelopes_repository.dart';
 import '../envelopes/goal_texts.dart';
 import '../plans/plans_controller.dart';
 import '../shell/account_menu_sheet.dart';
@@ -34,7 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final HomeController _controller = widget.controllerFactory();
-  final PageController _pages = PageController(viewportFraction: 0.82);
+  final PageController _pages = PageController(viewportFraction: 0.78);
   int _page = 0;
 
   @override
@@ -76,38 +77,49 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         SizedBox(
-          height: 310,
+          height: 340,
           child: PageView.builder(
             controller: _pages,
             itemCount: count,
             onPageChanged: (index) => setState(() => _page = index),
-            itemBuilder: (context, index) {
-              if (index == goals.length) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: _NewGoalCard(label: '+ Nueva meta', onTap: _newGoal),
-                );
-              }
-              final line = goals[index];
-              final goal = line.envelope.goal!;
-              final status = line.goalStatus;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                child: UiGoalCard(
-                  name: line.envelope.name,
-                  subtitle: goalSubtitle(goal, currency),
-                  savedLabel: formatMoney(status?.savedMinor ?? 0, currency),
-                  percent: status?.percent ?? 0,
-                  icon: uiEnvelopeIcon(line.envelope.icon),
-                  image: widget.envelopes.imageFor(line.envelope.photoUrl),
-                  onTap: () =>
-                      context.push(AppRoutes.goalDetail(line.envelope.id)),
-                ),
-              );
-            },
+            itemBuilder: (context, index) => _Tilted(
+              controller: _pages,
+              index: index,
+              initialPage: _page,
+              child: _card(context, goals, index, currency),
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _card(
+    BuildContext context,
+    List<EnvelopeLineData> goals,
+    int index,
+    Currency currency,
+  ) {
+    if (index == goals.length) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: _NewGoalCard(label: '+ Nueva meta', onTap: _newGoal),
+      );
+    }
+    final line = goals[index];
+    final goal = line.envelope.goal!;
+    final status = line.goalStatus;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: UiGoalCard(
+        name: line.envelope.name,
+        subtitle: goalSubtitle(goal, currency),
+        savedLabel: formatMoney(status?.savedMinor ?? 0, currency),
+        percent: status?.percent ?? 0,
+        icon: uiEnvelopeIcon(line.envelope.icon),
+        image: widget.envelopes.imageFor(line.envelope.photoUrl),
+        onTap: () => context.push(AppRoutes.goalDetail(line.envelope.id)),
+      ),
     );
   }
 
@@ -130,14 +142,35 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              const Spacer(),
+              // Reportes (→ 17) belongs to add-reports: muted and inert until it exists.
+              const Opacity(
+                opacity: 0.4,
+                child: UiIconButton(
+                  icon: UiIcons.barChart,
+                  semanticLabel: 'Reportes (todavía no disponible)',
+                  onPressed: null,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
-          Text(_controller.greeting, style: UiTypography.headline),
-          if (_controller.planName != null) ...[
-            const SizedBox(height: 6),
-            Text(_controller.planName!, style: UiTypography.caption),
-          ],
+          Text('Hola', style: UiTypography.headline),
+          Text('${_controller.firstName ?? ''}!', style: UiTypography.headline),
+          const SizedBox(height: 22),
+          // "+" (→ 03) belongs to add-monthly-assignment: muted and inert for now.
+          UiJoinedCard(
+            primaryValue: formatMoney(
+              _controller.readyToAssignMinor,
+              widget.plans.currency,
+            ),
+            primaryLabel: 'Listo para asignar',
+            secondaryValue: '${_controller.envelopeCount}',
+            secondaryLabel: 'Sobres activos',
+            addLabel: 'Asignar dinero',
+            addEnabled: false,
+            onAdd: () {},
+          ),
           const SizedBox(height: 28),
           Row(
             children: [
@@ -154,6 +187,38 @@ class _HomePageState extends State<HomePage> {
           _goals(),
         ],
       ),
+    );
+  }
+}
+
+/// Rotates a carousel card a few degrees, as the render of 01 draws them: the
+/// centered one slightly counter-clockwise, its neighbors tilting the other way
+/// as they move away.
+class _Tilted extends StatelessWidget {
+  const _Tilted({
+    required this.controller,
+    required this.index,
+    required this.initialPage,
+    required this.child,
+  });
+
+  final PageController controller;
+  final int index;
+  final int initialPage;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        final page = controller.hasClients
+            ? (controller.page ?? initialPage.toDouble())
+            : initialPage.toDouble();
+        final offset = (index - page).clamp(-1.0, 1.0);
+        return Transform.rotate(angle: -0.035 + 0.075 * offset, child: child);
+      },
+      child: child,
     );
   }
 }

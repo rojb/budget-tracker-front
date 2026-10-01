@@ -198,11 +198,16 @@ class GoalDetailPage extends StatelessWidget {
                         ],
                         const SizedBox(height: 12),
                         // Assigning to a goal is the monthly assignment flow (03),
-                        // which belongs to add-monthly-assignment.
+                        // which belongs to add-monthly-assignment: disabled until it exists.
                         const UiButton(
                           label: 'Asignar a esta meta',
                           icon: UiIcons.sparkles,
                           onPressed: null,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Disponible con la asignación mensual',
+                          style: UiTypography.custom(14, color: text),
                         ),
                       ],
                     ),
