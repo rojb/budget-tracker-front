@@ -35,15 +35,20 @@ class UiButton extends StatelessWidget {
     final height = large
         ? UiSizes.buttonPrimaryHeight
         : UiSizes.buttonSecondaryHeight;
-    final foreground = variant == UiButtonVariant.danger
-        ? UiColors.surface
-        : UiColors.ink;
-    final background = switch (variant) {
-      UiButtonVariant.primary => UiColors.chartreuse,
-      UiButtonVariant.secondary => UiColors.bg,
-      UiButtonVariant.white => UiColors.surface,
-      UiButtonVariant.danger => UiColors.danger,
-    };
+    // Without a handler the button is disabled: muted grey, never the live
+    // chartreuse, so a dead tap does not look alive.
+    final disabled = onPressed == null && !loading;
+    final foreground = disabled
+        ? UiColors.inkMuted
+        : (variant == UiButtonVariant.danger ? UiColors.surface : UiColors.ink);
+    final background = disabled
+        ? UiColors.soft
+        : switch (variant) {
+            UiButtonVariant.primary => UiColors.chartreuse,
+            UiButtonVariant.secondary => UiColors.bg,
+            UiButtonVariant.white => UiColors.surface,
+            UiButtonVariant.danger => UiColors.danger,
+          };
     final style = UiTypography.custom(
       large ? 16 : 15,
       weight: 500,

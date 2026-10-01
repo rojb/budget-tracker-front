@@ -43,10 +43,12 @@ class UiGoalBackdrop extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: const [0, 0.35, 1],
+                // A uniform dark base plus a gradient: white text and glass
+                // panels keep contrast (4.5 : 1) even over a light photo.
                 colors: [
-                  UiColors.ink.withAlpha(110),
-                  UiColors.ink.withAlpha(30),
-                  UiColors.ink.withAlpha(170),
+                  UiColors.ink.withAlpha(150),
+                  UiColors.ink.withAlpha(115),
+                  UiColors.ink.withAlpha(205),
                 ],
               ),
             ),

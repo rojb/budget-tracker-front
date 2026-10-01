@@ -82,6 +82,7 @@ abstract final class UiIcons {
   static const IconData image = LucideIcons.image300;
   static const IconData images = LucideIcons.images300;
   static const IconData target = LucideIcons.target300;
+  static const IconData barChart = LucideIcons.chartNoAxesColumn300;
   static const IconData arrowUpRight = LucideIcons.arrowUpRight300;
   static const IconData ellipsisVertical = LucideIcons.ellipsisVertical300;
 

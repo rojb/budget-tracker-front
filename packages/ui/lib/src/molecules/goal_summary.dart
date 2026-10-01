@@ -32,7 +32,7 @@ class UiGlassPanel extends StatelessWidget {
         child: Container(
           padding: padding,
           color: onPhoto
-              ? Color.alphaBlend(UiColors.glass, UiColors.ink.withAlpha(80))
+              ? Color.alphaBlend(UiColors.glass, UiColors.ink.withAlpha(110))
               : UiColors.surface.withAlpha(150),
           child: child,
         ),
