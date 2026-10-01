@@ -24,7 +24,13 @@ import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
 import '../features/goals/goal_detail_page.dart';
 import '../features/home/home_page.dart';
+import '../features/plan/assign_page.dart';
+import '../features/plan/month_close_page.dart';
+import '../features/plan/months_repository.dart';
 import '../features/payees/payee_form_page.dart';
+import '../features/reports/reports_controller.dart';
+import '../features/reports/reports_page.dart';
+import '../features/reports/reports_repository.dart';
 import '../features/payees/payees_controller.dart';
 import '../features/payees/payees_page.dart';
 import '../features/payees/payees_repository.dart';
@@ -149,6 +155,18 @@ GoRouter createRouter(Dependencies dependencies) {
                   plans: plans,
                   envelopes: dependencies.envelopesController,
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'reports',
+                    builder: (context, state) => ReportsPage(
+                      plans: plans,
+                      controllerFactory: () => ReportsController(
+                        ReportsRepository(dependencies.apiGateway),
+                        plans,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -160,6 +178,7 @@ GoRouter createRouter(Dependencies dependencies) {
                   plans: plans,
                   accounts: dependencies.accountsController,
                   envelopes: dependencies.envelopesController,
+                  month: dependencies.monthController,
                 ),
               ),
             ],
@@ -375,6 +394,28 @@ GoRouter createRouter(Dependencies dependencies) {
           plans: plans,
           envelopes: dependencies.envelopesController,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.assignPath,
+        builder: (context, state) => AssignPage(
+          plans: plans,
+          envelopes: dependencies.envelopesController,
+          month: dependencies.monthController,
+          initialMonth: state.uri.queryParameters['month'],
+          initialEnvelopeId: state.uri.queryParameters['envelopeId'],
+        ),
+      ),
+      GoRoute(
+        path: '/month-close/:month',
+        builder: (context, state) {
+          final close = state.extra;
+          return MonthClosePage(
+            fromMonth: state.pathParameters['month']!,
+            plans: plans,
+            month: dependencies.monthController,
+            initial: close is MonthCloseData ? close : null,
+          );
+        },
       ),
       GoRoute(
         path: '/envelopes/:envelopeId',

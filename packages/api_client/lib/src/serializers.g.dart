@@ -13,7 +13,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(AccountDetail.serializer)
       ..add(AccountType.serializer)
       ..add(ApplyEnvelopeTemplateRequest.serializer)
+      ..add(AssignMoneyRequest.serializer)
+      ..add(AssignMoneyResult.serializer)
       ..add(AuthSession.serializer)
+      ..add(CloseLine.serializer)
       ..add(CreateAccountRequest.serializer)
       ..add(CreateEnvelopeGroupRequest.serializer)
       ..add(CreateEnvelopeRequest.serializer)
@@ -36,6 +39,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(EnvelopeIcon.serializer)
       ..add(EnvelopeLine.serializer)
       ..add(EnvelopeList.serializer)
+      ..add(EnvelopeSpending.serializer)
       ..add(EnvelopeState.serializer)
       ..add(EnvelopeTemplate.serializer)
       ..add(EnvelopeTemplateResult.serializer)
@@ -44,6 +48,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(GoalStatus.serializer)
       ..add(HealthStatus.serializer)
       ..add(HealthStatusStatusEnum.serializer)
+      ..add(IncomeExpenseMonth.serializer)
+      ..add(IncomeExpenseReport.serializer)
       ..add(InitialAssignment.serializer)
       ..add(InitialAssignmentRequest.serializer)
       ..add(InitialAssignmentResult.serializer)
@@ -51,8 +57,12 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(InvitationPreview.serializer)
       ..add(InvitationRole.serializer)
       ..add(LoginRequest.serializer)
+      ..add(MonthClose.serializer)
+      ..add(MonthSummary.serializer)
       ..add(MoveMoneyRequest.serializer)
       ..add(MoveMoneyResult.serializer)
+      ..add(NetWorthMonth.serializer)
+      ..add(NetWorthReport.serializer)
       ..add(Payee.serializer)
       ..add(PayeePage.serializer)
       ..add(PhotoSuggestion.serializer)
@@ -63,6 +73,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(RegisterRequest.serializer)
       ..add(ReorderEnvelopeGroupsRequest.serializer)
       ..add(ReorderEnvelopesRequest.serializer)
+      ..add(SpendingMonth.serializer)
+      ..add(SpendingReport.serializer)
       ..add(SuggestedPhotoRequest.serializer)
       ..add(TemplateEnvelope.serializer)
       ..add(TemplateGroup.serializer)
@@ -85,6 +97,12 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ValidationErrorErrorEnum.serializer)
       ..add(ValidationErrorStatusCodeEnum.serializer)
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CloseLine)]),
+          () => ListBuilder<CloseLine>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(CloseLine)]),
+          () => ListBuilder<CloseLine>())
+      ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(CreateTransactionSplit)]),
           () => ListBuilder<CreateTransactionSplit>())
@@ -98,14 +116,26 @@ Serializers _$serializers = (Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(EnvelopeLine)]),
           () => ListBuilder<EnvelopeLine>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(EnvelopeSpending)]),
+          () => ListBuilder<EnvelopeSpending>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(IncomeExpenseMonth)]),
+          () => ListBuilder<IncomeExpenseMonth>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(InitialAssignment)]),
           () => ListBuilder<InitialAssignment>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(NetWorthMonth)]),
+          () => ListBuilder<NetWorthMonth>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Payee)]),
           () => ListBuilder<Payee>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(PlanMember)]),
           () => ListBuilder<PlanMember>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SpendingMonth)]),
+          () => ListBuilder<SpendingMonth>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => ListBuilder<String>())

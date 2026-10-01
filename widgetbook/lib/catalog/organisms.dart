@@ -9,6 +9,39 @@ WidgetbookFolder organismsFolder() {
     name: 'organisms',
     children: [
       WidgetbookComponent(
+        name: 'BarChart',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'spending by month (17)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 370,
+                child: UiBarChart(
+                  entries: [
+                    for (final (label, value) in const [
+                      ('Abr', 198000),
+                      ('May', 241000),
+                      ('Jun', 226000),
+                      ('Jul', 289000),
+                      ('Ago', 270000),
+                      ('Sep', 264550),
+                    ])
+                      UiBarChartEntry(
+                        label: label,
+                        value: value,
+                        semanticLabel: '$label, $value',
+                      ),
+                  ],
+                  selectedIndex: 5,
+                  selectedValue: r'$ 265k',
+                  onSelected: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'NavCluster',
         useCases: [
           for (final tab in UiNavTab.values)

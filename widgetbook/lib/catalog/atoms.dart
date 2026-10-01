@@ -146,6 +146,32 @@ WidgetbookFolder atomsFolder() {
                 stage(UiChip(label: 'Chip', showCheck: true, onPressed: () {})),
           ),
           WidgetbookUseCase(
+            name: 'status filters with icons (02)',
+            builder: (context) => stage(
+              Wrap(
+                spacing: 8,
+                children: [
+                  UiChip(label: 'Todos', selected: true, onPressed: () {}),
+                  UiChip(
+                    label: 'Sobregirados · 1',
+                    icon: UiIcons.warning,
+                    onPressed: () {},
+                  ),
+                  UiChip(
+                    label: 'Falta · 1',
+                    icon: UiIcons.clock,
+                    onPressed: () {},
+                  ),
+                  UiChip(
+                    label: 'Cubiertos · 10',
+                    icon: UiIcons.check,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
             name: 'soft compact (on a white card, 06)',
             builder: (context) => stage(
               Container(
@@ -364,6 +390,22 @@ WidgetbookFolder atomsFolder() {
                   icon: UiIcons.cornerDownRight,
                   title: 'Deja de sumar al saldo total.',
                   text: 'Sus movimientos se conservan.',
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'lavender with action (04)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiInfoNote(
+                  variant: UiInfoNoteVariant.lavender,
+                  icon: UiIcons.calendarClock,
+                  title: 'Estás en un mes futuro',
+                  text: 'Lo que asignes acá se reserva hoy.',
+                  actionLabel: 'Hoy',
+                  onAction: () {},
                 ),
               ),
             ),

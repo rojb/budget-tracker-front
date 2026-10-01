@@ -244,18 +244,57 @@ Cambio `add-envelope-goals` (RRG-52). `lib/features/envelopes/` y `lib/features/
   disponible"); la API responde 409 si el dinero cambió.
 - **01 Inicio**: carrusel "Metas" con una `UiGoalCard` por cada sobre con meta con fecha (→ 05) y
   "+ Nueva meta" (→ 31 con el grupo Metas y "Con fecha"); estados vacío ("Creá tu primera meta"),
-  cargando y error. La tarjeta "Listo para asignar" y Reportes no están (`add-monthly-assignment` y
-  `add-reports`).
+  cargando y error. El "+" de la tarjeta "Listo para asignar" abre 03 (`add-monthly-assignment`);
+  Reportes no está (`add-reports`).
 - **05 Detalle de meta** (`/goals/:id`), **40 Opciones de meta** y **50 Foto de la meta**: foto a
   pantalla completa (o el tinte lavanda con el ícono) bajo paneles de vidrio, tiles a 22, 24 y 23, y
-  "Asignar a esta meta" deshabilitado hasta que exista 03. 50 elige de la galería o la cámara
+  "Asignar a esta meta" (→ 03 con ese sobre elegido). 50 elige de la galería o la cámara
   (`image_picker`), una foto sugerida, o quita la foto; "Listo" la sube (la API valida JPEG/PNG/WebP de
   hasta 5 MB). Desde 31 solo recuerda la elección y se aplica al crear el sobre.
 - **Fotos con autenticación.** La API sirve las fotos solo a miembros: `EnvelopesController.imageFor`
   arma un `NetworkImage` con el header `Authorization` de `ApiGateway`. Una foto nueva cambia su URL
   (`?v=`), así que el caché de imágenes de Flutter no muestra una vieja.
-- Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el actual); la navegación
-  de meses es de `add-monthly-assignment`.
+- Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el que muestra 02/04).
+
+## Plan del mes, asignación y cierre de mes
+
+Cambio `add-monthly-assignment` (RRG-51). `lib/features/plan/`:
+
+- **Mes visto.** `EnvelopesController.showMonth` carga las cifras de otro mes y las recargas siguientes
+  lo mantienen, así 22 y 24 ven el mismo mes que 02. `MonthController` (app-scoped) sigue esas
+  cargas, pide el resumen del mes (`GET /plans/:id/months/:month`: mes actual del plan, si es futuro)
+  y guarda el filtro de estado.
+- **02 / 04.** ‹ › cambian de mes sin límite (FR-15). Los chips "Todos · Sobregirados · Falta ·
+  Cubiertos" filtran en el lugar por el `state` de la API (Cubiertos = cubiertos con dinero; un sobre
+  sin nada es Empty). En un mes futuro la vista pasa a 04: aviso lavanda con "Hoy", encabezados con
+  "$ X asignado" y filas "Reservado desde <mes actual>" o "Sin asignar todavía".
+- **03 / 53 Asignar dinero** (`/assign?month=&envelopeId=`): desde el "+" de 01, 02 y 04 y desde
+  "Asignar a esta meta" de 05. Monto (arranca en lo que necesita el sobre elegido: su sobregiro o lo
+  que le falta a su meta), montos rápidos, el mes visto y los tres siguientes, y el carrusel de sobres
+  (`UiAssignCard`). La cápsula o la calculadora del `SaveBar` pasan a 53, con `UiCalculatorPad` y
+  `AmountExpression` (FR-18). Confirmar suma el monto a la asignación del sobre en ese mes
+  (`POST .../months/:month/assignments`) y vuelve a la vista de ese mes; con 0 dice "Ingresá un monto
+  mayor a cero" y si Listo para asignar queda negativo avisa "Asignaste más de lo disponible".
+- **25 Cierre de mes** (`/month-close/:month`): se abre solo al ver el mes actual cuando el cierre del
+  mes anterior mueve dinero y nadie lo confirmó (una vez por sesión; no se abre a quien solo lee).
+  Lista lo que se arrastra y lo que se descuenta (`UiCloseRow`), el cuadre con `UiBalanceCheck` y
+  "Empezar <mes>", que confirma el cierre (`POST .../close`) y muestra el toast "Mes de <mes>
+  abierto". La cruz lo deja pendiente.
+
+## Reportes
+
+Cambio `add-reports` (RRG-54). `lib/features/reports/`: **17 Reportes** (`/home/reports`, hija de la
+rama de Inicio, así la barra de navegación queda en Inicio) se abre con el ícono de gráfico de 01.
+
+- `ReportsController` (uno por visita) pide los tres reportes del rango en paralelo (`spending`,
+  `income-expense`, `net-worth`) y los junta por mes; la pestaña y el mes elegido solo cambian lo que
+  se dibuja. Rango por defecto: últimos 6 meses hasta el actual; el calendario abre la hoja con 3, 6
+  y 12 meses.
+- **Gastos**: total del mes, barras por mes y "Dónde se fue" (`UiGoalRow` por sobre con "$ X · N%").
+  **Ingresos**: ingreso del mes, barras de ingresos e "Ingresos y gastos" con lo que sobró o faltó.
+  **Patrimonio**: Σ cuentas activas al cierre del mes y el cambio contra el mes anterior.
+- Gráfico: `UiBarChart` de `packages/ui`, sin biblioteca de gráficos (una sola serie con los tokens
+  del diseño); tocar una barra elige ese mes, que lleva el valor abreviado ("$ 265k") arriba.
 
 ## Widgetbook
 

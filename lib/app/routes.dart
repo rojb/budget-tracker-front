@@ -8,6 +8,7 @@ abstract final class AppRoutes {
 
   // Tabs.
   static const home = '/home'; // 01 Inicio
+  static const reports = '/home/reports'; // 17 Reportes
   static const plan =
       '/plan'; // 06 Plan vacío, or 02 Plan del mes with envelopes
   static const transactions = '/transactions'; // 10 Movimientos
@@ -41,6 +42,17 @@ abstract final class AppRoutes {
   static String editEnvelope(String id) => '/envelopes/$id/edit'; // 23
   static String moveMoney(String id) => '/envelopes/$id/move'; // 24
   static String goalDetail(String id) => '/goals/$id'; // 05
+
+  /// 03 Asignar dinero (and 53), for [month] ("2026-11") and with [envelopeId]
+  /// chosen; the viewed month and the neediest envelope when absent.
+  static const assignPath = '/assign';
+
+  /// 25 Cierre de mes of [month] ("2026-09") into the next one.
+  static String monthClose(String month) => '/month-close/$month';
+  static String assign({String? month, String? envelopeId}) => Uri(
+    path: assignPath,
+    queryParameters: {'month': ?month, 'envelopeId': ?envelopeId},
+  ).toString();
 
   /// 31 opened from "+ Nueva meta" in 01: group Metas and "Con fecha".
   static String newGoal({String? groupId}) =>

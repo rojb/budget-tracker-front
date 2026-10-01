@@ -13,8 +13,10 @@ import 'package:api_client/src/api/accounts_api.dart';
 import 'package:api_client/src/api/auth_api.dart';
 import 'package:api_client/src/api/envelopes_api.dart';
 import 'package:api_client/src/api/health_api.dart';
+import 'package:api_client/src/api/months_api.dart';
 import 'package:api_client/src/api/payees_api.dart';
 import 'package:api_client/src/api/plans_api.dart';
+import 'package:api_client/src/api/reports_api.dart';
 import 'package:api_client/src/api/sharing_api.dart';
 import 'package:api_client/src/api/transactions_api.dart';
 import 'package:api_client/src/api/users_api.dart';
@@ -137,6 +139,12 @@ class ApiClient {
     return HealthApi(dio, serializers);
   }
 
+  /// Get MonthsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  MonthsApi getMonthsApi() {
+    return MonthsApi(dio, serializers);
+  }
+
   /// Get PayeesApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   PayeesApi getPayeesApi() {
@@ -147,6 +155,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   PlansApi getPlansApi() {
     return PlansApi(dio, serializers);
+  }
+
+  /// Get ReportsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  ReportsApi getReportsApi() {
+    return ReportsApi(dio, serializers);
   }
 
   /// Get SharingApi instance, base route and serializer can be overridden by a given but be careful,

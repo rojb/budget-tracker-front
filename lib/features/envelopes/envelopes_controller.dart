@@ -6,8 +6,10 @@ import '../plans/plans_controller.dart';
 import 'envelopes_repository.dart';
 
 /// Groups, envelopes and Ready to Assign of the active plan, shared by the Plan
-/// tab (06 / 02), 31, 32, 35, 46 and the pickers. It reloads when the active
-/// plan changes and after every mutation, because the figures come from the API.
+/// tab (06 / 02 / 04), 31, 32, 35, 46 and the pickers. It reloads when the
+/// active plan changes and after every mutation, because the figures come from
+/// the API. The figures are those of the viewed month ([showMonth]), the
+/// current one until the plan view moves (add-monthly-assignment).
 class EnvelopesController extends ChangeNotifier {
   EnvelopesController(this._repository, this._plans) {
     _plans.addListener(_onPlan);
@@ -25,6 +27,9 @@ class EnvelopesController extends ChangeNotifier {
   List<EnvelopeLineData> _lines = const [];
   int _readyToAssignMinor = 0;
   String? _month;
+
+  /// Month asked for by the plan view; null for the current month.
+  String? _viewedMonth;
 
   bool get loading => _loading;
 
@@ -61,6 +66,7 @@ class EnvelopesController extends ChangeNotifier {
     _lines = const [];
     _readyToAssignMinor = 0;
     _month = null;
+    _viewedMonth = null;
     _loaded = false;
     _failed = false;
     if (planId == null) {
@@ -79,7 +85,7 @@ class EnvelopesController extends ChangeNotifier {
     try {
       final results = await Future.wait([
         _repository.groups(planId),
-        _repository.board(planId),
+        _repository.board(planId, month: _viewedMonth),
       ]);
       if (planId != _planId) return;
       _groups = results[0] as List<GroupData>;
@@ -95,6 +101,18 @@ class EnvelopesController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Loads the figures of [month] ("2026-11"), or of the current month when
+  /// null; every later reload keeps that month (FR-15).
+  Future<void> showMonth(String? month) {
+    _viewedMonth = month;
+    return load();
+  }
+
+  /// The envelopes and Ready to Assign of [month] without changing the viewed
+  /// month (the month chips of 03).
+  Future<EnvelopeBoard> boardOf(String month) =>
+      _repository.board(_planId!, month: month);
 
   /// Throws [ApiFailure] (409 when the name is taken).
   Future<GroupData> createGroup(String name) async {

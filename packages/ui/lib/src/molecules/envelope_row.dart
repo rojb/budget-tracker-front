@@ -32,6 +32,7 @@ class UiEnvelopeRow extends StatelessWidget {
     required this.name,
     this.variant = UiEnvelopeRowVariant.funded,
     this.subtitle,
+    this.subtitleMaxLines = 1,
     this.amount,
     this.caption,
     this.progress = 0,
@@ -48,6 +49,10 @@ class UiEnvelopeRow extends StatelessWidget {
 
   /// Line under the name, e.g. "$ 132.450 de $ 180.000".
   final String? subtitle;
+
+  /// Lines the subtitle may take; 2 for the compact card of 53, whose
+  /// subtitle carries the resulting amount and must not be cut.
+  final int subtitleMaxLines;
 
   /// Formatted available amount; the right column is left out when null (the
   /// summary of 43 Eliminar sobre).
@@ -115,7 +120,7 @@ class UiEnvelopeRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle!,
-                  maxLines: 1,
+                  maxLines: subtitleMaxLines,
                   overflow: TextOverflow.ellipsis,
                   style: UiTypography.custom(14, color: UiColors.inkMuted),
                 ),
