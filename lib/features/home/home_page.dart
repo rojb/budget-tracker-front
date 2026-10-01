@@ -107,8 +107,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        const SizedBox(height: 14),
-        UiPageDots(count: count, index: _page.clamp(0, count - 1)),
       ],
     );
   }
@@ -141,7 +139,17 @@ class _HomePageState extends State<HomePage> {
             Text(_controller.planName!, style: UiTypography.caption),
           ],
           const SizedBox(height: 28),
-          Text('Metas', style: UiTypography.custom(28)),
+          Row(
+            children: [
+              Text('Metas', style: UiTypography.custom(28)),
+              const Spacer(),
+              if (_controller.goals.isNotEmpty)
+                UiPageDots(
+                  count: _controller.goals.length + 1,
+                  index: _page.clamp(0, _controller.goals.length),
+                ),
+            ],
+          ),
           const SizedBox(height: 14),
           _goals(),
         ],

@@ -21,7 +21,10 @@ class _EnvelopeIconSelectorState extends State<EnvelopeIconSelector> {
   /// Icons shown before the "…" button; the rest of the closed set follows it.
   static const int _visibleIcons = 6;
 
-  bool _more = false;
+  // An icon beyond the first row (Supermercado's cart) starts expanded, so the
+  // selected one is always visible.
+  late bool _more =
+      uiEnvelopeIcons.keys.toList().indexOf(widget.selected) >= _visibleIcons;
 
   @override
   Widget build(BuildContext context) {
