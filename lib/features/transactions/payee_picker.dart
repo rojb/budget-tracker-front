@@ -26,12 +26,14 @@ class PayeeCleared extends PayeePickResult {
 /// the plan's active payees (FR-23) and, when the typed text is not an exact
 /// name, a last row `Crear "<text>"`. Returns the choice, or null when closed.
 /// A typed name is sent as `payeeName`, which the API creates on first use.
+/// [allowCreate] false (the filter of 11) offers only existing payees.
 Future<PayeePickResult?> showPayeePicker(
   BuildContext context, {
   required PayeesRepository repository,
   required String planId,
   required EnvelopesController envelopes,
   PayeePick? selected,
+  bool allowCreate = true,
 }) {
   return showUiSheet<PayeePickResult>(
     context,
@@ -42,6 +44,7 @@ Future<PayeePickResult?> showPayeePicker(
         planId: planId,
         envelopes: envelopes,
         selected: selected,
+        allowCreate: allowCreate,
       ),
     ),
   );
@@ -53,12 +56,14 @@ class _PayeePicker extends StatefulWidget {
     required this.planId,
     required this.envelopes,
     required this.selected,
+    required this.allowCreate,
   });
 
   final PayeesRepository repository;
   final String planId;
   final EnvelopesController envelopes;
   final PayeePick? selected;
+  final bool allowCreate;
 
   @override
   State<_PayeePicker> createState() => _PayeePickerState();
@@ -175,12 +180,14 @@ class _PayeePickerState extends State<_PayeePicker> {
           onTap: () => _pick(payee),
         ),
     ];
-    final canCreate = query.isNotEmpty && !exact;
+    final canCreate = widget.allowCreate && query.isNotEmpty && !exact;
     if (rows.isEmpty && !canCreate) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 14),
         child: Text(
-          'Todavía no tenés beneficiarios. Escribí un nombre para crear uno.',
+          widget.allowCreate
+              ? 'Todavía no tenés beneficiarios. Escribí un nombre para crear uno.'
+              : 'No hay beneficiarios con ese nombre.',
           style: UiTypography.custom(15, color: UiColors.inkMuted),
         ),
       );
