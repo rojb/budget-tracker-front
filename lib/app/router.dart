@@ -22,6 +22,7 @@ import '../features/envelopes/move_money_page.dart';
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
+import '../features/goals/goal_detail_page.dart';
 import '../features/home/home_page.dart';
 import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
@@ -145,6 +146,8 @@ GoRouter createRouter(Dependencies dependencies) {
                 builder: (context, state) => HomePage(
                   controllerFactory: dependencies.createHomeController,
                   menu: AccountMenu(auth),
+                  plans: plans,
+                  envelopes: dependencies.envelopesController,
                 ),
               ),
             ],
@@ -400,6 +403,14 @@ GoRouter createRouter(Dependencies dependencies) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/goals/:envelopeId',
+        builder: (context, state) => GoalDetailPage(
+          envelopeId: state.pathParameters['envelopeId']!,
+          plans: plans,
+          envelopes: dependencies.envelopesController,
+        ),
       ),
       ShellRoute(
         // One PayeesController per visit to 15, shared with 41.
