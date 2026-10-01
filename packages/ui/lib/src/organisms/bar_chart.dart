@@ -84,6 +84,12 @@ class UiBarChart extends StatelessWidget {
                           ),
                     pillHeight: _pill,
                     labelHeight: _labels,
+                    // The pill of an edge bar grows inwards so it stays on the card.
+                    pillAlignment: i == 0
+                        ? Alignment.topLeft
+                        : i == entries.length - 1
+                        ? Alignment.topRight
+                        : Alignment.topCenter,
                     onTap: () => onSelected(i),
                   ),
                 ),
@@ -104,6 +110,7 @@ class _Bar extends StatelessWidget {
     required this.barHeight,
     required this.pillHeight,
     required this.labelHeight,
+    required this.pillAlignment,
     required this.onTap,
   });
 
@@ -113,6 +120,7 @@ class _Bar extends StatelessWidget {
   final double barHeight;
   final double pillHeight;
   final double labelHeight;
+  final Alignment pillAlignment;
   final VoidCallback onTap;
 
   @override
@@ -130,9 +138,10 @@ class _Bar extends StatelessWidget {
               height: pillHeight,
               child: selected
                   ? Align(
-                      alignment: Alignment.topCenter,
+                      alignment: pillAlignment,
                       child: OverflowBox(
                         maxWidth: 120,
+                        alignment: pillAlignment,
                         child: Container(
                           height: 32,
                           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -170,13 +179,17 @@ class _Bar extends StatelessWidget {
               height: labelHeight,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text(
-                  entry.label,
-                  maxLines: 1,
-                  style: UiTypography.custom(
-                    14,
-                    weight: selected ? 500 : 400,
-                    color: selected ? UiColors.ink : UiColors.inkMuted,
+                // Twelve months on a phone: labels shrink instead of being cut.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    entry.label,
+                    maxLines: 1,
+                    style: UiTypography.custom(
+                      14,
+                      weight: selected ? 500 : 400,
+                      color: selected ? UiColors.ink : UiColors.inkMuted,
+                    ),
                   ),
                 ),
               ),
