@@ -221,6 +221,78 @@ WidgetbookFolder atomsFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'PageDots',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'carousel of 01 (second of four)',
+            builder: (context) => stage(const UiPageDots(count: 4, index: 1)),
+          ),
+          WidgetbookUseCase(
+            name: 'first of four',
+            builder: (context) => stage(const UiPageDots(count: 4, index: 0)),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PhotoThumb',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'grid of 50 (selected, photo, more)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 350,
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    SizedBox(
+                      width: 110,
+                      child: UiPhotoThumb(
+                        image: const AssetImage('assets/photos/vacaciones.jpg'),
+                        semanticLabel: 'Vacaciones',
+                        selected: true,
+                        onTap: () {},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 110,
+                      child: UiPhotoThumb(
+                        image: const AssetImage('assets/photos/auto.jpg'),
+                        semanticLabel: 'Auto',
+                        onTap: () {},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 110,
+                      child: UiPhotoThumb(
+                        image: const AssetImage('assets/photos/emergencia.jpg'),
+                        semanticLabel: 'Emergencia',
+                        onTap: () {},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 110,
+                      child: UiPhotoThumb(
+                        image: const AssetImage('assets/photos/mudanza.jpg'),
+                        semanticLabel: 'Mudanza',
+                        onTap: () {},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 110,
+                      child: UiPhotoThumb.more(
+                        label: 'Más fotos',
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'Key',
         useCases: [
           WidgetbookUseCase(

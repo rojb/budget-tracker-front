@@ -18,6 +18,10 @@ class _$Envelope extends Envelope {
   @override
   final int position;
   @override
+  final EnvelopeGoal? goal;
+  @override
+  final String? photoUrl;
+  @override
   final DateTime createdAt;
 
   factory _$Envelope([void Function(EnvelopeBuilder)? updates]) =>
@@ -29,6 +33,8 @@ class _$Envelope extends Envelope {
       required this.icon,
       this.groupId,
       required this.position,
+      this.goal,
+      this.photoUrl,
       required this.createdAt})
       : super._();
   @override
@@ -47,6 +53,8 @@ class _$Envelope extends Envelope {
         icon == other.icon &&
         groupId == other.groupId &&
         position == other.position &&
+        goal == other.goal &&
+        photoUrl == other.photoUrl &&
         createdAt == other.createdAt;
   }
 
@@ -58,6 +66,8 @@ class _$Envelope extends Envelope {
     _$hash = $jc(_$hash, icon.hashCode);
     _$hash = $jc(_$hash, groupId.hashCode);
     _$hash = $jc(_$hash, position.hashCode);
+    _$hash = $jc(_$hash, goal.hashCode);
+    _$hash = $jc(_$hash, photoUrl.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -71,6 +81,8 @@ class _$Envelope extends Envelope {
           ..add('icon', icon)
           ..add('groupId', groupId)
           ..add('position', position)
+          ..add('goal', goal)
+          ..add('photoUrl', photoUrl)
           ..add('createdAt', createdAt))
         .toString();
   }
@@ -99,6 +111,14 @@ class EnvelopeBuilder implements Builder<Envelope, EnvelopeBuilder> {
   int? get position => _$this._position;
   set position(int? position) => _$this._position = position;
 
+  EnvelopeGoalBuilder? _goal;
+  EnvelopeGoalBuilder get goal => _$this._goal ??= EnvelopeGoalBuilder();
+  set goal(EnvelopeGoalBuilder? goal) => _$this._goal = goal;
+
+  String? _photoUrl;
+  String? get photoUrl => _$this._photoUrl;
+  set photoUrl(String? photoUrl) => _$this._photoUrl = photoUrl;
+
   DateTime? _createdAt;
   DateTime? get createdAt => _$this._createdAt;
   set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
@@ -115,6 +135,8 @@ class EnvelopeBuilder implements Builder<Envelope, EnvelopeBuilder> {
       _icon = $v.icon;
       _groupId = $v.groupId;
       _position = $v.position;
+      _goal = $v.goal?.toBuilder();
+      _photoUrl = $v.photoUrl;
       _createdAt = $v.createdAt;
       _$v = null;
     }
@@ -135,19 +157,34 @@ class EnvelopeBuilder implements Builder<Envelope, EnvelopeBuilder> {
   Envelope build() => _build();
 
   _$Envelope _build() {
-    final _$result = _$v ??
-        _$Envelope._(
-          id: BuiltValueNullFieldError.checkNotNull(id, r'Envelope', 'id'),
-          name:
-              BuiltValueNullFieldError.checkNotNull(name, r'Envelope', 'name'),
-          icon:
-              BuiltValueNullFieldError.checkNotNull(icon, r'Envelope', 'icon'),
-          groupId: groupId,
-          position: BuiltValueNullFieldError.checkNotNull(
-              position, r'Envelope', 'position'),
-          createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt, r'Envelope', 'createdAt'),
-        );
+    _$Envelope _$result;
+    try {
+      _$result = _$v ??
+          _$Envelope._(
+            id: BuiltValueNullFieldError.checkNotNull(id, r'Envelope', 'id'),
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'Envelope', 'name'),
+            icon: BuiltValueNullFieldError.checkNotNull(
+                icon, r'Envelope', 'icon'),
+            groupId: groupId,
+            position: BuiltValueNullFieldError.checkNotNull(
+                position, r'Envelope', 'position'),
+            goal: _goal?.build(),
+            photoUrl: photoUrl,
+            createdAt: BuiltValueNullFieldError.checkNotNull(
+                createdAt, r'Envelope', 'createdAt'),
+          );
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'goal';
+        _goal?.build();
+      } catch (e) {
+        throw BuiltValueNestedFieldError(
+            r'Envelope', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

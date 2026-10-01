@@ -4,18 +4,22 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/envelope.dart';
+import 'package:api_client/src/model/envelope_state.dart';
+import 'package:api_client/src/model/goal_status.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 part 'envelope_line.g.dart';
 
-/// An envelope with the figures the budget engine derives for a month.
+/// An envelope with the figures the budget engine derives for a month, its state and, with a goal, the goal status.
 ///
 /// Properties:
 /// * [envelope] 
 /// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [spentMinor] - Net outflow of the month (expenses minus income sent to the envelope); negative when income exceeds expenses.
 /// * [availableMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [state] 
+/// * [goalStatus] 
 @BuiltValue()
 abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> {
   @BuiltValueField(wireName: r'envelope')
@@ -32,6 +36,13 @@ abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> 
   /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'availableMinor')
   int get availableMinor;
+
+  @BuiltValueField(wireName: r'state')
+  EnvelopeState get state;
+  // enum stateEnum {  funded,  underfunded,  overspent,  };
+
+  @BuiltValueField(wireName: r'goalStatus')
+  GoalStatus? get goalStatus;
 
   EnvelopeLine._();
 
@@ -76,6 +87,18 @@ class _$EnvelopeLineSerializer implements PrimitiveSerializer<EnvelopeLine> {
       object.availableMinor,
       specifiedType: const FullType(int),
     );
+    yield r'state';
+    yield serializers.serialize(
+      object.state,
+      specifiedType: const FullType(EnvelopeState),
+    );
+    if (object.goalStatus != null) {
+      yield r'goalStatus';
+      yield serializers.serialize(
+        object.goalStatus,
+        specifiedType: const FullType(GoalStatus),
+      );
+    }
   }
 
   @override
@@ -126,6 +149,21 @@ class _$EnvelopeLineSerializer implements PrimitiveSerializer<EnvelopeLine> {
             specifiedType: const FullType(int),
           ) as int;
           result.availableMinor = valueDes;
+          break;
+        case r'state':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(EnvelopeState),
+          ) as EnvelopeState;
+          result.state = valueDes;
+          break;
+        case r'goalStatus':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(GoalStatus),
+          ) as GoalStatus?;
+          if (valueDes == null) continue;
+          result.goalStatus.replace(valueDes);
           break;
         default:
           unhandled.add(key);

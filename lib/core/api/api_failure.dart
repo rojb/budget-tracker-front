@@ -16,6 +16,12 @@ enum ApiFailureKind {
   /// `409`: the resource is already in the requested state.
   conflict,
 
+  /// `413`: an uploaded file is larger than the API accepts (goal photo, 5 MB).
+  payloadTooLarge,
+
+  /// `415`: an uploaded file is not a JPEG, PNG or WebP image.
+  unsupportedMedia,
+
   /// The API could not be reached.
   network,
 
@@ -68,6 +74,10 @@ ApiFailure _map(DioException error) {
       return const ApiFailure(ApiFailureKind.notFound);
     case 409:
       return const ApiFailure(ApiFailureKind.conflict);
+    case 413:
+      return const ApiFailure(ApiFailureKind.payloadTooLarge);
+    case 415:
+      return const ApiFailure(ApiFailureKind.unsupportedMedia);
     case null:
       return ApiFailure(
         error.error is Exception || error.type != DioExceptionType.unknown

@@ -14,10 +14,15 @@ import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/envelopes/assign_money_page.dart';
+import '../features/envelopes/envelope_detail_page.dart';
+import '../features/envelopes/envelope_edit_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
+import '../features/envelopes/envelopes_repository.dart' show GoalKind;
+import '../features/envelopes/move_money_page.dart';
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
+import '../features/goals/goal_detail_page.dart';
 import '../features/home/home_page.dart';
 import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
@@ -141,6 +146,8 @@ GoRouter createRouter(Dependencies dependencies) {
                 builder: (context, state) => HomePage(
                   controllerFactory: dependencies.createHomeController,
                   menu: AccountMenu(auth),
+                  plans: plans,
+                  envelopes: dependencies.envelopesController,
                 ),
               ),
             ],
@@ -345,7 +352,11 @@ GoRouter createRouter(Dependencies dependencies) {
         path: AppRoutes.newEnvelope,
         builder: (context, state) => EnvelopeFormPage(
           envelopes: dependencies.envelopesController,
+          plans: plans,
           initialGroupId: state.uri.queryParameters['groupId'],
+          initialGoalKind: state.uri.queryParameters['goal'] == 'targetByDate'
+              ? GoalKind.targetByDate
+              : null,
         ),
       ),
       GoRoute(
@@ -367,10 +378,38 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: '/envelopes/:envelopeId',
-        builder: (context, state) => _placeholder(
-          context,
-          '22 Detalle de sobre',
-          'Llega con add-envelope-goals.',
+        builder: (context, state) => EnvelopeDetailPage(
+          envelopeId: state.pathParameters['envelopeId']!,
+          plans: plans,
+          envelopes: dependencies.envelopesController,
+          transactions: dependencies.transactionsController,
+          accounts: dependencies.accountsController,
+        ),
+        routes: [
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) => EnvelopeEditPage(
+              envelopeId: state.pathParameters['envelopeId']!,
+              plans: plans,
+              envelopes: dependencies.envelopesController,
+            ),
+          ),
+          GoRoute(
+            path: 'move',
+            builder: (context, state) => MoveMoneyPage(
+              fromEnvelopeId: state.pathParameters['envelopeId']!,
+              plans: plans,
+              envelopes: dependencies.envelopesController,
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/goals/:envelopeId',
+        builder: (context, state) => GoalDetailPage(
+          envelopeId: state.pathParameters['envelopeId']!,
+          plans: plans,
+          envelopes: dependencies.envelopesController,
         ),
       ),
       ShellRoute(

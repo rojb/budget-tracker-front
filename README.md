@@ -165,7 +165,7 @@ Cambio `add-envelopes` (RRG-47). `lib/features/envelopes/`:
   al cambiar de plan y después de cada cambio, porque las cifras (`assignedMinor`, `availableMinor`,
   Listo para asignar) las deriva la API.
 - **Pantallas:** 02 (`layers` → 32, lupa que filtra en el lugar, encabezados de grupo con "+" → 31,
-  "Sin grupo" al final), 31 Nuevo sobre (el bloque "Objetivo" llega con `add-envelope-goals`), 52
+  "Sin grupo" al final), 31 Nuevo sobre (con el bloque "Objetivo" de `add-envelope-goals`), 52
   Elegir grupo (hoja con "+ Nuevo grupo" expandible), 32 Grupos (arrastrar para reordenar, lápiz,
   papelera → 44), 35 Plantilla sugerida (la plantilla sale de `GET /envelope-template`), 46 Asigná tu
   dinero (asignación masiva) y las hojas 43 y 44.
@@ -173,8 +173,8 @@ Cambio `add-envelopes` (RRG-47). `lib/features/envelopes/`:
   deshabilitadas), los chips de estado, el "+" de la tarjeta (→ 03) y el cierre de mes son de ese
   cambio. `EnvelopeRow` ya dibuja Funded, Underfunded, Overspent y Empty; Underfunded lo produce
   `add-envelope-goals`.
-- **Entrada provisoria a 43:** una pulsación larga sobre un sobre de 02 (la entrada real es la
-  papelera de 23, de `add-envelope-goals`); tocar el sobre abre el placeholder de 22.
+- **Entrada a 43:** la papelera de 23 y "Eliminar meta" de 40 (cambio `add-envelope-goals`); la
+  pulsación larga provisoria sobre una fila de 02 ya no existe, y tocar la fila abre 22.
 - El gasto de cada fila viene de la API (`spentMinor`), así que "<gastado> de <asignado>" refleja los
   movimientos.
 
@@ -220,6 +220,42 @@ Cambio `add-transaction-editing-and-filters` (RRG-50):
   "Salió en la franja / Entró". 11 (`showFilterSheet`) cuenta en vivo "Ver N movimientos"; las hojas de
   fecha y hora son variantes de 38 (`features/common/date_sheets.dart`). Cerrar la hoja aplica lo
   elegido.
+
+## Metas, detalle de sobre y mover dinero
+
+Cambio `add-envelope-goals` (RRG-52). `lib/features/envelopes/` y `lib/features/goals/`:
+
+- **El cliente no calcula estados.** `EnvelopeLineData` trae `state` (`funded`, `underfunded`,
+  `overspent`) y, con meta, `goalStatus` (requerido del mes, lo que falta, ahorrado, porcentaje, meses
+  restantes) tal como los devuelve la API; `goal_texts.dart` solo arma los textos ("Falta $ X",
+  "Cubierto", "Objetivo mensual · 100% asignado", "3 meses restantes"). 02 usa ese estado para sus
+  filas (Funded, Underfunded, Overspent; las rayas son la cobertura del requerido del mes si hay meta,
+  o lo gastado si no).
+- **22 Detalle de sobre** (`/envelopes/:id`): cifras del mes, fila de objetivo (`UiGoalRow`) y la
+  actividad del mes de `GET .../detail` (tocar un movimiento abre 12). El lápiz (→ 23) y "Mover
+  dinero" (→ 24) no se muestran a quien solo lee.
+- **23 Editar sobre** (`/envelopes/:id/edit`) y el bloque "Objetivo" de **31**: `GoalFields` (chips
+  Sin objetivo / Mensual / Con fecha, la cápsula con teclado para un monto propio, montos rápidos y
+  "Fecha límite"). Guardar manda nombre, grupo e ícono con `PATCH` y la meta con `PUT` o `DELETE`.
+  La papelera de 23 (→ 43) es la única entrada al borrado.
+- **24 Mover dinero** (`/envelopes/:id/move`): el origen es el sobre desde el que se abrió; si el
+  destino está sobregirado el monto empieza en su sobregiro (tope: lo que tiene el origen). El
+  `SaveBar` queda deshabilitado con el motivo ("Elegí un sobre", "Ingresá un monto", "Supera lo
+  disponible"); la API responde 409 si el dinero cambió.
+- **01 Inicio**: carrusel "Metas" con una `UiGoalCard` por cada sobre con meta con fecha (→ 05) y
+  "+ Nueva meta" (→ 31 con el grupo Metas y "Con fecha"); estados vacío ("Creá tu primera meta"),
+  cargando y error. La tarjeta "Listo para asignar" y Reportes no están (`add-monthly-assignment` y
+  `add-reports`).
+- **05 Detalle de meta** (`/goals/:id`), **40 Opciones de meta** y **50 Foto de la meta**: foto a
+  pantalla completa (o el tinte lavanda con el ícono) bajo paneles de vidrio, tiles a 22, 24 y 23, y
+  "Asignar a esta meta" deshabilitado hasta que exista 03. 50 elige de la galería o la cámara
+  (`image_picker`), una foto sugerida, o quita la foto; "Listo" la sube (la API valida JPEG/PNG/WebP de
+  hasta 5 MB). Desde 31 solo recuerda la elección y se aplica al crear el sobre.
+- **Fotos con autenticación.** La API sirve las fotos solo a miembros: `EnvelopesController.imageFor`
+  arma un `NetworkImage` con el header `Authorization` de `ApiGateway`. Una foto nueva cambia su URL
+  (`?v=`), así que el caché de imágenes de Flutter no muestra una vieja.
+- Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el actual); la navegación
+  de meses es de `add-monthly-assignment`.
 
 ## Widgetbook
 

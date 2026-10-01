@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart' show ImageProvider;
 
 import '../../core/api/api_failure.dart';
 import '../plans/plans_controller.dart';
@@ -142,16 +143,108 @@ class EnvelopesController extends ChangeNotifier {
     required String name,
     String? groupId,
     String? icon,
+    GoalData? goal,
   }) async {
     final envelope = await _repository.createEnvelope(
       _planId!,
       name: name,
       groupId: groupId,
       icon: icon,
+      goal: goal,
     );
     await load();
     return envelope;
   }
+
+  /// The envelopes with a goal that has a date, in the order of the board:
+  /// the "Metas" of 01. Their state and progress come from the API.
+  List<EnvelopeLineData> get goalLines => [
+    for (final line in _lines)
+      if (line.envelope.goal?.kind == GoalKind.targetByDate) line,
+  ];
+
+  /// One envelope of the loaded month with its activity (22).
+  Future<EnvelopeDetailData> detail(String envelopeId) =>
+      _repository.detail(_planId!, envelopeId, month: _month);
+
+  /// Saves the name, icon or group, then sets or removes the goal ([goal] null
+  /// removes it) and reloads (23). Throws [ApiFailure] (409 when the name is
+  /// taken, 400 when the goal is invalid).
+  Future<void> saveEnvelope(
+    String envelopeId, {
+    String? name,
+    String? icon,
+    String? groupId,
+    GoalData? goal,
+    bool hadGoal = false,
+  }) async {
+    final planId = _planId!;
+    try {
+      if (name != null || icon != null || groupId != null) {
+        await _repository.updateEnvelope(
+          planId,
+          envelopeId,
+          name: name,
+          icon: icon,
+          groupId: groupId,
+        );
+      }
+      if (goal != null) {
+        await _repository.setGoal(planId, envelopeId, goal);
+      } else if (hadGoal) {
+        await _repository.clearGoal(planId, envelopeId);
+      }
+    } finally {
+      await load();
+    }
+  }
+
+  /// Moves money inside the loaded month and reloads (24). Throws
+  /// [ApiFailure] (409 when the source has less available than the amount).
+  Future<MoveResult> moveMoney({
+    required String fromEnvelopeId,
+    required String toEnvelopeId,
+    required int amountMinor,
+  }) async {
+    final result = await _repository.moveMoney(
+      _planId!,
+      fromEnvelopeId: fromEnvelopeId,
+      toEnvelopeId: toEnvelopeId,
+      amountMinor: amountMinor,
+      month: _month,
+    );
+    await load();
+    return result;
+  }
+
+  /// Throws [ApiFailure] (413 over 5 MB, 415 when not JPEG, PNG or WebP).
+  Future<void> uploadPhoto(
+    String envelopeId,
+    List<int> bytes,
+    String filename,
+  ) async {
+    await _repository.uploadPhoto(_planId!, envelopeId, bytes, filename);
+    await load();
+  }
+
+  Future<void> applySuggestedPhoto(
+    String envelopeId,
+    String suggestionId,
+  ) async {
+    await _repository.applySuggestedPhoto(_planId!, envelopeId, suggestionId);
+    await load();
+  }
+
+  Future<void> removePhoto(String envelopeId) async {
+    await _repository.removePhoto(_planId!, envelopeId);
+    await load();
+  }
+
+  Future<List<PhotoSuggestionData>> photoSuggestions() =>
+      _repository.photoSuggestions();
+
+  /// The photo or suggestion image at [path], with the bearer header.
+  ImageProvider? imageFor(String? path) => _repository.image(path);
 
   /// Throws [ApiFailure]. Its money returns to Ready to Assign.
   Future<void> deleteEnvelope(String envelopeId) async {

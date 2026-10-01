@@ -13,12 +13,15 @@ class _$CreateEnvelopeRequest extends CreateEnvelopeRequest {
   final String? groupId;
   @override
   final EnvelopeIcon? icon;
+  @override
+  final EnvelopeGoal? goal;
 
   factory _$CreateEnvelopeRequest(
           [void Function(CreateEnvelopeRequestBuilder)? updates]) =>
       (CreateEnvelopeRequestBuilder()..update(updates))._build();
 
-  _$CreateEnvelopeRequest._({required this.name, this.groupId, this.icon})
+  _$CreateEnvelopeRequest._(
+      {required this.name, this.groupId, this.icon, this.goal})
       : super._();
   @override
   CreateEnvelopeRequest rebuild(
@@ -35,7 +38,8 @@ class _$CreateEnvelopeRequest extends CreateEnvelopeRequest {
     return other is CreateEnvelopeRequest &&
         name == other.name &&
         groupId == other.groupId &&
-        icon == other.icon;
+        icon == other.icon &&
+        goal == other.goal;
   }
 
   @override
@@ -44,6 +48,7 @@ class _$CreateEnvelopeRequest extends CreateEnvelopeRequest {
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, groupId.hashCode);
     _$hash = $jc(_$hash, icon.hashCode);
+    _$hash = $jc(_$hash, goal.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -53,7 +58,8 @@ class _$CreateEnvelopeRequest extends CreateEnvelopeRequest {
     return (newBuiltValueToStringHelper(r'CreateEnvelopeRequest')
           ..add('name', name)
           ..add('groupId', groupId)
-          ..add('icon', icon))
+          ..add('icon', icon)
+          ..add('goal', goal))
         .toString();
   }
 }
@@ -74,6 +80,10 @@ class CreateEnvelopeRequestBuilder
   EnvelopeIcon? get icon => _$this._icon;
   set icon(EnvelopeIcon? icon) => _$this._icon = icon;
 
+  EnvelopeGoalBuilder? _goal;
+  EnvelopeGoalBuilder get goal => _$this._goal ??= EnvelopeGoalBuilder();
+  set goal(EnvelopeGoalBuilder? goal) => _$this._goal = goal;
+
   CreateEnvelopeRequestBuilder() {
     CreateEnvelopeRequest._defaults(this);
   }
@@ -84,6 +94,7 @@ class CreateEnvelopeRequestBuilder
       _name = $v.name;
       _groupId = $v.groupId;
       _icon = $v.icon;
+      _goal = $v.goal?.toBuilder();
       _$v = null;
     }
     return this;
@@ -103,13 +114,27 @@ class CreateEnvelopeRequestBuilder
   CreateEnvelopeRequest build() => _build();
 
   _$CreateEnvelopeRequest _build() {
-    final _$result = _$v ??
-        _$CreateEnvelopeRequest._(
-          name: BuiltValueNullFieldError.checkNotNull(
-              name, r'CreateEnvelopeRequest', 'name'),
-          groupId: groupId,
-          icon: icon,
-        );
+    _$CreateEnvelopeRequest _$result;
+    try {
+      _$result = _$v ??
+          _$CreateEnvelopeRequest._(
+            name: BuiltValueNullFieldError.checkNotNull(
+                name, r'CreateEnvelopeRequest', 'name'),
+            groupId: groupId,
+            icon: icon,
+            goal: _goal?.build(),
+          );
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'goal';
+        _goal?.build();
+      } catch (e) {
+        throw BuiltValueNestedFieldError(
+            r'CreateEnvelopeRequest', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

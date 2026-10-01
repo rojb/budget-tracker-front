@@ -15,6 +15,10 @@ class _$EnvelopeLine extends EnvelopeLine {
   final int spentMinor;
   @override
   final int availableMinor;
+  @override
+  final EnvelopeState state;
+  @override
+  final GoalStatus? goalStatus;
 
   factory _$EnvelopeLine([void Function(EnvelopeLineBuilder)? updates]) =>
       (EnvelopeLineBuilder()..update(updates))._build();
@@ -23,7 +27,9 @@ class _$EnvelopeLine extends EnvelopeLine {
       {required this.envelope,
       required this.assignedMinor,
       required this.spentMinor,
-      required this.availableMinor})
+      required this.availableMinor,
+      required this.state,
+      this.goalStatus})
       : super._();
   @override
   EnvelopeLine rebuild(void Function(EnvelopeLineBuilder) updates) =>
@@ -39,7 +45,9 @@ class _$EnvelopeLine extends EnvelopeLine {
         envelope == other.envelope &&
         assignedMinor == other.assignedMinor &&
         spentMinor == other.spentMinor &&
-        availableMinor == other.availableMinor;
+        availableMinor == other.availableMinor &&
+        state == other.state &&
+        goalStatus == other.goalStatus;
   }
 
   @override
@@ -49,6 +57,8 @@ class _$EnvelopeLine extends EnvelopeLine {
     _$hash = $jc(_$hash, assignedMinor.hashCode);
     _$hash = $jc(_$hash, spentMinor.hashCode);
     _$hash = $jc(_$hash, availableMinor.hashCode);
+    _$hash = $jc(_$hash, state.hashCode);
+    _$hash = $jc(_$hash, goalStatus.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -59,7 +69,9 @@ class _$EnvelopeLine extends EnvelopeLine {
           ..add('envelope', envelope)
           ..add('assignedMinor', assignedMinor)
           ..add('spentMinor', spentMinor)
-          ..add('availableMinor', availableMinor))
+          ..add('availableMinor', availableMinor)
+          ..add('state', state)
+          ..add('goalStatus', goalStatus))
         .toString();
   }
 }
@@ -86,6 +98,16 @@ class EnvelopeLineBuilder
   set availableMinor(int? availableMinor) =>
       _$this._availableMinor = availableMinor;
 
+  EnvelopeState? _state;
+  EnvelopeState? get state => _$this._state;
+  set state(EnvelopeState? state) => _$this._state = state;
+
+  GoalStatusBuilder? _goalStatus;
+  GoalStatusBuilder get goalStatus =>
+      _$this._goalStatus ??= GoalStatusBuilder();
+  set goalStatus(GoalStatusBuilder? goalStatus) =>
+      _$this._goalStatus = goalStatus;
+
   EnvelopeLineBuilder() {
     EnvelopeLine._defaults(this);
   }
@@ -97,6 +119,8 @@ class EnvelopeLineBuilder
       _assignedMinor = $v.assignedMinor;
       _spentMinor = $v.spentMinor;
       _availableMinor = $v.availableMinor;
+      _state = $v.state;
+      _goalStatus = $v.goalStatus?.toBuilder();
       _$v = null;
     }
     return this;
@@ -127,12 +151,18 @@ class EnvelopeLineBuilder
                 spentMinor, r'EnvelopeLine', 'spentMinor'),
             availableMinor: BuiltValueNullFieldError.checkNotNull(
                 availableMinor, r'EnvelopeLine', 'availableMinor'),
+            state: BuiltValueNullFieldError.checkNotNull(
+                state, r'EnvelopeLine', 'state'),
+            goalStatus: _goalStatus?.build(),
           );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'envelope';
         envelope.build();
+
+        _$failedField = 'goalStatus';
+        _goalStatus?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
             r'EnvelopeLine', _$failedField, e.toString());

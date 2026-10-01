@@ -1025,6 +1025,116 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'GoalCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'with photo (01)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 300,
+                child: UiGoalCard(
+                  name: 'Vacaciones',
+                  subtitle: r'$ 600.000 · diciembre',
+                  savedLabel: r'$ 360.000',
+                  percent: 60,
+                  icon: UiIcons.plane,
+                  image: const AssetImage('assets/photos/vacaciones.jpg'),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'without photo (lavender tint and icon)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 300,
+                child: UiGoalCard(
+                  name: 'Emergencia',
+                  subtitle: r'$ 900.000 · marzo',
+                  savedLabel: r'$ 270.000',
+                  percent: 30,
+                  icon: UiIcons.lifeBuoy,
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'GoalRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'monthly goal covered (22)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: r'$ 180.000 · 100% asignado',
+                  progress: 1,
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'underfunded (stripes and dots, note)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: r'$ 180.000 · 55% asignado',
+                  progress: 0.55,
+                  note: r'Falta $ 80.000 este mes',
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'goal with a date',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: r'Meta $ 600.000 · diciembre',
+                  value: '60% ahorrado',
+                  progress: 0.6,
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'overspent (red)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: 'Sobregirado',
+                  overspent: true,
+                  note: r'Gastaste $ 6.200 más de lo que tenía',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'GoalSummary and GlassTile (05)',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'on a photo',
+            builder: (context) => const _GoalScreenStory(photo: true),
+          ),
+          WidgetbookUseCase(
+            name: 'on the lavender tint (no photo)',
+            builder: (context) => const _GoalScreenStory(photo: false),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'OptionCard',
         useCases: [
           WidgetbookUseCase(
@@ -1294,6 +1404,94 @@ class _CodeCardDemoState extends State<_CodeCardDemo> {
             if (mounted) setState(() => _copied = false);
           });
         },
+      ),
+    );
+  }
+}
+
+/// The composition of 05 Detalle de meta (backdrop, glass summary and tiles), on a phone-sized
+/// frame, with and without a photo.
+class _GoalScreenStory extends StatelessWidget {
+  const _GoalScreenStory({required this.photo});
+
+  final bool photo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 390,
+        height: 844,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            UiGoalBackdrop(
+              icon: UiIcons.plane,
+              image: photo
+                  ? const AssetImage('assets/photos/vacaciones.jpg')
+                  : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 100, 16, 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  UiGoalSummary(
+                    targetLabel: r'$ 600.000',
+                    savedLabel: r'$ 360.000',
+                    remainingLabel: r'$ 240.000',
+                    progress: 0.6,
+                    onPhoto: photo,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: UiGlassTile(
+                          icon: UiIcons.history,
+                          label: 'Últimos aportes',
+                          onPhoto: photo,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: UiGlassTile(
+                          icon: UiIcons.calendar,
+                          label: 'Plan de aportes',
+                          onPhoto: photo,
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: UiGlassTile(
+                          icon: UiIcons.arrowLeftRight,
+                          label: 'Mover dinero',
+                          onPhoto: photo,
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: UiGlassTile(
+                          icon: UiIcons.target,
+                          label: 'Ajustar objetivo',
+                          onPhoto: photo,
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

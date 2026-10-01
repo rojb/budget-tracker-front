@@ -103,7 +103,7 @@ class Dependencies {
       RegisterController(authController);
 
   HomeController createHomeController() =>
-      HomeController(authController, plansController);
+      HomeController(authController, plansController, envelopesController);
 
   NewPlanController createNewPlanController() =>
       NewPlanController(plansController);

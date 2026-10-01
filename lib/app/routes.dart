@@ -37,6 +37,12 @@ abstract final class AppRoutes {
   static String newEnvelopeIn(String groupId) =>
       '$newEnvelope?groupId=$groupId'; // 31 with the group preselected
   static const assignMoney = '/envelopes/assign'; // 46 Asigná tu dinero
-  static String envelopeDetail(String id) =>
-      '/envelopes/$id'; // 22 placeholder (add-envelope-goals)
+  static String envelopeDetail(String id) => '/envelopes/$id'; // 22
+  static String editEnvelope(String id) => '/envelopes/$id/edit'; // 23
+  static String moveMoney(String id) => '/envelopes/$id/move'; // 24
+  static String goalDetail(String id) => '/goals/$id'; // 05
+
+  /// 31 opened from "+ Nueva meta" in 01: group Metas and "Con fecha".
+  static String newGoal({String? groupId}) =>
+      '$newEnvelope?goal=targetByDate${groupId == null ? '' : '&groupId=$groupId'}';
 }
