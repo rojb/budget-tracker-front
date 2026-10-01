@@ -2,11 +2,14 @@ import 'package:flutter/foundation.dart';
 
 import '../../core/api/api_failure.dart';
 import '../plans/plans_controller.dart';
+import 'transaction_filter.dart';
 import 'transactions_repository.dart';
 
 /// Movements of the active plan, shared by 10 and the save flow of 07 / 08 / 09.
 /// It holds the pages loaded so far (newest first), reloads when the active
-/// plan changes and starts over after every recorded transaction.
+/// plan changes and starts over after every recorded transaction. It also holds
+/// the active filter of 10 (11 and the search) and the summary the API returns
+/// for it.
 class TransactionsController extends ChangeNotifier {
   TransactionsController(this._repository, this._plans) {
     _plans.addListener(_onPlan);
@@ -25,6 +28,9 @@ class TransactionsController extends ChangeNotifier {
   bool _failed = false;
   int _page = 0;
   int _total = 0;
+  int _outflow = 0;
+  int _inflow = 0;
+  TransactionFilter _filter = TransactionFilter.none;
   List<TransactionData> _items = const [];
 
   /// True while the first page loads.
@@ -36,6 +42,11 @@ class TransactionsController extends ChangeNotifier {
   bool get failed => _failed;
   List<TransactionData> get items => _items;
   int get total => _total;
+
+  /// What the active filter selects: the money that left and that came in.
+  int get outflowMinor => _outflow;
+  int get inflowMinor => _inflow;
+  TransactionFilter get filter => _filter;
   bool get hasMore => _items.length < _total;
 
   void _onPlan() {
@@ -45,6 +56,9 @@ class TransactionsController extends ChangeNotifier {
     _items = const [];
     _page = 0;
     _total = 0;
+    _outflow = 0;
+    _inflow = 0;
+    _filter = TransactionFilter.none;
     _loaded = false;
     _failed = false;
     if (planId == null) {
@@ -62,11 +76,19 @@ class TransactionsController extends ChangeNotifier {
     _failed = false;
     notifyListeners();
     try {
-      final page = await _repository.list(planId, pageSize: pageSize);
-      if (planId != _planId) return;
+      final filter = _filter;
+      final page = await _repository.list(
+        planId,
+        filter: filter,
+        pageSize: pageSize,
+      );
+      // A newer filter or plan superseded this answer.
+      if (planId != _planId || filter != _filter) return;
       _items = page.items;
       _page = 1;
       _total = page.total;
+      _outflow = page.outflowMinor;
+      _inflow = page.inflowMinor;
       _loaded = true;
     } on ApiFailure {
       if (planId == _planId) _failed = true;
@@ -84,12 +106,14 @@ class TransactionsController extends ChangeNotifier {
     _loadingMore = true;
     notifyListeners();
     try {
+      final filter = _filter;
       final page = await _repository.list(
         planId,
+        filter: filter,
         page: _page + 1,
         pageSize: pageSize,
       );
-      if (planId != _planId) return;
+      if (planId != _planId || filter != _filter) return;
       final known = {for (final item in _items) item.id};
       _items = [
         ..._items,
@@ -105,12 +129,51 @@ class TransactionsController extends ChangeNotifier {
     }
   }
 
+  /// Applies a filter (or a new search text) and reloads from the first page.
+  Future<void> setFilter(TransactionFilter filter) {
+    if (filter == _filter) return Future.value();
+    _filter = filter;
+    _items = const [];
+    _page = 0;
+    _total = 0;
+    _loaded = false;
+    return refresh();
+  }
+
+  /// How many movements [filter] selects (the "Ver N movimientos" of 11).
+  Future<int> count(TransactionFilter filter) async {
+    final page = await _repository.list(_planId!, filter: filter, pageSize: 1);
+    return page.total;
+  }
+
   /// Throws [ApiFailure]. Reloads the list on success; the caller refreshes
   /// the envelopes and accounts, whose figures change.
   Future<TransactionData> create(NewTransaction draft) async {
     final created = await _repository.create(_planId!, draft);
     await refresh();
     return created;
+  }
+
+  /// Replaces the state of a transaction (an edit, or the undo of one). Throws
+  /// [ApiFailure]; reloads the list on success like [create].
+  Future<TransactionChangeData> update(String id, NewTransaction state) async {
+    final change = await _repository.update(_planId!, id, state);
+    await refresh();
+    return change;
+  }
+
+  /// Logical delete; returns the months recalculated. Throws [ApiFailure].
+  Future<List<String>> remove(String id) async {
+    final months = await _repository.delete(_planId!, id);
+    await refresh();
+    return months;
+  }
+
+  /// Undo of [remove]: the same transaction comes back. Throws [ApiFailure].
+  Future<TransactionChangeData> restore(String id) async {
+    final change = await _repository.restore(_planId!, id);
+    await refresh();
+    return change;
   }
 
   /// The latest movements of one account (14 merges them with its transfers).

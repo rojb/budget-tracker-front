@@ -26,7 +26,53 @@ class SplitPart {
 /// flips [isExpense]) and 08 edits its [splits], so going back and forth keeps
 /// everything the user entered.
 class TransactionDraft extends ChangeNotifier {
-  TransactionDraft({required this.currency, this.accountId});
+  TransactionDraft({required this.currency, this.accountId, this.editingId});
+
+  /// The draft of screen 12: the movement [data] loaded as it is, ready to be
+  /// changed. Its payee, envelope and portions are kept as they are (the
+  /// suggested envelope of a payee never overrides them).
+  factory TransactionDraft.fromTransaction(
+    TransactionData data, {
+    required Currency currency,
+  }) {
+    final draft = TransactionDraft(
+      currency: currency,
+      accountId: data.accountId,
+      editingId: data.id,
+    );
+    draft
+      ..isExpense = data.isExpense
+      ..occurredAt = data.occurredAt.toLocal()
+      ..description = data.description ?? ''
+      ..envelopeByHand = true
+      ..payee = data.payeeId == null
+          ? null
+          : PayeePick(id: data.payeeId, name: data.payeeName ?? '')
+      ..amount.setMinor(data.amountMinor, currency.minorUnits);
+    if (data.splits.length > 1) {
+      draft.splits = [
+        for (final part in data.splits)
+          SplitPart(envelopeId: part.envelopeId, amountMinor: part.amountMinor),
+      ];
+    } else if (data.splits.isNotEmpty) {
+      final envelopeId = data.splits.first.envelopeId;
+      if (data.isExpense) {
+        draft.envelopeId = envelopeId;
+      } else if (envelopeId != null) {
+        draft
+          ..incomeToEnvelope = true
+          ..incomeEnvelopeId = envelopeId;
+      }
+    }
+    return draft;
+  }
+
+  /// Id of the transaction being edited (12); null while recording (07 / 09).
+  final String? editingId;
+  bool get isEdit => editingId != null;
+
+  /// An expense edited as a split: its portions are edited in 08.
+  bool get isSplitEdit => isEdit && isExpense && splits.length >= 2;
 
   final Currency currency;
   final AmountExpression amount = AmountExpression();
