@@ -221,6 +221,19 @@ WidgetbookFolder atomsFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'PageDots',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'carousel of 01 (second of four)',
+            builder: (context) => stage(const UiPageDots(count: 4, index: 1)),
+          ),
+          WidgetbookUseCase(
+            name: 'first of four',
+            builder: (context) => stage(const UiPageDots(count: 4, index: 0)),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'Key',
         useCases: [
           WidgetbookUseCase(

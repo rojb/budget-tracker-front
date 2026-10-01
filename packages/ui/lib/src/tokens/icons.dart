@@ -78,6 +78,13 @@ abstract final class UiIcons {
   static const IconData inbox = LucideIcons.inbox300;
   static const IconData arrowDownLeft = LucideIcons.arrowDownLeft300;
 
+  // Goals (01, 05, 22, 40, 50).
+  static const IconData image = LucideIcons.image300;
+  static const IconData images = LucideIcons.images300;
+  static const IconData target = LucideIcons.target300;
+  static const IconData arrowUpRight = LucideIcons.arrowUpRight300;
+  static const IconData ellipsisVertical = LucideIcons.ellipsisVertical300;
+
   // Filters (10, 11).
   static const IconData sliders = LucideIcons.slidersHorizontal300;
   static const IconData calendar = LucideIcons.calendar300;

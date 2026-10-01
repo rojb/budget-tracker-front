@@ -1025,6 +1025,103 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'GoalCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'with photo (01)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 300,
+                child: UiGoalCard(
+                  name: 'Vacaciones',
+                  subtitle: r'$ 600.000 · diciembre',
+                  savedLabel: r'$ 360.000',
+                  percent: 60,
+                  icon: UiIcons.plane,
+                  image: const AssetImage('assets/photos/vacaciones.jpg'),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'without photo (lavender tint and icon)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 300,
+                child: UiGoalCard(
+                  name: 'Emergencia',
+                  subtitle: r'$ 900.000 · marzo',
+                  savedLabel: r'$ 270.000',
+                  percent: 30,
+                  icon: UiIcons.lifeBuoy,
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'GoalRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'monthly goal covered (22)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: r'$ 180.000 · 100% asignado',
+                  progress: 1,
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'underfunded (stripes and dots, note)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: r'$ 180.000 · 55% asignado',
+                  progress: 0.55,
+                  note: r'Falta $ 80.000 este mes',
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'goal with a date',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: r'Meta $ 600.000 · diciembre',
+                  value: '60% ahorrado',
+                  progress: 0.6,
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'overspent (red)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 350,
+                child: UiGoalRow(
+                  label: 'Objetivo mensual',
+                  value: 'Sobregirado',
+                  overspent: true,
+                  note: r'Gastaste $ 6.200 más de lo que tenía',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'OptionCard',
         useCases: [
           WidgetbookUseCase(
