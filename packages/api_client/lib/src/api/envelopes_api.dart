@@ -919,7 +919,7 @@ class EnvelopesApi {
   }
 
   /// Get an envelope with the figures and the activity of a month
-  /// The envelope line of the month (figures, state, goal status), its carryover and the month&#39;s transactions that have a portion on the envelope, newest first by &#x60;createdAt&#x60; (ties by id), at most 100.
+  /// The envelope line of the month (figures, state, goal status), its carryover, the month&#39;s transactions that have a portion on the envelope (&#x60;activity&#x60;) and the month&#39;s moves of money between envelopes in which it took part (&#x60;moves&#x60;), each list newest first by &#x60;createdAt&#x60; (ties by id), at most 100.
   ///
   /// Parameters:
   /// * [planId] 
@@ -1496,7 +1496,7 @@ class EnvelopesApi {
   }
 
   /// Move money between two envelopes inside a month (owner or editor)
-  /// Subtracts the amount from the source&#39;s assignment of the month and adds it to the destination&#39;s, atomically and without creating a transaction. Ready to Assign, the other envelopes and the other months do not change. The amount cannot exceed the source&#39;s Available in that month (&#x60;409&#x60;). 
+  /// Subtracts the amount from the source&#39;s assignment of the month and adds it to the destination&#39;s, atomically and without creating a transaction. Ready to Assign, the other envelopes and the other months do not change. The amount cannot exceed the source&#39;s Available in that month (&#x60;409&#x60;). Each successful move is recorded, in the same atomic operation, and listed in &#x60;moves&#x60; of the detail of both envelopes; a refused move records nothing. 
   ///
   /// Parameters:
   /// * [planId] 
