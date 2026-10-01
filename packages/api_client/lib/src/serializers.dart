@@ -42,6 +42,7 @@ import 'package:api_client/src/model/envelope_group.dart';
 import 'package:api_client/src/model/envelope_icon.dart';
 import 'package:api_client/src/model/envelope_line.dart';
 import 'package:api_client/src/model/envelope_list.dart';
+import 'package:api_client/src/model/envelope_spending.dart';
 import 'package:api_client/src/model/envelope_state.dart';
 import 'package:api_client/src/model/envelope_template.dart';
 import 'package:api_client/src/model/envelope_template_result.dart';
@@ -49,6 +50,8 @@ import 'package:api_client/src/model/error.dart';
 import 'package:api_client/src/model/error_message.dart';
 import 'package:api_client/src/model/goal_status.dart';
 import 'package:api_client/src/model/health_status.dart';
+import 'package:api_client/src/model/income_expense_month.dart';
+import 'package:api_client/src/model/income_expense_report.dart';
 import 'package:api_client/src/model/initial_assignment.dart';
 import 'package:api_client/src/model/initial_assignment_request.dart';
 import 'package:api_client/src/model/initial_assignment_result.dart';
@@ -60,6 +63,8 @@ import 'package:api_client/src/model/month_close.dart';
 import 'package:api_client/src/model/month_summary.dart';
 import 'package:api_client/src/model/move_money_request.dart';
 import 'package:api_client/src/model/move_money_result.dart';
+import 'package:api_client/src/model/net_worth_month.dart';
+import 'package:api_client/src/model/net_worth_report.dart';
 import 'package:api_client/src/model/page_meta.dart';
 import 'package:api_client/src/model/payee.dart';
 import 'package:api_client/src/model/payee_page.dart';
@@ -71,6 +76,8 @@ import 'package:api_client/src/model/plan_role.dart';
 import 'package:api_client/src/model/register_request.dart';
 import 'package:api_client/src/model/reorder_envelope_groups_request.dart';
 import 'package:api_client/src/model/reorder_envelopes_request.dart';
+import 'package:api_client/src/model/spending_month.dart';
+import 'package:api_client/src/model/spending_report.dart';
 import 'package:api_client/src/model/suggested_photo_request.dart';
 import 'package:api_client/src/model/template_envelope.dart';
 import 'package:api_client/src/model/template_group.dart';
@@ -122,6 +129,7 @@ part 'serializers.g.dart';
   EnvelopeIcon,
   EnvelopeLine,
   EnvelopeList,
+  EnvelopeSpending,
   EnvelopeState,
   EnvelopeTemplate,
   EnvelopeTemplateResult,
@@ -129,6 +137,8 @@ part 'serializers.g.dart';
   ErrorMessage,
   GoalStatus,
   HealthStatus,
+  IncomeExpenseMonth,
+  IncomeExpenseReport,
   InitialAssignment,
   InitialAssignmentRequest,
   InitialAssignmentResult,
@@ -140,6 +150,8 @@ part 'serializers.g.dart';
   MonthSummary,
   MoveMoneyRequest,
   MoveMoneyResult,
+  NetWorthMonth,
+  NetWorthReport,
   PageMeta,$PageMeta,
   Payee,
   PayeePage,
@@ -151,6 +163,8 @@ part 'serializers.g.dart';
   RegisterRequest,
   ReorderEnvelopeGroupsRequest,
   ReorderEnvelopesRequest,
+  SpendingMonth,
+  SpendingReport,
   SuggestedPhotoRequest,
   TemplateEnvelope,
   TemplateGroup,
@@ -181,12 +195,24 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<CreateTransactionSplit>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(IncomeExpenseMonth)]),
+        () => ListBuilder<IncomeExpenseMonth>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(SpendingMonth)]),
+        () => ListBuilder<SpendingMonth>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(PlanMember)]),
         () => ListBuilder<PlanMember>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(TemplateEnvelope)]),
         () => ListBuilder<TemplateEnvelope>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(NetWorthMonth)]),
+        () => ListBuilder<NetWorthMonth>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(CloseLine)]),
@@ -235,6 +261,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),
         () => ListBuilder<String>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(EnvelopeSpending)]),
+        () => ListBuilder<EnvelopeSpending>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(EnvelopeLine)]),

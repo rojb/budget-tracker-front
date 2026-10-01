@@ -8,6 +8,7 @@ lib/src/api/health_api.dart
 lib/src/api/months_api.dart
 lib/src/api/payees_api.dart
 lib/src/api/plans_api.dart
+lib/src/api/reports_api.dart
 lib/src/api/sharing_api.dart
 lib/src/api/transactions_api.dart
 lib/src/api/users_api.dart
@@ -47,6 +48,7 @@ lib/src/model/envelope_group.dart
 lib/src/model/envelope_icon.dart
 lib/src/model/envelope_line.dart
 lib/src/model/envelope_list.dart
+lib/src/model/envelope_spending.dart
 lib/src/model/envelope_state.dart
 lib/src/model/envelope_template.dart
 lib/src/model/envelope_template_result.dart
@@ -54,6 +56,8 @@ lib/src/model/error.dart
 lib/src/model/error_message.dart
 lib/src/model/goal_status.dart
 lib/src/model/health_status.dart
+lib/src/model/income_expense_month.dart
+lib/src/model/income_expense_report.dart
 lib/src/model/initial_assignment.dart
 lib/src/model/initial_assignment_request.dart
 lib/src/model/initial_assignment_result.dart
@@ -65,6 +69,8 @@ lib/src/model/month_close.dart
 lib/src/model/month_summary.dart
 lib/src/model/move_money_request.dart
 lib/src/model/move_money_result.dart
+lib/src/model/net_worth_month.dart
+lib/src/model/net_worth_report.dart
 lib/src/model/page_meta.dart
 lib/src/model/payee.dart
 lib/src/model/payee_page.dart
@@ -76,6 +82,8 @@ lib/src/model/plan_role.dart
 lib/src/model/register_request.dart
 lib/src/model/reorder_envelope_groups_request.dart
 lib/src/model/reorder_envelopes_request.dart
+lib/src/model/spending_month.dart
+lib/src/model/spending_report.dart
 lib/src/model/suggested_photo_request.dart
 lib/src/model/template_envelope.dart
 lib/src/model/template_group.dart
