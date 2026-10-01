@@ -48,16 +48,20 @@ class UiGlassTile extends StatelessWidget {
             child: UiGlassPanel(
               onPhoto: onPhoto,
               padding: const EdgeInsets.all(14),
-              child: SizedBox(
-                height: 96,
+              // At least 96 tall; a long label that wraps grows the tile instead of
+              // overflowing it on a narrow screen.
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 96),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [disc(icon), disc(UiIcons.arrowUpRight)],
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 10),
                     Text(
                       label,
                       maxLines: 2,
