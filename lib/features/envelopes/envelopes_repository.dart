@@ -186,6 +186,8 @@ class EnvelopeDetailData {
     required this.carryoverMinor,
     required this.activity,
     required this.activityTotal,
+    required this.moves,
+    required this.movesTotal,
   });
 
   final String month;
@@ -195,6 +197,43 @@ class EnvelopeDetailData {
   /// Transactions of the month with a portion on the envelope, newest first.
   final List<TransactionData> activity;
   final int activityTotal;
+
+  /// Moves of money between envelopes made for the month, newest first. History
+  /// only: they are shown with [activity] in 22, merged by registration instant.
+  final List<EnvelopeMoveData> moves;
+  final int movesTotal;
+}
+
+/// One recorded move of money, seen from the envelope of the detail.
+class EnvelopeMoveData {
+  const EnvelopeMoveData({
+    required this.id,
+    required this.outgoing,
+    required this.counterpartName,
+    required this.amountMinor,
+    required this.month,
+    required this.createdAt,
+  });
+
+  final String id;
+
+  /// True when the envelope was the source (the money left it).
+  final bool outgoing;
+  final String counterpartName;
+  final int amountMinor;
+
+  /// The month the move was made for (`YYYY-MM`).
+  final String month;
+  final DateTime createdAt;
+
+  static EnvelopeMoveData fromApi(api.EnvelopeMove move) => EnvelopeMoveData(
+    id: move.id,
+    outgoing: move.direction == api.EnvelopeMoveDirectionEnum.out_,
+    counterpartName: move.counterpartName,
+    amountMinor: move.amountMinor,
+    month: move.month,
+    createdAt: move.createdAt,
+  );
 }
 
 /// Result of moving money (24): the updated lines of both envelopes.
@@ -321,6 +360,8 @@ class EnvelopesRepository {
       carryoverMinor: detail.carryoverMinor,
       activity: detail.activity.map(TransactionData.fromApi).toList(),
       activityTotal: detail.activityTotal,
+      moves: detail.moves.map(EnvelopeMoveData.fromApi).toList(),
+      movesTotal: detail.movesTotal,
     );
   });
 

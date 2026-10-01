@@ -11,6 +11,8 @@ import '../plans/plans_controller.dart';
 import '../transactions/transaction_change.dart';
 import '../transactions/transaction_rows.dart';
 import '../transactions/transactions_controller.dart';
+import '../transactions/transactions_repository.dart';
+import 'envelope_move_row.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 import 'goal_texts.dart';
@@ -134,6 +136,7 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
       int.parse(detail.month.substring(5, 7)),
     );
     final group = widget.envelopes.groupById(envelope.groupId)?.name;
+    final entries = _activityEntries(detail);
     Widget figure(String value, String label, {bool muted = false}) => Expanded(
       child: Column(
         children: [
@@ -207,7 +210,7 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
         style: UiTypography.custom(22),
       ),
       const SizedBox(height: 10),
-      if (detail.activity.isEmpty)
+      if (entries.isEmpty)
         UiCard(
           padding: const EdgeInsets.all(22),
           child: Text(
@@ -217,21 +220,28 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
         )
       else
         ...buildDayGroups(
-          detail.activity,
-          registeredAt: (item) => item.createdAt,
-          rowBuilder: (item) => transactionRow(
-            item,
-            currency: currency,
-            envelopes: widget.envelopes,
-            onTap: () => openTransaction(
-              context,
+          entries,
+          registeredAt: (entry) => entry.createdAt,
+          rowBuilder: (entry) {
+            final move = entry.move;
+            if (move != null) {
+              return envelopeMoveRow(move, currency: currency);
+            }
+            final item = entry.transaction!;
+            return transactionRow(
               item,
-              transactions: widget.transactions,
+              currency: currency,
               envelopes: widget.envelopes,
-              accounts: widget.accounts,
-              onChanged: _load,
-            ),
-          ),
+              onTap: () => openTransaction(
+                context,
+                item,
+                transactions: widget.transactions,
+                envelopes: widget.envelopes,
+                accounts: widget.accounts,
+                onChanged: _load,
+              ),
+            );
+          },
         ),
       if (canEdit) ...[
         const SizedBox(height: 12),
@@ -243,6 +253,37 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
       ],
     ];
   }
+}
+
+/// The month's transactions and moves as one list, last registered first (ties
+/// by id), as the two lists of the API are merged by `createdAt`.
+List<_ActivityEntry> _activityEntries(EnvelopeDetailData detail) {
+  final entries = [
+    for (final item in detail.activity)
+      _ActivityEntry(id: item.id, createdAt: item.createdAt, transaction: item),
+    for (final move in detail.moves)
+      _ActivityEntry(id: move.id, createdAt: move.createdAt, move: move),
+  ];
+  entries.sort((a, b) {
+    final byInstant = b.createdAt.compareTo(a.createdAt);
+    return byInstant != 0 ? byInstant : b.id.compareTo(a.id);
+  });
+  return entries;
+}
+
+/// A row of the activity of 22: a transaction or a move of money.
+class _ActivityEntry {
+  const _ActivityEntry({
+    required this.id,
+    required this.createdAt,
+    this.transaction,
+    this.move,
+  });
+
+  final String id;
+  final DateTime createdAt;
+  final TransactionData? transaction;
+  final EnvelopeMoveData? move;
 }
 
 /// Loading placeholder with the shape of the page, never fewer than three rows
