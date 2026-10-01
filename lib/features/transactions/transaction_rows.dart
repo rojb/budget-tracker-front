@@ -13,8 +13,8 @@ import 'transactions_repository.dart';
 /// - amount: `−$ X` for an expense, `+$ X` in a lavender capsule for an income;
 /// - caption: the account in 10; in 14 (which already is the account) the group
 ///   of the envelope, or "A + B" with the envelope names of a split;
-/// - icon: the envelope's, a split icon for a split, an arrow for an income to
-///   Ready to Assign.
+/// - icon: the envelope's, a split icon for a split, the income arrow for every
+///   income.
 ///
 /// [timeWithDay] draws the time as "Hoy, 14:32" (the confirmation of 27).
 UiTxRow transactionRow(
@@ -33,19 +33,22 @@ UiTxRow transactionRow(
   final first = splits.isEmpty ? null : splits.first;
   final String destination;
   final IconData icon;
-  if (splits.length > 1) {
+  if (!transaction.isExpense) {
+    // Every income draws the income arrow, as the render of 10 does.
+    destination = first?.envelopeId == null
+        ? 'Listo para asignar'
+        : (first!.envelopeName ?? 'Sin sobre');
+    icon = UiIcons.arrowDownLeft;
+  } else if (splits.length > 1) {
     destination = '${splits.length} sobres';
     icon = UiIcons.split;
   } else if (first?.envelopeId != null) {
     final line = envelopes.lineById(first!.envelopeId!);
     destination = first.envelopeName ?? 'Sin sobre';
     icon = line == null ? UiIcons.tag : uiEnvelopeIcon(line.envelope.icon);
-  } else if (transaction.isExpense) {
+  } else {
     destination = 'Sin sobre';
     icon = UiIcons.tag;
-  } else {
-    destination = 'Listo para asignar';
-    icon = UiIcons.arrowDownLeft;
   }
   return UiTxRow(
     icon: icon,
