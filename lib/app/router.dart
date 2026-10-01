@@ -14,6 +14,7 @@ import '../features/auth/login_page.dart';
 import '../features/auth/register_page.dart';
 import '../features/auth/welcome_page.dart';
 import '../features/envelopes/assign_money_page.dart';
+import '../features/envelopes/envelope_detail_page.dart';
 import '../features/envelopes/envelope_form_page.dart';
 import '../features/envelopes/groups_page.dart';
 import '../features/envelopes/plan_tab_page.dart';
@@ -367,10 +368,12 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: '/envelopes/:envelopeId',
-        builder: (context, state) => _placeholder(
-          context,
-          '22 Detalle de sobre',
-          'Llega con add-envelope-goals.',
+        builder: (context, state) => EnvelopeDetailPage(
+          envelopeId: state.pathParameters['envelopeId']!,
+          plans: plans,
+          envelopes: dependencies.envelopesController,
+          transactions: dependencies.transactionsController,
+          accounts: dependencies.accountsController,
         ),
       ),
       ShellRoute(

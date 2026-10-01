@@ -5,19 +5,18 @@ import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
-import '../../core/api/api_failure.dart';
-import '../common/feedback.dart';
 import '../common/months.dart';
 import '../plans/plans_controller.dart';
-import 'delete_envelope_sheet.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
+import 'goal_texts.dart';
 
 /// Screen 02 Plan del mes: the Plan tab once the plan has envelopes. This change
 /// owns the structure (group headers with their "+", the envelope rows, the
 /// "Sin grupo" tail, search in place and the `layers` button to 32); the monthly
 /// flow (month navigation, status filters, the "+" of the joined card, 03/04/53,
-/// month close) belongs to `add-monthly-assignment`.
+/// month close) belongs to `add-monthly-assignment`. A row opens 22; its state
+/// (Funded, Underfunded, Overspent) is the API's `state` (`add-envelope-goals`).
 class PlanPage extends StatefulWidget {
   const PlanPage({required this.plans, required this.envelopes, super.key});
 
@@ -43,14 +42,6 @@ class _PlanPageState extends State<PlanPage> {
     if (!_searching) _search.clear();
   });
 
-  static UiEnvelopeRowVariant _variantOf(EnvelopeLineData line) {
-    if (line.availableMinor < 0) return UiEnvelopeRowVariant.overspent;
-    if (line.assignedMinor == 0 && line.availableMinor == 0) {
-      return UiEnvelopeRowVariant.empty;
-    }
-    return UiEnvelopeRowVariant.funded;
-  }
-
   DateTime get _month {
     final parts = (widget.envelopes.month ?? '').split('-');
     if (parts.length == 2) {
@@ -63,52 +54,26 @@ class _PlanPageState extends State<PlanPage> {
     // Spending comes from the engine (transactions), not from assigned − available, which
     // carryover and income sent to an envelope would falsify.
     final spent = math.max(0, line.spentMinor);
-    final variant = _variantOf(line);
+    // With a goal the stripes show how much of the month's requirement is
+    // assigned (PRD-ux-spec.md 5, state "Sobre"); without one, the share spent.
+    final progress = line.goalStatus != null
+        ? goalCoverage(line)
+        : (line.assignedMinor > 0 ? spent / line.assignedMinor : 0.0);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: UiEnvelopeRow(
-        variant: variant,
+        variant: rowVariant(line),
         icon: uiEnvelopeIcon(line.envelope.icon),
         name: line.envelope.name,
         subtitle:
             '${formatMoney(spent, currency)} de '
             '${formatMoney(line.assignedMinor, currency)}',
         amount: formatMoney(line.availableMinor, currency),
-        progress: line.assignedMinor > 0 ? spent / line.assignedMinor : 0,
-        // 22 Detalle de sobre arrives with add-envelope-goals; so does the
-        // real entry to 43 (the trash of 23), so a long press opens it meanwhile.
+        caption: rowCaption(line, currency),
+        progress: progress,
         onTap: () => context.push(AppRoutes.envelopeDetail(line.envelope.id)),
-        longPressLabel: 'Eliminar sobre',
-        onLongPress: () => _delete(context, line),
       ),
     );
-  }
-
-  Future<void> _delete(BuildContext context, EnvelopeLineData line) async {
-    final group = widget.envelopes.groupById(line.envelope.groupId);
-    final confirmed = await showDeleteEnvelopeSheet(
-      context,
-      line: line,
-      groupName: group?.name,
-      currency: widget.plans.currency,
-    );
-    if (confirmed != true || !context.mounted) return;
-    try {
-      await widget.envelopes.deleteEnvelope(line.envelope.id);
-      if (!context.mounted) return;
-      showUiToast(
-        context,
-        variant: UiToastVariant.info,
-        title: 'Sobre eliminado',
-        detail: 'Su disponible volvió a Listo para asignar.',
-        bottomOffset: 100,
-      );
-    } on ApiFailure catch (failure) {
-      if (!context.mounted) return;
-      failure.kind == ApiFailureKind.forbidden
-          ? showForbidden(context)
-          : showConnectionProblem(context);
-    }
   }
 
   @override
