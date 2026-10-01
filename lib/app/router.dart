@@ -387,7 +387,10 @@ GoRouter createRouter(Dependencies dependencies) {
       GoRoute(
         path: AppRoutes.template,
         builder: (context, state) =>
-            TemplatePage(envelopes: dependencies.envelopesController),
+            TemplatePage(
+              envelopes: dependencies.envelopesController,
+              plans: dependencies.plansController,
+            ),
       ),
       GoRoute(
         path: AppRoutes.assignMoney,

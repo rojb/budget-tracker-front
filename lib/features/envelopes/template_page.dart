@@ -5,17 +5,23 @@ import 'package:ui/ui.dart';
 import '../../app/routes.dart';
 import '../../core/api/api_failure.dart';
 import '../common/feedback.dart';
+import '../plans/plans_controller.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
 import 'faded_scroll.dart';
 
 /// Screen 35 Plantilla sugerida: the template's envelopes from the API, all
 /// ticked, untickable one by one. "Crear N sobres" creates the ticked ones
-/// without a goal and with $ 0, then opens 46.
+/// without a goal and with a zero amount in the plan currency, then opens 46.
 class TemplatePage extends StatefulWidget {
-  const TemplatePage({required this.envelopes, super.key});
+  const TemplatePage({
+    required this.envelopes,
+    required this.plans,
+    super.key,
+  });
 
   final EnvelopesController envelopes;
+  final PlansController plans;
 
   @override
   State<TemplatePage> createState() => _TemplatePageState();
@@ -145,7 +151,9 @@ class _TemplatePageState extends State<TemplatePage> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Se crean sin objetivo y en \$ 0. Después los ajustás.',
+                        'Se crean sin objetivo y en '
+                        '${formatMoney(0, widget.plans.currency)}. '
+                        'Después los ajustás.',
                         style: UiTypography.custom(
                           15,
                           color: UiColors.inkMuted,
