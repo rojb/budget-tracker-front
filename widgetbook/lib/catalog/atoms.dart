@@ -255,6 +255,15 @@ WidgetbookFolder atomsFolder() {
             name: 'ingresoActive',
             builder: (context) => stage(const _ToggleDemo(initial: 1)),
           ),
+          WidgetbookUseCase(
+            name: 'three segments (Tipo, 11)',
+            builder: (context) => stage(
+              const _ToggleDemo(
+                initial: 0,
+                labels: ['Todos', 'Gastos', 'Ingresos'],
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
@@ -369,9 +378,13 @@ WidgetbookFolder atomsFolder() {
 }
 
 class _ToggleDemo extends StatefulWidget {
-  const _ToggleDemo({required this.initial});
+  const _ToggleDemo({
+    required this.initial,
+    this.labels = const ['Gasto', 'Ingreso'],
+  });
 
   final int initial;
+  final List<String> labels;
 
   @override
   State<_ToggleDemo> createState() => _ToggleDemoState();
@@ -386,6 +399,7 @@ class _ToggleDemoState extends State<_ToggleDemo> {
       width: 340,
       child: UiToggle(
         selectedIndex: _index,
+        labels: widget.labels,
         onChanged: (i) => setState(() => _index = i),
       ),
     );

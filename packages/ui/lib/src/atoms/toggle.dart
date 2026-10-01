@@ -4,15 +4,19 @@ import '../tokens/colors.dart';
 import '../tokens/shape.dart';
 import '../tokens/typography.dart';
 
-/// Two-segment control (Gasto / Ingreso by default). Controlled: the parent
-/// owns the selection and rebuilds with the new [selectedIndex].
+/// Two- or three-segment control (Gasto / Ingreso by default; Todos / Gastos /
+/// Ingresos in 11). Controlled: the parent owns the selection and rebuilds with
+/// the new [selectedIndex].
 class UiToggle extends StatelessWidget {
   const UiToggle({
     required this.selectedIndex,
     required this.onChanged,
     this.labels = const ['Gasto', 'Ingreso'],
     super.key,
-  }) : assert(labels.length == 2, 'Toggle has exactly two segments');
+  }) : assert(
+         labels.length == 2 || labels.length == 3,
+         'Toggle has two or three segments',
+       );
 
   final int selectedIndex;
   final ValueChanged<int> onChanged;

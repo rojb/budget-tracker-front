@@ -260,6 +260,137 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'FilterChip',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'active filters (10)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    UiFilterChip(
+                      icon: UiIcons.calendar,
+                      label: '1 – 30 sep',
+                      onRemove: () {},
+                    ),
+                    UiFilterChip(
+                      icon: UiIcons.clock,
+                      label: '18:00 – 23:59',
+                      onRemove: () {},
+                    ),
+                    UiFilterChip(
+                      icon: UiIcons.store,
+                      label: 'Farmacity',
+                      onRemove: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PickerField',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'dates and times (11)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: UiPickerField(
+                            label: 'Desde',
+                            value: '01/09/2026',
+                            icon: UiIcons.calendar,
+                            onTap: () {},
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: UiPickerField(
+                            label: 'Hasta',
+                            value: '30/09/2026',
+                            icon: UiIcons.calendar,
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: UiPickerField(
+                            label: 'Desde',
+                            value: '18:00',
+                            icon: UiIcons.clock,
+                            onTap: () {},
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: UiPickerField(
+                            label: 'Hasta',
+                            icon: UiIcons.clock,
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'FilterRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'all and chosen (11)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: Column(
+                  children: [
+                    UiFilterRow(
+                      icon: UiIcons.store,
+                      label: 'Beneficiario',
+                      value: 'Todos',
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    UiFilterRow(
+                      icon: UiIcons.wallet,
+                      label: 'Sobre',
+                      value: 'Comida afuera',
+                      active: true,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    UiFilterRow(
+                      icon: UiIcons.creditCard,
+                      label: 'Cuenta',
+                      value: 'Todas',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'ChoiceCard',
         useCases: [
           WidgetbookUseCase(
