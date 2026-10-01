@@ -165,6 +165,9 @@ Widget _money() {
     ('EUR 98000', 98000, Currency.eur),
     ('USD -1250', -1250, Currency.usd),
     ('ARS 0', 0, Currency.ars),
+    ('BOB 125050', 125050, Currency.bob),
+    ('BOB -1250', -1250, Currency.bob),
+    ('BOB 0', 0, Currency.bob),
   ];
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

@@ -1075,6 +1075,11 @@ WidgetbookFolder moleculesFolder() {
             builder: (context) =>
                 stage(const UiAmountCapsule(symbol: r'US$', value: '1.250,50')),
           ),
+          WidgetbookUseCase(
+            name: 'bob',
+            builder: (context) =>
+                stage(const UiAmountCapsule(symbol: 'Bs.', value: '1.250,50')),
+          ),
         ],
       ),
       WidgetbookComponent(
