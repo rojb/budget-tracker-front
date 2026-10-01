@@ -9,6 +9,104 @@ WidgetbookFolder moleculesFolder() {
     name: 'molecules',
     children: [
       WidgetbookComponent(
+        name: 'AssignCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'carousel (03)',
+            builder: (context) => stage(
+              SizedBox(
+                height: 180,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 250,
+                      child: UiAssignCard(
+                        icon: UiIcons.bus,
+                        name: 'Transporte',
+                        available: r'−$ 6.200 disponible',
+                        caption: r'Sobregirado · quedaría en $ 0',
+                        percent: '100%',
+                        selected: true,
+                        onTap: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    SizedBox(
+                      width: 250,
+                      child: UiAssignCard(
+                        icon: UiIcons.cart,
+                        name: 'Supermercado',
+                        available: r'$ 47.550 disponible',
+                        caption: 'Disponible',
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CloseRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'carried and deducted (25)',
+            builder: (context) => stage(
+              Container(
+                width: 360,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: UiColors.surface,
+                  borderRadius: BorderRadius.circular(UiRadius.card),
+                ),
+                child: const Column(
+                  children: [
+                    UiCloseRow(
+                      name: 'Alquiler',
+                      outcome: r'+$ 380.000 se arrastra',
+                    ),
+                    UiCloseRow(
+                      name: 'Supermercado',
+                      outcome: r'+$ 47.550 se arrastra',
+                    ),
+                    UiCloseRow(
+                      name: 'Transporte',
+                      outcome: r'−$ 6.200 se descuenta de Listo para asignar',
+                      deducted: true,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'BalanceCheck',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'todo cuadra (25)',
+            builder: (context) => stage(
+              const SizedBox(
+                width: 360,
+                child: UiBalanceCheck(
+                  title: 'Todo cuadra',
+                  equation: r'$ 1.000.000 − $ 938.000 − $ 20.000 = $ 42.000',
+                  caption:
+                      'Σ cuentas − Σ disponible − reservado a futuro = Listo '
+                      'para asignar',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'EnvelopeRow',
         useCases: [
           WidgetbookUseCase(

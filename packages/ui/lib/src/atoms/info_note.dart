@@ -4,6 +4,7 @@ import '../tokens/colors.dart';
 import '../tokens/icons.dart';
 import '../tokens/shape.dart';
 import '../tokens/typography.dart';
+import 'hit_target.dart';
 
 enum UiInfoNoteVariant { plain, lavender }
 
@@ -17,6 +18,8 @@ class UiInfoNote extends StatelessWidget {
     this.title,
     this.icon = UiIcons.info,
     this.variant = UiInfoNoteVariant.plain,
+    this.actionLabel,
+    this.onAction,
     super.key,
   });
 
@@ -27,6 +30,10 @@ class UiInfoNote extends StatelessWidget {
   final String? title;
   final IconData icon;
   final UiInfoNoteVariant variant;
+
+  /// Trailing pill action, shown when both are set.
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +85,29 @@ class UiInfoNote extends StatelessWidget {
               ],
             ),
           ),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(width: 10),
+            UiHitTarget(
+              onTap: onAction,
+              semanticLabel: actionLabel!,
+              minWidth: 0,
+              child: Container(
+                height: 44,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: UiColors.ink,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: ExcludeSemantics(
+                  child: Text(
+                    actionLabel!,
+                    style: UiTypography.custom(15, color: UiColors.surface),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

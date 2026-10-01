@@ -89,6 +89,7 @@ abstract final class UiIcons {
   // Filters (10, 11).
   static const IconData sliders = LucideIcons.slidersHorizontal300;
   static const IconData calendar = LucideIcons.calendar300;
+  static const IconData calendarClock = LucideIcons.calendarClock300;
   static const IconData store = LucideIcons.store300;
 }
 
