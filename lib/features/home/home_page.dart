@@ -35,7 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final HomeController _controller = widget.controllerFactory();
-  final PageController _pages = PageController(viewportFraction: 0.78);
+  final PageController _pages = PageController(viewportFraction: 0.85);
   int _page = 0;
 
   @override
