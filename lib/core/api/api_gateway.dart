@@ -40,6 +40,16 @@ class ApiGateway {
   }
 
   bool get hasToken => _bearer.tokens.containsKey(_schemeName);
+
+  /// Base URL of the API, for the images the API serves (goal photos).
+  String get baseUrl => client.dio.options.baseUrl;
+
+  /// Headers for requests the generated client does not make itself, namely
+  /// `Image.network` of a photo, which the API serves only to members.
+  Map<String, String> get authorizationHeaders {
+    final token = _bearer.tokens[_schemeName];
+    return token == null ? const {} : {'Authorization': 'Bearer $token'};
+  }
 }
 
 class _UnauthorizedInterceptor extends Interceptor {
