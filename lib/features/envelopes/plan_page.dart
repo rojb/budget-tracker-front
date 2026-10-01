@@ -215,9 +215,9 @@ class _PlanPageState extends State<PlanPage> {
                 secondaryValue: '${envelopes.envelopeCount}',
                 secondaryLabel: 'Sobres activos',
                 addLabel: 'Asignar dinero',
-                // The assignment flow (03) arrives in the next task.
-                addEnabled: false,
-                onAdd: () {},
+                addEnabled: month.canEdit,
+                onAdd: () =>
+                    context.push(AppRoutes.assign(month: envelopes.month)),
               ),
               const SizedBox(height: 14),
               if (future) ...[

@@ -42,6 +42,14 @@ abstract final class AppRoutes {
   static String moveMoney(String id) => '/envelopes/$id/move'; // 24
   static String goalDetail(String id) => '/goals/$id'; // 05
 
+  /// 03 Asignar dinero (and 53), for [month] ("2026-11") and with [envelopeId]
+  /// chosen; the viewed month and the neediest envelope when absent.
+  static const assignPath = '/assign';
+  static String assign({String? month, String? envelopeId}) => Uri(
+    path: assignPath,
+    queryParameters: {'month': ?month, 'envelopeId': ?envelopeId},
+  ).toString();
+
   /// 31 opened from "+ Nueva meta" in 01: group Metas and "Con fecha".
   static String newGoal({String? groupId}) =>
       '$newEnvelope?goal=targetByDate${groupId == null ? '' : '&groupId=$groupId'}';

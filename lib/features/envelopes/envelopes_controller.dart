@@ -109,6 +109,11 @@ class EnvelopesController extends ChangeNotifier {
     return load();
   }
 
+  /// The envelopes and Ready to Assign of [month] without changing the viewed
+  /// month (the month chips of 03).
+  Future<EnvelopeBoard> boardOf(String month) =>
+      _repository.board(_planId!, month: month);
+
   /// Throws [ApiFailure] (409 when the name is taken).
   Future<GroupData> createGroup(String name) async {
     final group = await _repository.createGroup(_planId!, name);

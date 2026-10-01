@@ -24,6 +24,7 @@ import '../features/envelopes/plan_tab_page.dart';
 import '../features/envelopes/template_page.dart';
 import '../features/goals/goal_detail_page.dart';
 import '../features/home/home_page.dart';
+import '../features/plan/assign_page.dart';
 import '../features/payees/payee_form_page.dart';
 import '../features/payees/payees_controller.dart';
 import '../features/payees/payees_page.dart';
@@ -375,6 +376,16 @@ GoRouter createRouter(Dependencies dependencies) {
         builder: (context, state) => AssignMoneyPage(
           plans: plans,
           envelopes: dependencies.envelopesController,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.assignPath,
+        builder: (context, state) => AssignPage(
+          plans: plans,
+          envelopes: dependencies.envelopesController,
+          month: dependencies.monthController,
+          initialMonth: state.uri.queryParameters['month'],
+          initialEnvelopeId: state.uri.queryParameters['envelopeId'],
         ),
       ),
       GoRoute(
