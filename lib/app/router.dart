@@ -222,6 +222,7 @@ GoRouter createRouter(Dependencies dependencies) {
                     builder: (context, state) => ArchivedAccountsPage(
                       accounts: dependencies.accountsController,
                       plans: plans,
+                      transactions: dependencies.transactionsController,
                     ),
                   ),
                   GoRoute(

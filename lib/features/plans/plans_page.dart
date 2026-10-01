@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
@@ -14,7 +16,7 @@ import 'plans_repository.dart';
 
 /// Screen 16 Planes y miembros: the user's plans (tap to make one active) and
 /// the members of the active plan. Invitations arrive with add-plan-sharing.
-class PlansPage extends StatelessWidget {
+class PlansPage extends StatefulWidget {
   const PlansPage({
     required this.plans,
     required this.auth,
@@ -26,17 +28,52 @@ class PlansPage extends StatelessWidget {
   final AuthController auth;
   final SharingRepository sharing;
 
+  static String roleLabel(PlanRole role) => switch (role) {
+    PlanRole.owner => 'Titular',
+    PlanRole.editor => 'Puede editar',
+    PlanRole.viewer => 'Solo lectura',
+  };
+
+  @override
+  State<PlansPage> createState() => _PlansPageState();
+}
+
+class _PlansPageState extends State<PlansPage> with WidgetsBindingObserver {
+  /// How often the plans are reloaded while the screen is open: there is no
+  /// push channel, and a member who joins should show up without a restart.
+  static const _refreshEvery = Duration(seconds: 10);
+
+  Timer? _timer;
+
+  PlansController get plans => widget.plans;
+  AuthController get auth => widget.auth;
+  SharingRepository get sharing => widget.sharing;
+
   static const Map<Currency, String> _currencyNames = {
     Currency.ars: r'pesos ($)',
     Currency.usd: r'dólares (US$)',
     Currency.eur: 'euros (€)',
   };
 
-  static String roleLabel(PlanRole role) => switch (role) {
-    PlanRole.owner => 'Titular',
-    PlanRole.editor => 'Puede editar',
-    PlanRole.viewer => 'Solo lectura',
-  };
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    plans.refresh();
+    _timer = Timer.periodic(_refreshEvery, (_) => plans.refresh());
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) plans.refresh();
+  }
 
   String _subtitle(PlanData plan) {
     final who = plan.members.length <= 1
@@ -163,7 +200,7 @@ class PlansPage extends StatelessWidget {
                                 ? '${member.name} (vos)'
                                 : member.name,
                             email: member.email,
-                            role: roleLabel(member.role),
+                            role: PlansPage.roleLabel(member.role),
                             avatarColor: i == 0
                                 ? UiColors.lavender
                                 : UiColors.chartreuse,

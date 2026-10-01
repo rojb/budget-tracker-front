@@ -52,9 +52,10 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
   String? _error;
   bool _saving = false;
 
-  /// Income only: the pad is shown while the amount is empty; the calculator
-  /// icon of the `SaveBar` (or a tap on the capsule) shows or hides it.
-  bool _incomePad = true;
+  /// Income only: the destination cards come first (render 09), so the pad stays
+  /// hidden until the calculator icon of the `SaveBar` (or a tap on the capsule)
+  /// shows it; expenses always show it (render 07).
+  bool _incomePad = false;
 
   Currency get _currency => widget.plans.currency;
 
@@ -265,7 +266,11 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     final account = draft.accountId == null
         ? null
         : widget.accounts.byId(draft.accountId!);
-    final caption = draft.amount.caption;
+    final caption =
+        draft.amount.caption ??
+        (!expense && !_incomePad && draft.amount.isEmpty
+            ? 'Tocá el monto para escribirlo'
+            : null);
     final fields = <Widget>[
       UiFieldRow(
         label: 'Beneficiario',
@@ -303,8 +308,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
               child: UiToggle(
                 selectedIndex: expense ? 0 : 1,
                 onChanged: (index) {
-                  // Income opens the pad only while there is nothing typed yet.
-                  if (index == 1 && expense) _incomePad = draft.amount.isEmpty;
+                  // Income opens with the destination cards, not the pad.
+                  if (index == 1 && expense) _incomePad = false;
                   draft.setDirection(expense: index == 0);
                 },
               ),

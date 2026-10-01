@@ -77,6 +77,26 @@ class PlansController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Reloads the plans in the background (members who joined or left, renamed
+  /// plans). Unlike [load] it never changes the status, and a failure keeps the
+  /// list that is already shown, so it can run while a screen is open.
+  Future<void> refresh() async {
+    if (_status != PlansStatus.ready) return;
+    try {
+      final plans = await _repository.list();
+      // The session may have ended while the request was in flight.
+      if (_status != PlansStatus.ready) return;
+      _plans = plans;
+      final remembered = _active?.id;
+      _active =
+          _plans.where((plan) => plan.id == remembered).firstOrNull ??
+          _plans.firstOrNull;
+      notifyListeners();
+    } on ApiFailure {
+      // Keep what is shown; the next refresh retries.
+    }
+  }
+
   Future<void> select(String planId) async {
     final plan = _plans.where((p) => p.id == planId).firstOrNull;
     if (plan == null) return;

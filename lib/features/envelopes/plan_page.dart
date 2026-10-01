@@ -264,6 +264,32 @@ class _PlanPageState extends State<PlanPage> {
                 )
               else
                 ...sections,
+              // After the last group (PRD-ux-spec.md 9.1): create or manage groups
+              // without leaving the Plan tab; both open 32.
+              if (!narrowed) ...[
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(
+                      child: UiButton(
+                        label: 'Nuevo grupo',
+                        icon: UiIcons.plus,
+                        variant: UiButtonVariant.white,
+                        onPressed: () => context.push(AppRoutes.groups),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: UiButton(
+                        label: 'Editar grupos',
+                        icon: UiIcons.layers,
+                        variant: UiButtonVariant.white,
+                        onPressed: () => context.push(AppRoutes.groups),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         );

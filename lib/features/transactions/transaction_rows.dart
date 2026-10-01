@@ -29,7 +29,7 @@ UiTxRow transactionRow(
   final splits = transaction.splits;
   final time = timeWithDay
       ? dateTimeLabel(transaction.occurredAt)
-      : timeLabel(transaction.occurredAt);
+      : movementTimeLabel(transaction.occurredAt, transaction.createdAt);
   final first = splits.isEmpty ? null : splits.first;
   final String destination;
   final IconData icon;
