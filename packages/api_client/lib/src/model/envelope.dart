@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/envelope_goal.dart';
 import 'package:api_client/src/model/envelope_icon.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -17,6 +18,8 @@ part 'envelope.g.dart';
 /// * [icon] 
 /// * [groupId] - UUID v4 identifier.
 /// * [position] - Zero-based place inside its group (or among the envelopes without a group).
+/// * [goal] 
+/// * [photoUrl] - Path, relative to the API, of the envelope's photo (served only to members with a bearer token). It carries a `v` version query, so a changed photo is a new URL. Absent when the envelope has no photo.
 /// * [createdAt] - ISO-8601 instant with UTC offset, e.g. 2026-09-29T14:30:00Z.
 @BuiltValue()
 abstract class Envelope implements Built<Envelope, EnvelopeBuilder> {
@@ -38,6 +41,13 @@ abstract class Envelope implements Built<Envelope, EnvelopeBuilder> {
   /// Zero-based place inside its group (or among the envelopes without a group).
   @BuiltValueField(wireName: r'position')
   int get position;
+
+  @BuiltValueField(wireName: r'goal')
+  EnvelopeGoal? get goal;
+
+  /// Path, relative to the API, of the envelope's photo (served only to members with a bearer token). It carries a `v` version query, so a changed photo is a new URL. Absent when the envelope has no photo.
+  @BuiltValueField(wireName: r'photoUrl')
+  String? get photoUrl;
 
   /// ISO-8601 instant with UTC offset, e.g. 2026-09-29T14:30:00Z.
   @BuiltValueField(wireName: r'createdAt')
@@ -93,6 +103,20 @@ class _$EnvelopeSerializer implements PrimitiveSerializer<Envelope> {
       object.position,
       specifiedType: const FullType(int),
     );
+    if (object.goal != null) {
+      yield r'goal';
+      yield serializers.serialize(
+        object.goal,
+        specifiedType: const FullType(EnvelopeGoal),
+      );
+    }
+    if (object.photoUrl != null) {
+      yield r'photoUrl';
+      yield serializers.serialize(
+        object.photoUrl,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'createdAt';
     yield serializers.serialize(
       object.createdAt,
@@ -156,6 +180,22 @@ class _$EnvelopeSerializer implements PrimitiveSerializer<Envelope> {
             specifiedType: const FullType(int),
           ) as int;
           result.position = valueDes;
+          break;
+        case r'goal':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(EnvelopeGoal),
+          ) as EnvelopeGoal?;
+          if (valueDes == null) continue;
+          result.goal.replace(valueDes);
+          break;
+        case r'photoUrl':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.photoUrl = valueDes;
           break;
         case r'createdAt':
           final valueDes = serializers.deserialize(

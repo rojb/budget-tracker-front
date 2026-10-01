@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/envelope_goal.dart';
 import 'package:api_client/src/model/envelope_icon.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -15,6 +16,7 @@ part 'create_envelope_request.g.dart';
 /// * [name] 
 /// * [groupId] - UUID v4 identifier.
 /// * [icon] 
+/// * [goal] 
 @BuiltValue()
 abstract class CreateEnvelopeRequest implements Built<CreateEnvelopeRequest, CreateEnvelopeRequestBuilder> {
   @BuiltValueField(wireName: r'name')
@@ -27,6 +29,9 @@ abstract class CreateEnvelopeRequest implements Built<CreateEnvelopeRequest, Cre
   @BuiltValueField(wireName: r'icon')
   EnvelopeIcon? get icon;
   // enum iconEnum {  tag,  home,  bus,  utensils,  heartPulse,  gift,  cart,  pill,  wifi,  settings,  ticket,  repeat,  lifeBuoy,  plane,  };
+
+  @BuiltValueField(wireName: r'goal')
+  EnvelopeGoal? get goal;
 
   CreateEnvelopeRequest._();
 
@@ -68,6 +73,13 @@ class _$CreateEnvelopeRequestSerializer implements PrimitiveSerializer<CreateEnv
       yield serializers.serialize(
         object.icon,
         specifiedType: const FullType(EnvelopeIcon),
+      );
+    }
+    if (object.goal != null) {
+      yield r'goal';
+      yield serializers.serialize(
+        object.goal,
+        specifiedType: const FullType(EnvelopeGoal),
       );
     }
   }
@@ -115,6 +127,14 @@ class _$CreateEnvelopeRequestSerializer implements PrimitiveSerializer<CreateEnv
           ) as EnvelopeIcon?;
           if (valueDes == null) continue;
           result.icon = valueDes;
+          break;
+        case r'goal':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(EnvelopeGoal),
+          ) as EnvelopeGoal?;
+          if (valueDes == null) continue;
+          result.goal.replace(valueDes);
           break;
         default:
           unhandled.add(key);
