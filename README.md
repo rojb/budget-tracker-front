@@ -244,18 +244,17 @@ Cambio `add-envelope-goals` (RRG-52). `lib/features/envelopes/` y `lib/features/
   disponible"); la API responde 409 si el dinero cambió.
 - **01 Inicio**: carrusel "Metas" con una `UiGoalCard` por cada sobre con meta con fecha (→ 05) y
   "+ Nueva meta" (→ 31 con el grupo Metas y "Con fecha"); estados vacío ("Creá tu primera meta"),
-  cargando y error. La tarjeta "Listo para asignar" y Reportes no están (`add-monthly-assignment` y
-  `add-reports`).
+  cargando y error. El "+" de la tarjeta "Listo para asignar" abre 03 (`add-monthly-assignment`);
+  Reportes no está (`add-reports`).
 - **05 Detalle de meta** (`/goals/:id`), **40 Opciones de meta** y **50 Foto de la meta**: foto a
   pantalla completa (o el tinte lavanda con el ícono) bajo paneles de vidrio, tiles a 22, 24 y 23, y
-  "Asignar a esta meta" deshabilitado hasta que exista 03. 50 elige de la galería o la cámara
+  "Asignar a esta meta" (→ 03 con ese sobre elegido). 50 elige de la galería o la cámara
   (`image_picker`), una foto sugerida, o quita la foto; "Listo" la sube (la API valida JPEG/PNG/WebP de
   hasta 5 MB). Desde 31 solo recuerda la elección y se aplica al crear el sobre.
 - **Fotos con autenticación.** La API sirve las fotos solo a miembros: `EnvelopesController.imageFor`
   arma un `NetworkImage` con el header `Authorization` de `ApiGateway`. Una foto nueva cambia su URL
   (`?v=`), así que el caché de imágenes de Flutter no muestra una vieja.
-- Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el actual); la navegación
-  de meses es de `add-monthly-assignment`.
+- Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el que muestra 02/04).
 
 ## Plan del mes, asignación y cierre de mes
 
