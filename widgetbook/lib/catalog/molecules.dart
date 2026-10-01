@@ -1432,7 +1432,7 @@ class _GoalScreenStory extends StatelessWidget {
                   : null,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 300, 16, 24),
+              padding: const EdgeInsets.fromLTRB(16, 100, 16, 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
