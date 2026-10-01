@@ -45,6 +45,9 @@ abstract final class AppRoutes {
   /// 03 Asignar dinero (and 53), for [month] ("2026-11") and with [envelopeId]
   /// chosen; the viewed month and the neediest envelope when absent.
   static const assignPath = '/assign';
+
+  /// 25 Cierre de mes of [month] ("2026-09") into the next one.
+  static String monthClose(String month) => '/month-close/$month';
   static String assign({String? month, String? envelopeId}) => Uri(
     path: assignPath,
     queryParameters: {'month': ?month, 'envelopeId': ?envelopeId},

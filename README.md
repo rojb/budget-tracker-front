@@ -257,6 +257,31 @@ Cambio `add-envelope-goals` (RRG-52). `lib/features/envelopes/` y `lib/features/
 - Mes: todas las pantallas usan el mes cargado por `EnvelopesController` (el actual); la navegación
   de meses es de `add-monthly-assignment`.
 
+## Plan del mes, asignación y cierre de mes
+
+Cambio `add-monthly-assignment` (RRG-51). `lib/features/plan/`:
+
+- **Mes visto.** `EnvelopesController.showMonth` carga las cifras de otro mes y las recargas siguientes
+  lo mantienen, así 22 y 24 ven el mismo mes que 02. `MonthController` (app-scoped) sigue esas
+  cargas, pide el resumen del mes (`GET /plans/:id/months/:month`: mes actual del plan, si es futuro)
+  y guarda el filtro de estado.
+- **02 / 04.** ‹ › cambian de mes sin límite (FR-15). Los chips "Todos · Sobregirados · Falta ·
+  Cubiertos" filtran en el lugar por el `state` de la API (Cubiertos = cubiertos con dinero; un sobre
+  sin nada es Empty). En un mes futuro la vista pasa a 04: aviso lavanda con "Hoy", encabezados con
+  "$ X asignado" y filas "Reservado desde <mes actual>" o "Sin asignar todavía".
+- **03 / 53 Asignar dinero** (`/assign?month=&envelopeId=`): desde el "+" de 01, 02 y 04 y desde
+  "Asignar a esta meta" de 05. Monto (arranca en lo que necesita el sobre elegido: su sobregiro o lo
+  que le falta a su meta), montos rápidos, el mes visto y los tres siguientes, y el carrusel de sobres
+  (`UiAssignCard`). La cápsula o la calculadora del `SaveBar` pasan a 53, con `UiCalculatorPad` y
+  `AmountExpression` (FR-18). Confirmar suma el monto a la asignación del sobre en ese mes
+  (`POST .../months/:month/assignments`) y vuelve a la vista de ese mes; con 0 dice "Ingresá un monto
+  mayor a cero" y si Listo para asignar queda negativo avisa "Asignaste más de lo disponible".
+- **25 Cierre de mes** (`/month-close/:month`): se abre solo al ver el mes actual cuando el cierre del
+  mes anterior mueve dinero y nadie lo confirmó (una vez por sesión; no se abre a quien solo lee).
+  Lista lo que se arrastra y lo que se descuenta (`UiCloseRow`), el cuadre con `UiBalanceCheck` y
+  "Empezar <mes>", que confirma el cierre (`POST .../close`) y muestra el toast "Mes de <mes>
+  abierto". La cruz lo deja pendiente.
+
 ## Widgetbook
 
 ```bash

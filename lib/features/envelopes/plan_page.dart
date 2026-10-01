@@ -21,8 +21,9 @@ import 'goal_texts.dart';
 /// tail, search in place and the `layers` button to 32) comes from
 /// `add-envelopes`; the monthly flow (month navigation, status filters, the
 /// future month view and the "+" of the joined card) from
-/// `add-monthly-assignment`, through [MonthController]. A row opens 22; its
-/// state (Funded, Underfunded, Overspent) is the API's `state`.
+/// `add-monthly-assignment`, through [MonthController], which also opens 25
+/// Cierre de mes by itself when the previous month's close is pending. A row
+/// opens 22; its state (Funded, Underfunded, Overspent) is the API's `state`.
 class PlanPage extends StatefulWidget {
   const PlanPage({
     required this.plans,
@@ -44,9 +45,24 @@ class _PlanPageState extends State<PlanPage> {
   bool _searching = false;
 
   @override
+  void initState() {
+    super.initState();
+    widget.month.addListener(_checkClose);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkClose());
+  }
+
+  @override
   void dispose() {
+    widget.month.removeListener(_checkClose);
     _search.dispose();
     super.dispose();
+  }
+
+  /// Opens 25 by itself when the previous month's close is pending.
+  Future<void> _checkClose() async {
+    final close = await widget.month.pendingClose();
+    if (close == null || !mounted) return;
+    context.push(AppRoutes.monthClose(close.fromMonth), extra: close);
   }
 
   void _toggleSearch() => setState(() {
