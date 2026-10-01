@@ -14,7 +14,7 @@ part 'update_account_request.g.dart';
 /// Properties:
 /// * [name] 
 /// * [type] 
-/// * [openingBalanceMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [openingBalanceMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 @BuiltValue()
 abstract class UpdateAccountRequest implements Built<UpdateAccountRequest, UpdateAccountRequestBuilder> {
   @BuiltValueField(wireName: r'name')
@@ -24,7 +24,7 @@ abstract class UpdateAccountRequest implements Built<UpdateAccountRequest, Updat
   AccountType? get type;
   // enum typeEnum {  bank,  digitalWallet,  cash,  };
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'openingBalanceMinor')
   int? get openingBalanceMinor;
 

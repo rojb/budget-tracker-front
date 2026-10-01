@@ -919,7 +919,7 @@ class EnvelopesApi {
   }
 
   /// Get an envelope with the figures and the activity of a month
-  /// The envelope line of the month (figures, state, goal status), its carryover and the month&#39;s transactions that have a portion on the envelope, newest first, at most 100.
+  /// The envelope line of the month (figures, state, goal status), its carryover and the month&#39;s transactions that have a portion on the envelope, newest first by &#x60;createdAt&#x60; (ties by id), at most 100.
   ///
   /// Parameters:
   /// * [planId] 

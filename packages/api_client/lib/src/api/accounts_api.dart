@@ -551,7 +551,7 @@ class AccountsApi {
   }
 
   /// List transfers between accounts
-  /// Newest first; with &#x60;accountId&#x60;, only transfers that leave or enter that account.
+  /// Newest first by &#x60;createdAt&#x60; (ties by id); with &#x60;accountId&#x60;, only transfers that leave or enter that account.
   ///
   /// Parameters:
   /// * [planId] 

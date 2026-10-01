@@ -15,9 +15,9 @@ part 'envelope_line.g.dart';
 ///
 /// Properties:
 /// * [envelope] 
-/// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [assignedMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [spentMinor] - Net outflow of the month (expenses minus income sent to the envelope); negative when income exceeds expenses.
-/// * [availableMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [availableMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [state] 
 /// * [goalStatus] 
 @BuiltValue()
@@ -25,7 +25,7 @@ abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> 
   @BuiltValueField(wireName: r'envelope')
   Envelope get envelope;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'assignedMinor')
   int get assignedMinor;
 
@@ -33,7 +33,7 @@ abstract class EnvelopeLine implements Built<EnvelopeLine, EnvelopeLineBuilder> 
   @BuiltValueField(wireName: r'spentMinor')
   int get spentMinor;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'availableMinor')
   int get availableMinor;
 

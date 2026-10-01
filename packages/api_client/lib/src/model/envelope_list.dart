@@ -14,7 +14,7 @@ part 'envelope_list.g.dart';
 ///
 /// Properties:
 /// * [month] - Budget month as YYYY-MM.
-/// * [readyToAssignMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+/// * [readyToAssignMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [items] 
 @BuiltValue()
 abstract class EnvelopeList implements Built<EnvelopeList, EnvelopeListBuilder> {
@@ -22,7 +22,7 @@ abstract class EnvelopeList implements Built<EnvelopeList, EnvelopeListBuilder> 
   @BuiltValueField(wireName: r'month')
   String get month;
 
-  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD and EUR are cents). Never a float. Use in fields named `<thing>Minor`. 
+  /// Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
   @BuiltValueField(wireName: r'readyToAssignMinor')
   int get readyToAssignMinor;
 

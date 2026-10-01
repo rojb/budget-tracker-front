@@ -18,6 +18,8 @@ class CurrencyCode extends EnumClass {
   static const CurrencyCode USD = _$USD;
   @BuiltValueEnumConst(wireName: r'EUR')
   static const CurrencyCode EUR = _$EUR;
+  @BuiltValueEnumConst(wireName: r'BOB')
+  static const CurrencyCode BOB = _$BOB;
 
   static Serializer<CurrencyCode> get serializer => _$currencyCodeSerializer;
 
