@@ -166,6 +166,7 @@ GoRouter createRouter(Dependencies dependencies) {
                   envelopes: dependencies.envelopesController,
                   accounts: dependencies.accountsController,
                   plans: plans,
+                  payees: PayeesRepository(dependencies.apiGateway),
                 ),
               ),
             ],

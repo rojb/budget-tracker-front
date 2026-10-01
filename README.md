@@ -196,8 +196,30 @@ Cambio `add-transactions` (RRG-49). `lib/features/transactions/`:
   la unidad menor de la moneda. El teclado es `UiCalculatorPad` (`packages/ui`).
 - **Beneficiarios:** escribir un nombre nuevo en 26 lo manda como `payeeName` y la API lo crea al
   guardar; elegir uno con sobre sugerido completa "Sobre" (salvo que ya se haya elegido a mano).
-- **Límite con `add-transaction-editing-and-filters`:** 10 no tiene búsqueda, filtros ni abre un
-  movimiento (11 y 12); 14 tampoco los abre. Las transferencias no aparecen en 10, solo en 14.
+- Las transferencias no aparecen en 10, solo en 14.
+
+### Edición, filtros y deshacer
+
+Cambio `add-transaction-editing-and-filters` (RRG-50):
+
+- **Editar (12):** tocar un movimiento de 10 o de 14 abre `EditTransactionPage`
+  (`/transactions/:id/edit`, recibe el `TransactionData` como `extra`). Reutiliza el formulario de 07
+  con `TransactionDraft.fromTransaction`: monto con el teclado del `SaveBar`, "Antes $ X", nota
+  lavanda "Es de <mes>, un mes cerrado" si el movimiento es de un mes anterior, y papelera → 27. Un
+  movimiento dividido se edita en 08 (el `SaveBar` pasa a "Guardar cambios" y vuelve a 12, que envía
+  el `PUT`). El `PUT` reemplaza todo el estado, así que deshacer es reenviar el estado anterior.
+- **Eliminar (27)** (`showDeleteTransactionSheet`) y **toast de 49** (`showChangeToast`): al volver
+  a 10 / 14 el toast Neutral dice "Recalculado" o "Movimiento eliminado", nombra los meses que
+  devolvió la API (`affectedMonths`) y ofrece "Deshacer": reenvía el estado anterior (edición) o llama
+  a `restore` (baja lógica). Una edición cuyo original tenía una porción sin sobre no se puede
+  reenviar y el toast no ofrece "Deshacer".
+- **Filtros (11) y búsqueda:** `TransactionFilter` (fechas, franja horaria, tipo, beneficiario, sobre,
+  cuenta y texto) vive en `TransactionsController`, que recarga desde la primera página al cambiarlo y
+  guarda el `summary` de la API. 10 muestra la lupa (campo en el lugar), el botón de filtros
+  (lavanda con filtros activos), un chip quitable por filtro y, con filtros o búsqueda, la tarjeta
+  "Salió en la franja / Entró". 11 (`showFilterSheet`) cuenta en vivo "Ver N movimientos"; las hojas de
+  fecha y hora son variantes de 38 (`features/common/date_sheets.dart`). Cerrar la hoja aplica lo
+  elegido.
 
 ## Widgetbook
 
