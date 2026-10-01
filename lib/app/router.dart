@@ -160,6 +160,7 @@ GoRouter createRouter(Dependencies dependencies) {
                   plans: plans,
                   accounts: dependencies.accountsController,
                   envelopes: dependencies.envelopesController,
+                  month: dependencies.monthController,
                 ),
               ),
             ],

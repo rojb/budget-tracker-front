@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
 import '../accounts/accounts_controller.dart';
+import '../plan/month_controller.dart';
 import '../plans/empty_plan_page.dart';
 import '../plans/plans_controller.dart';
 import 'envelopes_controller.dart';
@@ -14,12 +15,14 @@ class PlanTabPage extends StatelessWidget {
     required this.plans,
     required this.accounts,
     required this.envelopes,
+    required this.month,
     super.key,
   });
 
   final PlansController plans;
   final AccountsController accounts;
   final EnvelopesController envelopes;
+  final MonthController month;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class PlanTabPage extends StatelessWidget {
         if (envelopes.envelopeCount == 0) {
           return EmptyPlanPage(plans: plans, accounts: accounts);
         }
-        return PlanPage(plans: plans, envelopes: envelopes);
+        return PlanPage(plans: plans, envelopes: envelopes, month: month);
       },
     );
   }

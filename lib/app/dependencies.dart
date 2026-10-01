@@ -11,6 +11,8 @@ import '../features/auth/register_controller.dart';
 import '../features/envelopes/envelopes_controller.dart';
 import '../features/envelopes/envelopes_repository.dart';
 import '../features/home/home_controller.dart';
+import '../features/plan/month_controller.dart';
+import '../features/plan/months_repository.dart';
 import '../features/plans/new_plan_controller.dart';
 import '../features/transactions/transactions_controller.dart';
 import '../features/transactions/transactions_repository.dart';
@@ -32,6 +34,7 @@ class Dependencies {
     required this.plansController,
     required this.accountsController,
     required this.envelopesController,
+    required this.monthController,
     required this.transactionsController,
     required this.sharingRepository,
     required this.pendingInvite,
@@ -48,6 +51,7 @@ class Dependencies {
       const SecureActivePlanStorage(),
       auth,
     );
+    final envelopes = EnvelopesController(EnvelopesRepository(gateway), plans);
     return Dependencies(
       config: config,
       apiGateway: gateway,
@@ -59,9 +63,11 @@ class Dependencies {
         AccountsRepository(gateway),
         plans,
       ),
-      envelopesController: EnvelopesController(
-        EnvelopesRepository(gateway),
+      envelopesController: envelopes,
+      monthController: MonthController(
+        MonthsRepository(gateway),
         plans,
+        envelopes,
       ),
       transactionsController: TransactionsController(
         TransactionsRepository(gateway),
@@ -88,6 +94,10 @@ class Dependencies {
 
   /// Groups and envelopes of the active plan (06 / 02, 31, 32, 35, 46).
   final EnvelopesController envelopesController;
+
+  /// Viewed month, filters, assignment and month close of the Plan tab (02 /
+  /// 04, 03 / 53, 25).
+  final MonthController monthController;
 
   /// Movements of the active plan (10, 07 / 08 / 09, 14).
   final TransactionsController transactionsController;
