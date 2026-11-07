@@ -51,15 +51,7 @@ class UiGoalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final onPhoto = _hasPhoto;
     final text = onPhoto ? UiColors.surface : UiColors.ink;
-    final shadow = onPhoto
-        ? const [
-            Shadow(
-              color: Color(0x66000000),
-              blurRadius: 6,
-              offset: Offset(0, 1),
-            ),
-          ]
-        : const <Shadow>[];
+    final shadow = onPhoto ? _photoTextShadow : const <Shadow>[];
     final value = (percent.clamp(0, 100)) / 100;
     final card = Container(
       height: height,
@@ -159,6 +151,11 @@ class UiGoalCard extends StatelessWidget {
   }
 }
 
+/// Soft shadow of every text drawn over the photo.
+const _photoTextShadow = [
+  Shadow(color: Color(0x66000000), blurRadius: 6, offset: Offset(0, 1)),
+];
+
 /// The thin line of the card: the covered share solid, the rest faint.
 class _ProgressLine extends StatelessWidget {
   const _ProgressLine({required this.value, required this.color});
@@ -212,12 +209,13 @@ class _GlassPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = onPhoto ? UiColors.surface : UiColors.ink;
+    final shadows = onPhoto ? _photoTextShadow : const <Shadow>[];
     final circle = onPhoto ? UiColors.glass : UiColors.surface.withAlpha(150);
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       decoration: BoxDecoration(
         color: onPhoto
-            ? UiColors.ink.withAlpha(90)
+            ? UiColors.ink.withAlpha(150)
             : UiColors.surface.withAlpha(140),
         borderRadius: BorderRadius.circular(UiRadius.card),
       ),
@@ -244,7 +242,10 @@ class _GlassPanel extends StatelessWidget {
                   subtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: UiTypography.custom(14, color: text),
+                  style: UiTypography.custom(
+                    14,
+                    color: text,
+                  ).copyWith(shadows: shadows),
                 ),
               ],
             ),
