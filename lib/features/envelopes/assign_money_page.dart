@@ -9,7 +9,7 @@ import '../common/feedback.dart';
 import '../plans/plans_controller.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
-import 'faded_scroll.dart';
+import '../common/faded_scroll.dart';
 
 /// Screen 46 Asigná tu dinero: distributes the plan's money among the new
 /// envelopes in one go (the initial bulk assignment). Over-assigning is

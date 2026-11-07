@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
+import '../common/faded_scroll.dart';
 import '../../app/routes.dart';
 import '../plans/plans_controller.dart';
 import 'accounts_controller.dart';
@@ -47,73 +48,75 @@ class _AccountsPageState extends State<AccountsPage> {
             .toList();
         return RefreshIndicator(
           onRefresh: accounts.load,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: _searching
-                        ? UiTextField(
-                            label: 'Buscar cuenta',
-                            controller: _search,
-                            textInputAction: TextInputAction.search,
-                          )
-                        : Text('Cuentas', style: UiTypography.custom(36)),
-                  ),
-                  const SizedBox(width: 10),
-                  UiIconButton(
-                    icon: _searching ? UiIcons.close : UiIcons.search,
-                    semanticLabel: _searching ? 'Cerrar búsqueda' : 'Buscar',
-                    onPressed: _toggleSearch,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              UiJoinedCard(
-                primaryValue: formatMoney(accounts.totalMinor, currency),
-                primaryLabel: 'Saldo total',
-                secondaryValue: '${accounts.active.length}',
-                secondaryLabel: 'Cuentas',
-                addLabel: 'Nueva cuenta',
-                onAdd: () => context.push(AppRoutes.newAccount),
-              ),
-              const SizedBox(height: 12),
-              const UiInfoNote(
-                text:
-                    'Esto es lo que tenés, no lo que podés gastar. Lo gastable '
-                    'está en tus sobres.',
-              ),
-              const SizedBox(height: 12),
-              if (accounts.active.isEmpty && !accounts.loading)
-                _Empty(onAdd: () => context.push(AppRoutes.newAccount))
-              else
-                for (final account in rows) ...[
+          child: FadedScroll(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _searching
+                          ? UiTextField(
+                              label: 'Buscar cuenta',
+                              controller: _search,
+                              textInputAction: TextInputAction.search,
+                            )
+                          : Text('Cuentas', style: UiTypography.custom(36)),
+                    ),
+                    const SizedBox(width: 10),
+                    UiIconButton(
+                      icon: _searching ? UiIcons.close : UiIcons.search,
+                      semanticLabel: _searching ? 'Cerrar búsqueda' : 'Buscar',
+                      onPressed: _toggleSearch,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                UiJoinedCard(
+                  primaryValue: formatMoney(accounts.totalMinor, currency),
+                  primaryLabel: 'Saldo total',
+                  secondaryValue: '${accounts.active.length}',
+                  secondaryLabel: 'Cuentas',
+                  addLabel: 'Nueva cuenta',
+                  onAdd: () => context.push(AppRoutes.newAccount),
+                ),
+                const SizedBox(height: 12),
+                const UiInfoNote(
+                  text:
+                      'Esto es lo que tenés, no lo que podés gastar. Lo gastable '
+                      'está en tus sobres.',
+                ),
+                const SizedBox(height: 12),
+                if (accounts.active.isEmpty && !accounts.loading)
+                  _Empty(onAdd: () => context.push(AppRoutes.newAccount))
+                else
+                  for (final account in rows) ...[
+                    UiCard(
+                      child: UiAccountRow(
+                        icon: account.kind.icon,
+                        name: account.name,
+                        subtitle: account.kind.label,
+                        amount: formatMoney(account.balanceMinor, currency),
+                        caption:
+                            '${_percent(accounts.shareOf(account))} del total',
+                        share: accounts.shareOf(account),
+                        onTap: () =>
+                            context.push(AppRoutes.accountDetail(account.id)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                if (accounts.archived.isNotEmpty)
                   UiCard(
-                    child: UiAccountRow(
-                      icon: account.kind.icon,
-                      name: account.name,
-                      subtitle: account.kind.label,
-                      amount: formatMoney(account.balanceMinor, currency),
-                      caption:
-                          '${_percent(accounts.shareOf(account))} del total',
-                      share: accounts.shareOf(account),
-                      onTap: () =>
-                          context.push(AppRoutes.accountDetail(account.id)),
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: UiMenuRow(
+                      icon: UiIcons.archive,
+                      label: 'Archivadas · ${accounts.archived.length}',
+                      onTap: () => context.push(AppRoutes.archivedAccounts),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                ],
-              if (accounts.archived.isNotEmpty)
-                UiCard(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: UiMenuRow(
-                    icon: UiIcons.archive,
-                    label: 'Archivadas · ${accounts.archived.length}',
-                    onTap: () => context.push(AppRoutes.archivedAccounts),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       },

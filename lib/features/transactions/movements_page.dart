@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
+import '../common/faded_scroll.dart';
 import '../accounts/accounts_controller.dart';
 import '../common/day_groups.dart';
 import '../envelopes/envelopes_controller.dart';
@@ -127,32 +128,34 @@ class _MovementsPageState extends State<MovementsPage> {
         final filter = transactions.filter;
         return RefreshIndicator(
           onRefresh: transactions.refresh,
-          child: ListView(
-            controller: _scroll,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-            children: [
-              _header(filter),
-              ..._chips(filter),
-              if (filter.isActive && transactions.loaded) ...[
-                const SizedBox(height: 16),
-                UiJoinedCard(
-                  primaryValue: formatMoney(
-                    transactions.outflowMinor,
-                    currency,
+          child: FadedScroll(
+            child: ListView(
+              controller: _scroll,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+              children: [
+                _header(filter),
+                ..._chips(filter),
+                if (filter.isActive && transactions.loaded) ...[
+                  const SizedBox(height: 16),
+                  UiJoinedCard(
+                    primaryValue: formatMoney(
+                      transactions.outflowMinor,
+                      currency,
+                    ),
+                    primaryLabel: 'Salió en la franja',
+                    secondaryValue: formatMoney(
+                      transactions.inflowMinor,
+                      currency,
+                    ),
+                    secondaryLabel: 'Entró',
+                    secondaryIsAmount: true,
                   ),
-                  primaryLabel: 'Salió en la franja',
-                  secondaryValue: formatMoney(
-                    transactions.inflowMinor,
-                    currency,
-                  ),
-                  secondaryLabel: 'Entró',
-                  secondaryIsAmount: true,
-                ),
+                ],
+                const SizedBox(height: 14),
+                ..._body(context, currency, filter),
               ],
-              const SizedBox(height: 14),
-              ..._body(context, currency, filter),
-            ],
+            ),
           ),
         );
       },

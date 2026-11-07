@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
+import '../common/faded_scroll.dart';
 import '../../app/routes.dart';
 import '../common/months.dart';
 import '../plan/future_month_notice.dart';
@@ -187,110 +188,112 @@ class _PlanPageState extends State<PlanPage> {
             : emptyFilterText(filter);
         return RefreshIndicator(
           onRefresh: envelopes.load,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-            children: [
-              Row(
-                children: [
-                  Text('Plan', style: UiTypography.custom(36)),
-                  if (currency != Currency.ars) ...[
-                    const SizedBox(width: 10),
-                    UiChip(
-                      label: currency.symbol,
-                      selected: true,
-                      size: UiChipSize.compact,
-                    ),
-                  ],
-                  const Spacer(),
-                  UiIconButton(
-                    icon: UiIcons.layers,
-                    semanticLabel: 'Grupos',
-                    onPressed: () => context.push(AppRoutes.groups),
-                  ),
-                  const SizedBox(width: 8),
-                  UiIconButton(
-                    icon: _searching ? UiIcons.close : UiIcons.search,
-                    semanticLabel: _searching ? 'Cerrar búsqueda' : 'Buscar',
-                    onPressed: _toggleSearch,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              UiMonthSwitch(
-                label: monthLabel(_month),
-                onPrevious: envelopes.loading ? null : month.previous,
-                onNext: envelopes.loading ? null : month.next,
-              ),
-              const SizedBox(height: 14),
-              UiJoinedCard(
-                primaryValue: formatMoney(
-                  envelopes.readyToAssignMinor,
-                  currency,
-                ),
-                primaryLabel: 'Listo para asignar',
-                secondaryValue: '${envelopes.envelopeCount}',
-                secondaryLabel: 'Sobres activos',
-                addLabel: 'Asignar dinero',
-                addEnabled: month.canEdit,
-                onAdd: () =>
-                    context.push(AppRoutes.assign(month: envelopes.month)),
-              ),
-              const SizedBox(height: 14),
-              if (future) ...[
-                FutureMonthNotice(onToday: month.today),
-                const SizedBox(height: 14),
-              ],
-              PlanFilterChips(
-                lines: envelopes.lines,
-                selected: filter,
-                onSelected: month.setFilter,
-              ),
-              const SizedBox(height: 14),
-              if (_searching) ...[
-                UiTextField(
-                  label: 'Buscar sobre',
-                  controller: _search,
-                  textInputAction: TextInputAction.search,
-                ),
-                const SizedBox(height: 10),
-              ],
-              if (narrowed && sections.isEmpty)
-                UiCard(
-                  padding: const EdgeInsets.all(22),
-                  child: Text(
-                    emptyText,
-                    style: UiTypography.custom(15, color: UiColors.inkMuted),
-                  ),
-                )
-              else
-                ...sections,
-              // After the last group (PRD-ux-spec.md 9.1): create or manage groups
-              // without leaving the Plan tab; both open 32.
-              if (!narrowed) ...[
-                const SizedBox(height: 6),
+          child: FadedScroll(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+              children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: UiButton(
-                        label: 'Nuevo grupo',
-                        icon: UiIcons.plus,
-                        variant: UiButtonVariant.white,
-                        onPressed: () => context.push(AppRoutes.groups),
+                    Text('Plan', style: UiTypography.custom(36)),
+                    if (currency != Currency.ars) ...[
+                      const SizedBox(width: 10),
+                      UiChip(
+                        label: currency.symbol,
+                        selected: true,
+                        size: UiChipSize.compact,
                       ),
+                    ],
+                    const Spacer(),
+                    UiIconButton(
+                      icon: UiIcons.layers,
+                      semanticLabel: 'Grupos',
+                      onPressed: () => context.push(AppRoutes.groups),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: UiButton(
-                        label: 'Editar grupos',
-                        icon: UiIcons.layers,
-                        variant: UiButtonVariant.white,
-                        onPressed: () => context.push(AppRoutes.groups),
-                      ),
+                    const SizedBox(width: 8),
+                    UiIconButton(
+                      icon: _searching ? UiIcons.close : UiIcons.search,
+                      semanticLabel: _searching ? 'Cerrar búsqueda' : 'Buscar',
+                      onPressed: _toggleSearch,
                     ),
                   ],
                 ),
+                const SizedBox(height: 18),
+                UiMonthSwitch(
+                  label: monthLabel(_month),
+                  onPrevious: envelopes.loading ? null : month.previous,
+                  onNext: envelopes.loading ? null : month.next,
+                ),
+                const SizedBox(height: 14),
+                UiJoinedCard(
+                  primaryValue: formatMoney(
+                    envelopes.readyToAssignMinor,
+                    currency,
+                  ),
+                  primaryLabel: 'Listo para asignar',
+                  secondaryValue: '${envelopes.envelopeCount}',
+                  secondaryLabel: 'Sobres activos',
+                  addLabel: 'Asignar dinero',
+                  addEnabled: month.canEdit,
+                  onAdd: () =>
+                      context.push(AppRoutes.assign(month: envelopes.month)),
+                ),
+                const SizedBox(height: 14),
+                if (future) ...[
+                  FutureMonthNotice(onToday: month.today),
+                  const SizedBox(height: 14),
+                ],
+                PlanFilterChips(
+                  lines: envelopes.lines,
+                  selected: filter,
+                  onSelected: month.setFilter,
+                ),
+                const SizedBox(height: 14),
+                if (_searching) ...[
+                  UiTextField(
+                    label: 'Buscar sobre',
+                    controller: _search,
+                    textInputAction: TextInputAction.search,
+                  ),
+                  const SizedBox(height: 10),
+                ],
+                if (narrowed && sections.isEmpty)
+                  UiCard(
+                    padding: const EdgeInsets.all(22),
+                    child: Text(
+                      emptyText,
+                      style: UiTypography.custom(15, color: UiColors.inkMuted),
+                    ),
+                  )
+                else
+                  ...sections,
+                // After the last group (PRD-ux-spec.md 9.1): create or manage groups
+                // without leaving the Plan tab; both open 32.
+                if (!narrowed) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: UiButton(
+                          label: 'Nuevo grupo',
+                          icon: UiIcons.plus,
+                          variant: UiButtonVariant.white,
+                          onPressed: () => context.push(AppRoutes.groups),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: UiButton(
+                          label: 'Editar grupos',
+                          icon: UiIcons.layers,
+                          variant: UiButtonVariant.white,
+                          onPressed: () => context.push(AppRoutes.groups),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         );
       },

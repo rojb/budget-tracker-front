@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
+import '../common/faded_scroll.dart';
 import '../common/months.dart';
 import '../plan/month_keys.dart';
 import '../plans/plans_controller.dart';
@@ -220,39 +221,45 @@ class _ReportsPageState extends State<ReportsPage> {
       listenable: Listenable.merge([_controller, widget.plans]),
       builder: (context, _) {
         final controller = _controller;
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          children: [
-            Row(
-              children: [
-                Text('Reportes', style: UiTypography.custom(44)),
-                const Spacer(),
-                UiIconButton(
-                  icon: UiIcons.calendar,
-                  semanticLabel: 'Elegir rango',
-                  onPressed: _pickRange,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            UiToggle(
-              labels: const ['Gastos', 'Ingresos', 'Patrimonio'],
-              selectedIndex: controller.tab.index,
-              onChanged: (index) => controller.setTab(ReportTab.values[index]),
-            ),
-            const SizedBox(height: 22),
-            if (controller.failed) ...[
-              Text('No pudimos cargar los reportes', style: UiTypography.title),
+        return FadedScroll(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            children: [
+              Row(
+                children: [
+                  Text('Reportes', style: UiTypography.custom(44)),
+                  const Spacer(),
+                  UiIconButton(
+                    icon: UiIcons.calendar,
+                    semanticLabel: 'Elegir rango',
+                    onPressed: _pickRange,
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
-              UiButton(label: 'Reintentar', onPressed: controller.load),
-            ] else if (controller.selected == null)
-              const Padding(
-                padding: EdgeInsets.only(top: 60),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else
-              ..._content(),
-          ],
+              UiToggle(
+                labels: const ['Gastos', 'Ingresos', 'Patrimonio'],
+                selectedIndex: controller.tab.index,
+                onChanged: (index) =>
+                    controller.setTab(ReportTab.values[index]),
+              ),
+              const SizedBox(height: 22),
+              if (controller.failed) ...[
+                Text(
+                  'No pudimos cargar los reportes',
+                  style: UiTypography.title,
+                ),
+                const SizedBox(height: 16),
+                UiButton(label: 'Reintentar', onPressed: controller.load),
+              ] else if (controller.selected == null)
+                const Padding(
+                  padding: EdgeInsets.only(top: 60),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else
+                ..._content(),
+            ],
+          ),
         );
       },
     );
