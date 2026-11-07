@@ -40,6 +40,20 @@ class ReportsController extends ChangeNotifier {
   ReportMonthData? get previous =>
       _selected > 0 ? _months[_selected - 1] : null;
 
+  /// False for a month with nothing to draw in the current tab, so the chart
+  /// shows a baseline tick instead of a minimum bar that looks like a small
+  /// amount (V-12). Spending and income are empty at zero; net worth only when
+  /// the balance is zero and the month had no movement at all.
+  bool hasData(ReportMonthData month) => switch (_tab) {
+    ReportTab.spending => month.spentMinor != 0,
+    ReportTab.income => month.incomeMinor != 0,
+    ReportTab.netWorth =>
+      month.netWorthMinor != 0 ||
+          month.incomeMinor != 0 ||
+          month.expenseMinor != 0 ||
+          month.spentMinor != 0,
+  };
+
   void setTab(ReportTab tab) {
     if (tab == _tab) return;
     _tab = tab;

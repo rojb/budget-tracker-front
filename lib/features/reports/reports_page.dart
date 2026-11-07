@@ -184,6 +184,7 @@ class _ReportsPageState extends State<ReportsPage> {
             UiBarChartEntry(
               label: _shortMonth(entry.month),
               value: _valueOf(entry),
+              hasData: controller.hasData(entry),
               semanticLabel:
                   '${monthLabel(monthDate(entry.month))}, '
                   '${_money(_valueOf(entry))}',
