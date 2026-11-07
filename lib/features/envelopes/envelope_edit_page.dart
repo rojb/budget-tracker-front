@@ -45,6 +45,7 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
   late GoalDraft _goal = GoalDraft.of(_line?.envelope.goal);
   String? _nameError;
   String? _dateError;
+  final GlobalKey _goalKey = GlobalKey();
   bool _saving = false;
 
   /// The "Foto" row is for goals: group Metas or an objective with a date.
@@ -97,6 +98,7 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
     }
     if (_dueDateInvalid) {
       setState(() => _dateError = 'Elegí una fecha límite.');
+      _showGoalFields();
       return;
     }
     final envelope = line.envelope;
@@ -163,6 +165,19 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
           ? showForbidden(context)
           : showConnectionProblem(context);
     }
+  }
+
+  /// Keeps the "Fecha límite" row on screen while its error shows: the form is
+  /// pinned under a scrolling list, so the row may be out of view at save time.
+  void _showGoalFields() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _goalKey.currentContext;
+      if (context == null || !context.mounted) return;
+      Scrollable.ensureVisible(
+        context,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
   }
 
   @override
@@ -268,6 +283,7 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
                   ),
                   const SizedBox(height: 26),
                   GoalFields(
+                    key: _goalKey,
                     draft: _goal,
                     currency: widget.plans.currency,
                     onChanged: (next) => setState(() {
