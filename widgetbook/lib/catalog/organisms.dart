@@ -39,6 +39,37 @@ WidgetbookFolder organismsFolder() {
               ),
             ),
           ),
+          WidgetbookUseCase(
+            name: 'months without data (17)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 370,
+                child: UiBarChart(
+                  entries: [
+                    for (final (label, value, hasData) in const [
+                      ('Jun', 0, false),
+                      ('Jul', 0, false),
+                      ('Ago', 0, false),
+                      ('Sep', 0, false),
+                      ('Oct', 241000, true),
+                      ('Nov', 264550, true),
+                    ])
+                      UiBarChartEntry(
+                        label: label,
+                        value: value,
+                        hasData: hasData,
+                        semanticLabel: hasData
+                            ? '$label, $value'
+                            : '$label, sin gastos',
+                      ),
+                  ],
+                  selectedIndex: 5,
+                  selectedValue: r'$ 265k',
+                  onSelected: (_) {},
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(

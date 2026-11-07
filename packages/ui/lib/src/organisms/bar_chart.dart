@@ -13,6 +13,7 @@ class UiBarChartEntry {
     required this.label,
     required this.value,
     required this.semanticLabel,
+    this.hasData = true,
   });
 
   /// Short label under the bar ("Sep").
@@ -22,8 +23,15 @@ class UiBarChartEntry {
   /// below zero draw as zero.
   final num value;
 
-  /// What a screen reader says for the bar ("Septiembre, $ 264.550").
+  /// What a screen reader says for the bar ("Septiembre, $ 264.550"). It
+  /// carries the value, since the bar of a month without data has no height to
+  /// tell it by.
   final String semanticLabel;
+
+  /// False for a month with nothing to show: the bar is a 2 dp tick on the
+  /// baseline instead of a minimum-height pill, so zero does not look like a
+  /// small amount. It still selects like any other bar.
+  final bool hasData;
 }
 
 /// The bar chart of 17 Reportes: one series, one bar per month on a white
@@ -51,6 +59,7 @@ class UiBarChart extends StatelessWidget {
 
   static const double _pill = 40;
   static const double _labels = 34;
+  static const double _tick = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +85,9 @@ class UiBarChart extends StatelessWidget {
                     entry: entries[i],
                     selected: i == selectedIndex,
                     selectedValue: selectedValue,
-                    barHeight: maxValue <= 0
+                    barHeight: !entries[i].hasData
+                        ? _tick
+                        : maxValue <= 0
                         ? 12
                         : math.max(
                             12,
