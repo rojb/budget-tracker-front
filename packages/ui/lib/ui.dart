@@ -22,6 +22,7 @@ export 'src/molecules/amount_capsule.dart';
 export 'src/molecules/assign_card.dart';
 export 'src/molecules/balance_check.dart';
 export 'src/molecules/choice_card.dart';
+export 'src/molecules/chip_row.dart';
 export 'src/molecules/close_row.dart';
 export 'src/molecules/code_card.dart';
 export 'src/molecules/currency_selector.dart';

@@ -19,6 +19,7 @@ class UiTxRow extends StatelessWidget {
     required this.subtitle,
     required this.amount,
     this.caption,
+    this.titleMaxLines = 2,
     this.variant = UiTxRowVariant.expense,
     this.onTap,
     super.key,
@@ -31,6 +32,10 @@ class UiTxRow extends StatelessWidget {
   /// Formatted amount, with `−` for money that left ("−$ 20.000").
   final String amount;
   final String? caption;
+
+  /// Lines the title may take before the ellipsis. 1 keeps a row, such as a
+  /// move whose counterpart has a long name, as tall as a plain expense.
+  final int titleMaxLines;
   final UiTxRowVariant variant;
   final VoidCallback? onTap;
 
@@ -66,7 +71,7 @@ class UiTxRow extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      maxLines: 2,
+                      maxLines: titleMaxLines,
                       overflow: TextOverflow.ellipsis,
                       style: UiTypography.custom(18),
                     ),

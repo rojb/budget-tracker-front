@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'stage.dart';
+
+/// Near-white 1 px PNG used as a bright photo in the GoalCard story.
+const _brightPixelPng =
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP49OkZAAWkAsuy5np0AAAAAElFTkSuQmCC';
 
 WidgetbookFolder moleculesFolder() {
   return WidgetbookFolder(
@@ -42,6 +48,60 @@ WidgetbookFolder moleculesFolder() {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ChipRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'fits',
+            builder: (context) => stage(
+              SizedBox(
+                width: 393,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: UiChipRow(
+                    children: [
+                      UiChip(label: 'Todos', selected: true, onPressed: () {}),
+                      UiChip(label: 'Falta · 2', onPressed: () {}),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'overflows (02/04)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 393,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: UiChipRow(
+                    children: [
+                      UiChip(label: 'Todos', selected: true, onPressed: () {}),
+                      UiChip(
+                        label: 'Sobregirados · 1',
+                        icon: UiIcons.warning,
+                        onPressed: () {},
+                      ),
+                      UiChip(
+                        label: 'Falta · 3',
+                        icon: UiIcons.clock,
+                        onPressed: () {},
+                      ),
+                      UiChip(
+                        label: 'Cubiertos · 8',
+                        icon: UiIcons.check,
+                        onPressed: () {},
+                      ),
+                      UiChip(label: 'Sin asignar · 2', onPressed: () {}),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -839,6 +899,34 @@ WidgetbookFolder moleculesFolder() {
         name: 'TxRow',
         useCases: [
           WidgetbookUseCase(
+            name: 'one-line title (titleMaxLines: 1)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 380,
+                child: UiCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    children: [
+                      UiTxRow(
+                        icon: UiIcons.arrowLeftRight,
+                        title: 'Movido a una cuenta con un nombre muy largo',
+                        subtitle: '21:52',
+                        amount: '−${formatMoney(10000, Currency.ars)}',
+                        titleMaxLines: 1,
+                      ),
+                      UiTxRow(
+                        icon: UiIcons.cart,
+                        title: 'Supermercado',
+                        subtitle: 'Sin sobre · 15:04',
+                        amount: '−${formatMoney(20000, Currency.ars)}',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
             name: 'expense and income (14)',
             builder: (context) => stage(
               SizedBox(
@@ -1142,6 +1230,25 @@ WidgetbookFolder moleculesFolder() {
                   percent: 60,
                   icon: UiIcons.plane,
                   image: const AssetImage('assets/photos/vacaciones.jpg'),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'bright photo, long name',
+            builder: (context) => stage(
+              SizedBox(
+                width: 300,
+                child: UiGoalCard(
+                  name: 'Viaje a Bariloche con la familia',
+                  subtitle: r'$ 1.200.000 · diciembre',
+                  savedLabel: r'$ 480.000',
+                  percent: 40,
+                  icon: UiIcons.plane,
+                  // A near-white 1 px image stretched to cover the card: the
+                  // worst case for white text over a photo.
+                  image: MemoryImage(base64Decode(_brightPixelPng)),
                   onTap: () {},
                 ),
               ),
