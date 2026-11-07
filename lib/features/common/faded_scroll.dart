@@ -8,15 +8,25 @@ class FadedScroll extends StatelessWidget {
 
   final Widget child;
 
+  /// Height of the fade at the bottom edge.
+  static const double fadeHeight = 28;
+
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
       blendMode: BlendMode.dstIn,
-      shaderCallback: (bounds) => const LinearGradient(
+      // A fixed-height fade, not a share of the viewport: the lists end with
+      // 32 dp of padding, so their last row at the end of the scroll is clear
+      // of it on any screen height.
+      shaderCallback: (bounds) => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Colors.black, Colors.black, Colors.transparent],
-        stops: [0, 0.88, 1],
+        colors: const [Colors.black, Colors.black, Colors.transparent],
+        stops: [
+          0,
+          bounds.height > fadeHeight ? 1 - fadeHeight / bounds.height : 0,
+          1,
+        ],
       ).createShader(bounds),
       child: child,
     );
