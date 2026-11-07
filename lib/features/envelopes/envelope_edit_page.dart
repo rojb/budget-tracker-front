@@ -193,88 +193,99 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
     final group = widget.envelopes.groupById(_groupId);
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: Column(
           children: [
-            Row(
-              children: [
-                UiIconButton(
-                  icon: UiIcons.chevronLeft,
-                  variant: UiIconButtonVariant.soft,
-                  semanticLabel: 'Volver',
-                  onPressed: () => context.pop(),
-                ),
-                const Spacer(),
-                UiIconButton(
-                  icon: UiIcons.trash,
-                  variant: UiIconButtonVariant.danger,
-                  semanticLabel: 'Eliminar sobre',
-                  onPressed: _delete,
-                ),
-              ],
-            ),
-            const SizedBox(height: 22),
-            Text('Editar sobre', style: UiTypography.custom(36)),
-            const SizedBox(height: 18),
-            UiCard(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-              child: Column(
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 children: [
-                  UiFieldRow(
-                    label: 'Nombre',
-                    value: _name.isEmpty ? 'Elegí un nombre' : _name,
-                    onTap: _editName,
-                  ),
-                  UiFieldRow(
-                    label: 'Grupo',
-                    value: group?.name ?? 'Sin grupo',
-                    onTap: _pickGroup,
-                  ),
-                  if (_showPhotoRow)
-                    UiFieldRow(
-                      label: 'Foto',
-                      value: line.envelope.photoUrl == null
-                          ? 'Elegir'
-                          : 'Cambiar',
-                      onTap: () => showGoalPhotoSheet(
-                        context,
-                        envelopes: widget.envelopes,
-                        icon: uiEnvelopeIcon(_icon),
-                        envelopeId: line.envelope.id,
+                  Row(
+                    children: [
+                      UiIconButton(
+                        icon: UiIcons.chevronLeft,
+                        variant: UiIconButtonVariant.soft,
+                        semanticLabel: 'Volver',
+                        onPressed: () => context.pop(),
                       ),
+                      const Spacer(),
+                      UiIconButton(
+                        icon: UiIcons.trash,
+                        variant: UiIconButtonVariant.danger,
+                        semanticLabel: 'Eliminar sobre',
+                        onPressed: _delete,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                  Text('Editar sobre', style: UiTypography.custom(36)),
+                  const SizedBox(height: 18),
+                  UiCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22,
+                      vertical: 10,
                     ),
+                    child: Column(
+                      children: [
+                        UiFieldRow(
+                          label: 'Nombre',
+                          value: _name.isEmpty ? 'Elegí un nombre' : _name,
+                          onTap: _editName,
+                        ),
+                        UiFieldRow(
+                          label: 'Grupo',
+                          value: group?.name ?? 'Sin grupo',
+                          onTap: _pickGroup,
+                        ),
+                        if (_showPhotoRow)
+                          UiFieldRow(
+                            label: 'Foto',
+                            value: line.envelope.photoUrl == null
+                                ? 'Elegir'
+                                : 'Cambiar',
+                            onTap: () => showGoalPhotoSheet(
+                              context,
+                              envelopes: widget.envelopes,
+                              icon: uiEnvelopeIcon(_icon),
+                              envelopeId: line.envelope.id,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (_nameError != null) ...[
+                    const SizedBox(height: 8),
+                    UiFormMessage(message: _nameError!),
+                  ],
+                  const SizedBox(height: 22),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2),
+                    child: Text('Ícono', style: UiTypography.custom(19)),
+                  ),
+                  const SizedBox(height: 12),
+                  EnvelopeIconSelector(
+                    selected: _icon,
+                    onSelected: (name) => setState(() => _icon = name),
+                  ),
+                  const SizedBox(height: 26),
+                  GoalFields(
+                    draft: _goal,
+                    currency: widget.plans.currency,
+                    error: _dateError,
+                    onChanged: (next) => setState(() {
+                      _goal = next;
+                      _dateError = null;
+                    }),
+                  ),
                 ],
               ),
             ),
-            if (_nameError != null) ...[
-              const SizedBox(height: 8),
-              UiFormMessage(message: _nameError!),
-            ],
-            const SizedBox(height: 22),
             Padding(
-              padding: const EdgeInsets.only(left: 2),
-              child: Text('Ícono', style: UiTypography.custom(19)),
-            ),
-            const SizedBox(height: 12),
-            EnvelopeIconSelector(
-              selected: _icon,
-              onSelected: (name) => setState(() => _icon = name),
-            ),
-            const SizedBox(height: 26),
-            GoalFields(
-              draft: _goal,
-              currency: widget.plans.currency,
-              error: _dateError,
-              onChanged: (next) => setState(() {
-                _goal = next;
-                _dateError = null;
-              }),
-            ),
-            const SizedBox(height: 28),
-            UiSaveBar(
-              label: 'Guardar cambios',
-              enabled: !_saving,
-              onConfirm: _save,
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: UiSaveBar(
+                label: 'Guardar cambios',
+                enabled: !_saving,
+                onConfirm: _save,
+              ),
             ),
           ],
         ),

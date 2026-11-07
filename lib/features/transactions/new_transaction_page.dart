@@ -388,16 +388,14 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
           UiFormMessage(message: _error!),
         ],
         const SizedBox(height: 14),
-        Center(
-          child: UiSaveBar(
-            label: expense ? 'Guardar gasto' : 'Guardar ingreso',
-            enabled: !_saving,
-            leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
-            onConfirm: _save,
-            onCalculatorPressed: expense
-                ? _openSplit
-                : () => setState(() => _incomePad = !_padVisible),
-          ),
+        UiSaveBar(
+          label: expense ? 'Guardar gasto' : 'Guardar ingreso',
+          enabled: !_saving,
+          leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
+          onConfirm: _save,
+          onCalculatorPressed: expense
+              ? _openSplit
+              : () => setState(() => _incomePad = !_padVisible),
         ),
       ],
     );
