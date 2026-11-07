@@ -30,6 +30,8 @@ UiTxRow envelopeMoveRow(EnvelopeMoveData move, {required Currency currency}) {
         ? time
         : '${dayMonthShort(registered)}, $time',
     amount: move.outgoing ? '−$money' : '+$money',
+    // One line keeps the row as tall as an expense row, whatever the name.
+    titleMaxLines: 1,
     variant: move.outgoing ? UiTxRowVariant.expense : UiTxRowVariant.income,
   );
 }
