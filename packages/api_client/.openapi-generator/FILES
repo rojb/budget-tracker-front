@@ -48,6 +48,7 @@ lib/src/model/envelope_group.dart
 lib/src/model/envelope_icon.dart
 lib/src/model/envelope_line.dart
 lib/src/model/envelope_list.dart
+lib/src/model/envelope_move.dart
 lib/src/model/envelope_spending.dart
 lib/src/model/envelope_state.dart
 lib/src/model/envelope_template.dart

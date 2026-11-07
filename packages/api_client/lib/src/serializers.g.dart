@@ -39,6 +39,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(EnvelopeIcon.serializer)
       ..add(EnvelopeLine.serializer)
       ..add(EnvelopeList.serializer)
+      ..add(EnvelopeMove.serializer)
+      ..add(EnvelopeMoveDirectionEnum.serializer)
       ..add(EnvelopeSpending.serializer)
       ..add(EnvelopeState.serializer)
       ..add(EnvelopeTemplate.serializer)
@@ -166,6 +168,9 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Transaction)]),
           () => ListBuilder<Transaction>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(EnvelopeMove)]),
+          () => ListBuilder<EnvelopeMove>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(TransactionSplit)]),
           () => ListBuilder<TransactionSplit>())

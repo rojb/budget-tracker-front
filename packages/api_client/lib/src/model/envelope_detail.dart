@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
+import 'package:api_client/src/model/envelope_move.dart';
 import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/envelope_line.dart';
 import 'package:built_value/built_value.dart';
@@ -19,6 +20,8 @@ part 'envelope_detail.g.dart';
 /// * [carryoverMinor] - Integer amount in the minor units of the owning plan's currency, as defined by that currency's `minorUnits` (ARS amounts are whole pesos; USD, EUR and BOB are cents). Never a float. Use in fields named `<thing>Minor`. 
 /// * [activity] - Transactions of the month with a portion on the envelope, newest first by `createdAt` (ties by id), at most 100.
 /// * [activityTotal] - Number of transactions of the month with a portion on the envelope.
+/// * [moves] - Moves of money between envelopes made for the month in which the envelope was the source or the destination, newest first by `createdAt` (ties by id), at most 100. A client shows them with `activity`, merged by `createdAt`. They are history only and never count in `line.spentMinor`.
+/// * [movesTotal] - Number of moves of the month in which the envelope was the source or the destination.
 @BuiltValue()
 abstract class EnvelopeDetail implements Built<EnvelopeDetail, EnvelopeDetailBuilder> {
   /// Budget month as YYYY-MM.
@@ -39,6 +42,14 @@ abstract class EnvelopeDetail implements Built<EnvelopeDetail, EnvelopeDetailBui
   /// Number of transactions of the month with a portion on the envelope.
   @BuiltValueField(wireName: r'activityTotal')
   int get activityTotal;
+
+  /// Moves of money between envelopes made for the month in which the envelope was the source or the destination, newest first by `createdAt` (ties by id), at most 100. A client shows them with `activity`, merged by `createdAt`. They are history only and never count in `line.spentMinor`.
+  @BuiltValueField(wireName: r'moves')
+  BuiltList<EnvelopeMove> get moves;
+
+  /// Number of moves of the month in which the envelope was the source or the destination.
+  @BuiltValueField(wireName: r'movesTotal')
+  int get movesTotal;
 
   EnvelopeDetail._();
 
@@ -86,6 +97,16 @@ class _$EnvelopeDetailSerializer implements PrimitiveSerializer<EnvelopeDetail> 
     yield r'activityTotal';
     yield serializers.serialize(
       object.activityTotal,
+      specifiedType: const FullType(int),
+    );
+    yield r'moves';
+    yield serializers.serialize(
+      object.moves,
+      specifiedType: const FullType(BuiltList, [FullType(EnvelopeMove)]),
+    );
+    yield r'movesTotal';
+    yield serializers.serialize(
+      object.movesTotal,
       specifiedType: const FullType(int),
     );
   }
@@ -145,6 +166,20 @@ class _$EnvelopeDetailSerializer implements PrimitiveSerializer<EnvelopeDetail> 
             specifiedType: const FullType(int),
           ) as int;
           result.activityTotal = valueDes;
+          break;
+        case r'moves':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(EnvelopeMove)]),
+          ) as BuiltList<EnvelopeMove>;
+          result.moves.replace(valueDes);
+          break;
+        case r'movesTotal':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.movesTotal = valueDes;
           break;
         default:
           unhandled.add(key);

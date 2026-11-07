@@ -42,6 +42,7 @@ import 'package:api_client/src/model/envelope_group.dart';
 import 'package:api_client/src/model/envelope_icon.dart';
 import 'package:api_client/src/model/envelope_line.dart';
 import 'package:api_client/src/model/envelope_list.dart';
+import 'package:api_client/src/model/envelope_move.dart';
 import 'package:api_client/src/model/envelope_spending.dart';
 import 'package:api_client/src/model/envelope_state.dart';
 import 'package:api_client/src/model/envelope_template.dart';
@@ -129,6 +130,7 @@ part 'serializers.g.dart';
   EnvelopeIcon,
   EnvelopeLine,
   EnvelopeList,
+  EnvelopeMove,
   EnvelopeSpending,
   EnvelopeState,
   EnvelopeTemplate,
@@ -249,6 +251,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(InitialAssignment)]),
         () => ListBuilder<InitialAssignment>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(EnvelopeMove)]),
+        () => ListBuilder<EnvelopeMove>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(TransactionSplit)]),

@@ -17,6 +17,10 @@ class _$EnvelopeDetail extends EnvelopeDetail {
   final BuiltList<Transaction> activity;
   @override
   final int activityTotal;
+  @override
+  final BuiltList<EnvelopeMove> moves;
+  @override
+  final int movesTotal;
 
   factory _$EnvelopeDetail([void Function(EnvelopeDetailBuilder)? updates]) =>
       (EnvelopeDetailBuilder()..update(updates))._build();
@@ -26,7 +30,9 @@ class _$EnvelopeDetail extends EnvelopeDetail {
       required this.line,
       required this.carryoverMinor,
       required this.activity,
-      required this.activityTotal})
+      required this.activityTotal,
+      required this.moves,
+      required this.movesTotal})
       : super._();
   @override
   EnvelopeDetail rebuild(void Function(EnvelopeDetailBuilder) updates) =>
@@ -43,7 +49,9 @@ class _$EnvelopeDetail extends EnvelopeDetail {
         line == other.line &&
         carryoverMinor == other.carryoverMinor &&
         activity == other.activity &&
-        activityTotal == other.activityTotal;
+        activityTotal == other.activityTotal &&
+        moves == other.moves &&
+        movesTotal == other.movesTotal;
   }
 
   @override
@@ -54,6 +62,8 @@ class _$EnvelopeDetail extends EnvelopeDetail {
     _$hash = $jc(_$hash, carryoverMinor.hashCode);
     _$hash = $jc(_$hash, activity.hashCode);
     _$hash = $jc(_$hash, activityTotal.hashCode);
+    _$hash = $jc(_$hash, moves.hashCode);
+    _$hash = $jc(_$hash, movesTotal.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -65,7 +75,9 @@ class _$EnvelopeDetail extends EnvelopeDetail {
           ..add('line', line)
           ..add('carryoverMinor', carryoverMinor)
           ..add('activity', activity)
-          ..add('activityTotal', activityTotal))
+          ..add('activityTotal', activityTotal)
+          ..add('moves', moves)
+          ..add('movesTotal', movesTotal))
         .toString();
   }
 }
@@ -98,6 +110,15 @@ class EnvelopeDetailBuilder
   set activityTotal(int? activityTotal) =>
       _$this._activityTotal = activityTotal;
 
+  ListBuilder<EnvelopeMove>? _moves;
+  ListBuilder<EnvelopeMove> get moves =>
+      _$this._moves ??= ListBuilder<EnvelopeMove>();
+  set moves(ListBuilder<EnvelopeMove>? moves) => _$this._moves = moves;
+
+  int? _movesTotal;
+  int? get movesTotal => _$this._movesTotal;
+  set movesTotal(int? movesTotal) => _$this._movesTotal = movesTotal;
+
   EnvelopeDetailBuilder() {
     EnvelopeDetail._defaults(this);
   }
@@ -110,6 +131,8 @@ class EnvelopeDetailBuilder
       _carryoverMinor = $v.carryoverMinor;
       _activity = $v.activity.toBuilder();
       _activityTotal = $v.activityTotal;
+      _moves = $v.moves.toBuilder();
+      _movesTotal = $v.movesTotal;
       _$v = null;
     }
     return this;
@@ -141,6 +164,9 @@ class EnvelopeDetailBuilder
             activity: activity.build(),
             activityTotal: BuiltValueNullFieldError.checkNotNull(
                 activityTotal, r'EnvelopeDetail', 'activityTotal'),
+            moves: moves.build(),
+            movesTotal: BuiltValueNullFieldError.checkNotNull(
+                movesTotal, r'EnvelopeDetail', 'movesTotal'),
           );
     } catch (_) {
       late String _$failedField;
@@ -150,6 +176,9 @@ class EnvelopeDetailBuilder
 
         _$failedField = 'activity';
         activity.build();
+
+        _$failedField = 'moves';
+        moves.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
             r'EnvelopeDetail', _$failedField, e.toString());

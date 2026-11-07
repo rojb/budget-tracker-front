@@ -50,6 +50,7 @@ export 'package:api_client/src/model/envelope_group.dart';
 export 'package:api_client/src/model/envelope_icon.dart';
 export 'package:api_client/src/model/envelope_line.dart';
 export 'package:api_client/src/model/envelope_list.dart';
+export 'package:api_client/src/model/envelope_move.dart';
 export 'package:api_client/src/model/envelope_spending.dart';
 export 'package:api_client/src/model/envelope_state.dart';
 export 'package:api_client/src/model/envelope_template.dart';
