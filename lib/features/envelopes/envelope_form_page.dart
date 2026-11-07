@@ -50,6 +50,7 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
         );
   String? _nameError;
   String? _dateError;
+  final GlobalKey _goalKey = GlobalKey();
   bool _saving = false;
   PhotoChoice? _photo;
 
@@ -116,6 +117,7 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     }
     if (_dueDateInvalid) {
       setState(() => _dateError = 'Elegí una fecha límite.');
+      _showGoalFields();
       return;
     }
     setState(() => _saving = true);
@@ -169,6 +171,19 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  /// Keeps the "Fecha límite" row on screen while its error shows: the form is
+  /// pinned under a scrolling list, so the row may be out of view at save time.
+  void _showGoalFields() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _goalKey.currentContext;
+      if (context == null || !context.mounted) return;
+      Scrollable.ensureVisible(
+        context,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
   }
 
   @override
@@ -243,6 +258,7 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
                   ),
                   const SizedBox(height: 26),
                   GoalFields(
+                    key: _goalKey,
                     draft: _goal,
                     currency: widget.plans.currency,
                     title: 'Objetivo (opcional)',
