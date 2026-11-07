@@ -130,12 +130,15 @@ class TransactionDraft extends ChangeNotifier {
   }
 
   /// Chooses the payee (or clears it with null). An expense without an
-  /// envelope chosen by hand takes the payee's suggested one (FR-23).
+  /// envelope chosen by hand takes the payee's suggested one (FR-23); when the
+  /// new payee has none, the envelope an earlier payee filled in is cleared, so
+  /// money is never recorded in an envelope nobody chose for this payee. An
+  /// envelope picked by hand is never touched.
   void pickPayee(PayeePick? pick, {bool suggestionExists = true}) {
     payee = pick;
     final suggested = pick?.suggestedEnvelopeId;
-    if (isExpense && !envelopeByHand && suggested != null && suggestionExists) {
-      envelopeId = suggested;
+    if (isExpense && !envelopeByHand) {
+      envelopeId = suggested != null && suggestionExists ? suggested : null;
     }
     _changed();
   }

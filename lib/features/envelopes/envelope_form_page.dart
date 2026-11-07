@@ -246,7 +246,6 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
                     draft: _goal,
                     currency: widget.plans.currency,
                     title: 'Objetivo (opcional)',
-                    error: _dateError,
                     onChanged: (next) => setState(() {
                       _goal = next;
                       _dateError = null;
@@ -257,10 +256,24 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: UiSaveBar(
-                label: 'Crear sobre',
-                enabled: !_saving,
-                onConfirm: _save,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Always present, so the date error shows where the bar is
+                  // (not below the fold) and nothing moves when it appears.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 24),
+                    child: _dateError == null
+                        ? null
+                        : UiFormMessage(message: _dateError!),
+                  ),
+                  const SizedBox(height: 6),
+                  UiSaveBar(
+                    label: 'Crear sobre',
+                    enabled: !_saving,
+                    onConfirm: _save,
+                  ),
+                ],
               ),
             ),
           ],

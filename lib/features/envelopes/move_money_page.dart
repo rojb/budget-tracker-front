@@ -203,85 +203,112 @@ class _MoveMoneyPageState extends State<MoveMoneyPage> {
         final blocker = _blocker;
         return Scaffold(
           body: SafeArea(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: UiIconButton(
-                    icon: UiIcons.close,
-                    variant: UiIconButtonVariant.soft,
-                    semanticLabel: 'Cerrar',
-                    onPressed: () => context.pop(),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                Text('Mover dinero', style: UiTypography.custom(36)),
-                const SizedBox(height: 22),
-                Text(
-                  'Desde',
-                  style: UiTypography.custom(17, color: UiColors.inkMuted),
-                ),
-                const SizedBox(height: 10),
-                _card(_from, source: true),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Center(
-                    child: Icon(
-                      UiIcons.arrowDown,
-                      size: 22,
-                      color: UiColors.inkMuted,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Hacia',
-                  style: UiTypography.custom(17, color: UiColors.inkMuted),
-                ),
-                const SizedBox(height: 10),
-                _card(_to, source: false),
-                const SizedBox(height: 22),
-                Center(
-                  child: Semantics(
-                    button: true,
-                    label: 'Cambiar el monto a mover',
-                    child: GestureDetector(
-                      onTap: _editAmount,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: UiAmountCapsule(
-                          symbol: _currency.symbol,
-                          value: formatAmountValue(_amountMinor, _currency),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: UiIconButton(
+                          icon: UiIcons.close,
+                          variant: UiIconButtonVariant.soft,
+                          semanticLabel: 'Cerrar',
+                          onPressed: () => context.pop(),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 14),
+                      Text('Mover dinero', style: UiTypography.custom(36)),
+                      const SizedBox(height: 22),
+                      Text(
+                        'Desde',
+                        style: UiTypography.custom(
+                          17,
+                          color: UiColors.inkMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      _card(_from, source: true),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Center(
+                          child: Icon(
+                            UiIcons.arrowDown,
+                            size: 22,
+                            color: UiColors.inkMuted,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Hacia',
+                        style: UiTypography.custom(
+                          17,
+                          color: UiColors.inkMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      _card(_to, source: false),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    for (final (index, minor) in _quick.indexed) ...[
-                      if (index > 0) const SizedBox(width: 8),
-                      Expanded(
-                        child: minor == null
-                            ? const SizedBox(height: UiSizes.chipHeight)
-                            : UiChip(
-                                label: formatAmountValue(minor, _currency),
-                                selected: minor == _amountMinor,
-                                onPressed: () =>
-                                    setState(() => _amountMinor = minor),
+                // Pinned below the cards: the destination card is taller than
+                // its placeholder, and everything under it used to move.
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Semantics(
+                          button: true,
+                          label: 'Cambiar el monto a mover',
+                          child: GestureDetector(
+                            onTap: _editAmount,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: UiAmountCapsule(
+                                symbol: _currency.symbol,
+                                value: formatAmountValue(
+                                  _amountMinor,
+                                  _currency,
+                                ),
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          for (final (index, minor) in _quick.indexed) ...[
+                            if (index > 0) const SizedBox(width: 8),
+                            Expanded(
+                              child: minor == null
+                                  ? const SizedBox(height: UiSizes.chipHeight)
+                                  : UiChip(
+                                      label: formatAmountValue(
+                                        minor,
+                                        _currency,
+                                      ),
+                                      selected: minor == _amountMinor,
+                                      onPressed: () =>
+                                          setState(() => _amountMinor = minor),
+                                    ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      UiSaveBar(
+                        label:
+                            blocker ??
+                            'Mover ${formatMoney(_amountMinor, _currency)}',
+                        enabled: blocker == null && !_saving,
+                        onConfirm: _save,
                       ),
                     ],
-                  ],
-                ),
-                const SizedBox(height: 22),
-                UiSaveBar(
-                  label:
-                      blocker ??
-                      'Mover ${formatMoney(_amountMinor, _currency)}',
-                  enabled: blocker == null && !_saving,
-                  onConfirm: _save,
+                  ),
                 ),
               ],
             ),

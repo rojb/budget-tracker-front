@@ -270,7 +270,6 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
                   GoalFields(
                     draft: _goal,
                     currency: widget.plans.currency,
-                    error: _dateError,
                     onChanged: (next) => setState(() {
                       _goal = next;
                       _dateError = null;
@@ -281,10 +280,24 @@ class _EnvelopeEditPageState extends State<EnvelopeEditPage> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: UiSaveBar(
-                label: 'Guardar cambios',
-                enabled: !_saving,
-                onConfirm: _save,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Always present, so the date error shows where the bar is
+                  // (not below the fold) and nothing moves when it appears.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 24),
+                    child: _dateError == null
+                        ? null
+                        : UiFormMessage(message: _dateError!),
+                  ),
+                  const SizedBox(height: 6),
+                  UiSaveBar(
+                    label: 'Guardar cambios',
+                    enabled: !_saving,
+                    onConfirm: _save,
+                  ),
+                ],
               ),
             ),
           ],

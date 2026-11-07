@@ -211,6 +211,7 @@ class _SplitPageState extends State<SplitPage> {
             label: saveLabel,
             enabled: draft.splitValid && !_saving,
             leadingIcon: UiIcons.split,
+            leadingSemanticLabel: 'Dividir pago',
             onConfirm: _save,
           ),
         ),
