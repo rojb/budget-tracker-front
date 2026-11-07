@@ -49,6 +49,60 @@ WidgetbookFolder moleculesFolder() {
         ],
       ),
       WidgetbookComponent(
+        name: 'ChipRow',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'fits',
+            builder: (context) => stage(
+              SizedBox(
+                width: 393,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: UiChipRow(
+                    children: [
+                      UiChip(label: 'Todos', selected: true, onPressed: () {}),
+                      UiChip(label: 'Falta · 2', onPressed: () {}),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'overflows (02/04)',
+            builder: (context) => stage(
+              SizedBox(
+                width: 393,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: UiChipRow(
+                    children: [
+                      UiChip(label: 'Todos', selected: true, onPressed: () {}),
+                      UiChip(
+                        label: 'Sobregirados · 1',
+                        icon: UiIcons.warning,
+                        onPressed: () {},
+                      ),
+                      UiChip(
+                        label: 'Falta · 3',
+                        icon: UiIcons.clock,
+                        onPressed: () {},
+                      ),
+                      UiChip(
+                        label: 'Cubiertos · 8',
+                        icon: UiIcons.check,
+                        onPressed: () {},
+                      ),
+                      UiChip(label: 'Sin asignar · 2', onPressed: () {}),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      WidgetbookComponent(
         name: 'CloseRow',
         useCases: [
           WidgetbookUseCase(
