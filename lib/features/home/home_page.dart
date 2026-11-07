@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
 import '../../app/routes.dart';
+import '../accounts/accounts_controller.dart';
 import '../envelopes/envelopes_controller.dart';
 import '../envelopes/envelopes_repository.dart';
 import '../envelopes/goal_texts.dart';
 import '../plans/plans_controller.dart';
 import '../shell/account_menu_sheet.dart';
+import '../transactions/transactions_controller.dart';
 import 'home_controller.dart';
 
 /// Screen 01 Inicio: the avatar (→ 39), the greeting and the "Metas" carousel
@@ -21,6 +23,8 @@ class HomePage extends StatefulWidget {
     required this.menu,
     required this.plans,
     required this.envelopes,
+    required this.accounts,
+    required this.transactions,
     super.key,
   });
 
@@ -28,6 +32,8 @@ class HomePage extends StatefulWidget {
   final AccountMenu menu;
   final PlansController plans;
   final EnvelopesController envelopes;
+  final AccountsController accounts;
+  final TransactionsController transactions;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -44,6 +50,13 @@ class _HomePageState extends State<HomePage> {
     _controller.dispose();
     super.dispose();
   }
+
+  /// Pull to refresh: the figures 01 shows come from these three controllers.
+  Future<void> _refresh() => Future.wait([
+    widget.envelopes.load(),
+    widget.accounts.load(),
+    widget.transactions.refresh(),
+  ]);
 
   void _newGoal() =>
       context.push(AppRoutes.newGoal(groupId: _controller.goalsGroupId));
@@ -127,60 +140,67 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: _controller,
-      builder: (context, _) => ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        children: [
-          Row(
-            children: [
-              Semantics(
-                button: true,
-                label: 'Menú de cuenta',
-                child: GestureDetector(
-                  onTap: () => widget.menu.show(context),
-                  child: ExcludeSemantics(
-                    child: UiAvatar(initials: _controller.initials),
+      builder: (context, _) => RefreshIndicator(
+        onRefresh: _refresh,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          children: [
+            Row(
+              children: [
+                Semantics(
+                  button: true,
+                  label: 'Menú de cuenta',
+                  child: GestureDetector(
+                    onTap: () => widget.menu.show(context),
+                    child: ExcludeSemantics(
+                      child: UiAvatar(initials: _controller.initials),
+                    ),
                   ),
                 ),
-              ),
-              const Spacer(),
-              UiIconButton(
-                icon: UiIcons.barChart,
-                semanticLabel: 'Reportes',
-                onPressed: () => context.push(AppRoutes.reports),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Text('Hola', style: UiTypography.headline),
-          Text('${_controller.firstName ?? ''}!', style: UiTypography.headline),
-          const SizedBox(height: 22),
-          UiJoinedCard(
-            primaryValue: formatMoney(
-              _controller.readyToAssignMinor,
-              widget.plans.currency,
-            ),
-            primaryLabel: 'Listo para asignar',
-            secondaryValue: '${_controller.envelopeCount}',
-            secondaryLabel: 'Sobres activos',
-            addLabel: 'Asignar dinero',
-            addEnabled: widget.plans.activePlan?.canEdit ?? false,
-            onAdd: () => context.push(AppRoutes.assign()),
-          ),
-          const SizedBox(height: 28),
-          Row(
-            children: [
-              Text('Metas', style: UiTypography.custom(28)),
-              const Spacer(),
-              if (_controller.goals.isNotEmpty)
-                UiPageDots(
-                  count: _controller.goals.length + 1,
-                  index: _page.clamp(0, _controller.goals.length),
+                const Spacer(),
+                UiIconButton(
+                  icon: UiIcons.barChart,
+                  semanticLabel: 'Reportes',
+                  onPressed: () => context.push(AppRoutes.reports),
                 ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          _goals(),
-        ],
+              ],
+            ),
+            const SizedBox(height: 24),
+            Text('Hola', style: UiTypography.headline),
+            Text(
+              '${_controller.firstName ?? ''}!',
+              style: UiTypography.headline,
+            ),
+            const SizedBox(height: 22),
+            UiJoinedCard(
+              primaryValue: formatMoney(
+                _controller.readyToAssignMinor,
+                widget.plans.currency,
+              ),
+              primaryLabel: 'Listo para asignar',
+              secondaryValue: '${_controller.envelopeCount}',
+              secondaryLabel: 'Sobres activos',
+              addLabel: 'Asignar dinero',
+              addEnabled: widget.plans.activePlan?.canEdit ?? false,
+              onAdd: () => context.push(AppRoutes.assign()),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              children: [
+                Text('Metas', style: UiTypography.custom(28)),
+                const Spacer(),
+                if (_controller.goals.isNotEmpty)
+                  UiPageDots(
+                    count: _controller.goals.length + 1,
+                    index: _page.clamp(0, _controller.goals.length),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            _goals(),
+          ],
+        ),
       ),
     );
   }
