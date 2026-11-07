@@ -110,11 +110,22 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     switch (result) {
       case PayeeChosen(:final pick):
         final suggested = pick.suggestedEnvelopeId;
-        _draft.pickPayee(
-          pick,
-          suggestionExists:
-              suggested != null && widget.envelopes.lineById(suggested) != null,
-        );
+        final suggestionExists =
+            suggested != null && widget.envelopes.lineById(suggested) != null;
+        _draft.pickPayee(pick, suggestionExists: suggestionExists);
+        // No usable suggestion: fall back to where the payee's last expense
+        // went (F-04). A payee typed by name has no history.
+        final payeeId = pick.id;
+        if (!suggestionExists && payeeId != null && !_draft.envelopeByHand) {
+          final envelopeId = await widget.transactions.lastExpenseEnvelopeOf(
+            payeeId,
+            exists: (id) => widget.envelopes.lineById(id) != null,
+          );
+          // The user may have moved on while the request ran.
+          if (envelopeId != null && mounted && _draft.payee?.id == payeeId) {
+            _draft.suggestEnvelope(envelopeId);
+          }
+        }
       case PayeeCleared():
         _draft.pickPayee(null);
       case null:

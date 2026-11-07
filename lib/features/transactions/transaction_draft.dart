@@ -140,6 +140,15 @@ class TransactionDraft extends ChangeNotifier {
     _changed();
   }
 
+  /// Prefills the expense envelope from the payee's history (F-04). Unlike
+  /// [pickEnvelope] it leaves [envelopeByHand] false, so another payee can still
+  /// replace it, and it does nothing once the user chose an envelope.
+  void suggestEnvelope(String id) {
+    if (!isExpense || envelopeByHand) return;
+    envelopeId = id;
+    _changed();
+  }
+
   void pickEnvelope(String id) {
     if (isExpense) {
       envelopeId = id;

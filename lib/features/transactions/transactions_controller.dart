@@ -176,6 +176,34 @@ class TransactionsController extends ChangeNotifier {
     return change;
   }
 
+  /// The envelope of the payee's latest expense, to prefill the Sobre row of
+  /// 07 (F-04). Looks at the 5 newest transactions of [payeeId] and returns the
+  /// envelope of the first expense with a single portion whose envelope
+  /// satisfies [exists]; split expenses and incomes are skipped. Null when
+  /// there is none or the request fails: it only ever helps, never blocks.
+  Future<String?> lastExpenseEnvelopeOf(
+    String payeeId, {
+    required bool Function(String envelopeId) exists,
+  }) async {
+    final planId = _planId;
+    if (planId == null) return null;
+    try {
+      final page = await _repository.list(
+        planId,
+        filter: TransactionFilter(payeeId: payeeId),
+        pageSize: 5,
+      );
+      for (final item in page.items) {
+        if (!item.isExpense || item.splits.length != 1) continue;
+        final envelopeId = item.splits.first.envelopeId;
+        if (envelopeId != null && exists(envelopeId)) return envelopeId;
+      }
+    } on ApiFailure {
+      // The row stays "Elegir".
+    }
+    return null;
+  }
+
   /// The latest movements of one account (14 merges them with its transfers).
   Future<List<TransactionData>> forAccount(String accountId) async {
     final page = await _repository.list(
