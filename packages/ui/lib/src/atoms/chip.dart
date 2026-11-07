@@ -20,6 +20,9 @@ enum UiChipSize {
 /// or [icon] (the status filters of 02/04: "Sobregirados" with a warning).
 /// [soft] uses the `bg` grey instead of white, for chips that sit on a white
 /// card (06's template preview).
+///
+/// The chip is at least [UiChipSize.height] tall and grows with the text
+/// scale; its label scales down when the chip sits in a slot narrower than it.
 class UiChip extends StatelessWidget {
   const UiChip({
     required this.label,
@@ -52,7 +55,7 @@ class UiChip extends StatelessWidget {
       selected: selected,
       minWidth: 0,
       child: Container(
-        height: size.height,
+        constraints: BoxConstraints(minHeight: size.height),
         padding: const EdgeInsets.symmetric(horizontal: 18),
         decoration: BoxDecoration(
           color: selected
@@ -72,8 +75,13 @@ class UiChip extends StatelessWidget {
                 Icon(icon, size: 18, color: UiColors.ink),
                 const SizedBox(width: 8),
               ],
-              ExcludeSemantics(
-                child: Text(label, style: UiTypography.custom(15)),
+              Flexible(
+                child: ExcludeSemantics(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(label, style: UiTypography.custom(15)),
+                  ),
+                ),
               ),
             ],
           ),

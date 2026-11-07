@@ -3,6 +3,7 @@ import 'package:ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'stage.dart';
+import 'text_scale.dart';
 
 WidgetbookFolder organismsFolder() {
   return WidgetbookFolder(
@@ -72,6 +73,7 @@ WidgetbookFolder organismsFolder() {
           ),
         ],
       ),
+      textScaleComponent(),
       WidgetbookComponent(
         name: 'NavCluster',
         useCases: [
