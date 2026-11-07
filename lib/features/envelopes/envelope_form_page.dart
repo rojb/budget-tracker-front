@@ -176,81 +176,92 @@ class _EnvelopeFormPageState extends State<EnvelopeFormPage> {
     final group = widget.envelopes.groupById(_groupId);
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: UiIconButton(
-                icon: UiIcons.chevronLeft,
-                variant: UiIconButtonVariant.soft,
-                semanticLabel: 'Volver',
-                onPressed: () => context.pop(),
-              ),
-            ),
-            const SizedBox(height: 22),
-            Text('Nuevo sobre', style: UiTypography.custom(36)),
-            const SizedBox(height: 6),
-            Text(
-              group == null
-                  ? 'Sumá un sobre a tu plan.'
-                  : 'Sumá un sobre a ${group.name}.',
-              style: UiTypography.custom(16, color: UiColors.inkMuted),
-            ),
-            const SizedBox(height: 18),
-            UiCard(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-              child: Column(
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 children: [
-                  UiFieldRow(
-                    label: 'Nombre',
-                    value: _name.isEmpty ? 'Elegí un nombre' : _name,
-                    onTap: _editName,
-                  ),
-                  UiFieldRow(
-                    label: 'Grupo',
-                    value: group?.name ?? 'Sin grupo',
-                    onTap: _pickGroup,
-                  ),
-                  if (_showPhotoRow)
-                    UiFieldRow(
-                      label: 'Foto',
-                      value: _photoLabel,
-                      onTap: _pickPhoto,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: UiIconButton(
+                      icon: UiIcons.chevronLeft,
+                      variant: UiIconButtonVariant.soft,
+                      semanticLabel: 'Volver',
+                      onPressed: () => context.pop(),
                     ),
+                  ),
+                  const SizedBox(height: 22),
+                  Text('Nuevo sobre', style: UiTypography.custom(36)),
+                  const SizedBox(height: 6),
+                  Text(
+                    group == null
+                        ? 'Sumá un sobre a tu plan.'
+                        : 'Sumá un sobre a ${group.name}.',
+                    style: UiTypography.custom(16, color: UiColors.inkMuted),
+                  ),
+                  const SizedBox(height: 18),
+                  UiCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22,
+                      vertical: 10,
+                    ),
+                    child: Column(
+                      children: [
+                        UiFieldRow(
+                          label: 'Nombre',
+                          value: _name.isEmpty ? 'Elegí un nombre' : _name,
+                          onTap: _editName,
+                        ),
+                        UiFieldRow(
+                          label: 'Grupo',
+                          value: group?.name ?? 'Sin grupo',
+                          onTap: _pickGroup,
+                        ),
+                        if (_showPhotoRow)
+                          UiFieldRow(
+                            label: 'Foto',
+                            value: _photoLabel,
+                            onTap: _pickPhoto,
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (_nameError != null) ...[
+                    const SizedBox(height: 8),
+                    UiFormMessage(message: _nameError!),
+                  ],
+                  const SizedBox(height: 22),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2),
+                    child: Text('Ícono', style: UiTypography.custom(19)),
+                  ),
+                  const SizedBox(height: 12),
+                  EnvelopeIconSelector(
+                    selected: _icon,
+                    onSelected: (name) => setState(() => _icon = name),
+                  ),
+                  const SizedBox(height: 26),
+                  GoalFields(
+                    draft: _goal,
+                    currency: widget.plans.currency,
+                    title: 'Objetivo (opcional)',
+                    error: _dateError,
+                    onChanged: (next) => setState(() {
+                      _goal = next;
+                      _dateError = null;
+                    }),
+                  ),
                 ],
               ),
             ),
-            if (_nameError != null) ...[
-              const SizedBox(height: 8),
-              UiFormMessage(message: _nameError!),
-            ],
-            const SizedBox(height: 22),
             Padding(
-              padding: const EdgeInsets.only(left: 2),
-              child: Text('Ícono', style: UiTypography.custom(19)),
-            ),
-            const SizedBox(height: 12),
-            EnvelopeIconSelector(
-              selected: _icon,
-              onSelected: (name) => setState(() => _icon = name),
-            ),
-            const SizedBox(height: 26),
-            GoalFields(
-              draft: _goal,
-              currency: widget.plans.currency,
-              title: 'Objetivo (opcional)',
-              error: _dateError,
-              onChanged: (next) => setState(() {
-                _goal = next;
-                _dateError = null;
-              }),
-            ),
-            const SizedBox(height: 28),
-            UiSaveBar(
-              label: 'Crear sobre',
-              enabled: !_saving,
-              onConfirm: _save,
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: UiSaveBar(
+                label: 'Crear sobre',
+                enabled: !_saving,
+                onConfirm: _save,
+              ),
             ),
           ],
         ),

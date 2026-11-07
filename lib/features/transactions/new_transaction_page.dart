@@ -110,11 +110,22 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     switch (result) {
       case PayeeChosen(:final pick):
         final suggested = pick.suggestedEnvelopeId;
-        _draft.pickPayee(
-          pick,
-          suggestionExists:
-              suggested != null && widget.envelopes.lineById(suggested) != null,
-        );
+        final suggestionExists =
+            suggested != null && widget.envelopes.lineById(suggested) != null;
+        _draft.pickPayee(pick, suggestionExists: suggestionExists);
+        // No usable suggestion: fall back to where the payee's last expense
+        // went (F-04). A payee typed by name has no history.
+        final payeeId = pick.id;
+        if (!suggestionExists && payeeId != null && !_draft.envelopeByHand) {
+          final envelopeId = await widget.transactions.lastExpenseEnvelopeOf(
+            payeeId,
+            exists: (id) => widget.envelopes.lineById(id) != null,
+          );
+          // The user may have moved on while the request ran.
+          if (envelopeId != null && mounted && _draft.payee?.id == payeeId) {
+            _draft.suggestEnvelope(envelopeId);
+          }
+        }
       case PayeeCleared():
         _draft.pickPayee(null);
       case null:
@@ -383,21 +394,22 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
           const SizedBox(height: 12),
           UiCalculatorPad(onKey: _onKey, onDelete: draft.typeDelete),
         ],
-        if (_error != null) ...[
-          const SizedBox(height: 8),
-          UiFormMessage(message: _error!),
-        ],
-        const SizedBox(height: 14),
-        Center(
-          child: UiSaveBar(
-            label: expense ? 'Guardar gasto' : 'Guardar ingreso',
-            enabled: !_saving,
-            leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
-            onConfirm: _save,
-            onCalculatorPressed: expense
-                ? _openSplit
-                : () => setState(() => _incomePad = !_padVisible),
-          ),
+        // Always present, so an error appearing does not move the SaveBar.
+        const SizedBox(height: 8),
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 24),
+          child: _error == null ? null : UiFormMessage(message: _error!),
+        ),
+        const SizedBox(height: 6),
+        UiSaveBar(
+          label: expense ? 'Guardar gasto' : 'Guardar ingreso',
+          enabled: !_saving,
+          leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
+          leadingSemanticLabel: expense ? 'Dividir pago' : 'Calculadora',
+          onConfirm: _save,
+          onCalculatorPressed: expense
+              ? _openSplit
+              : () => setState(() => _incomePad = !_padVisible),
         ),
       ],
     );
