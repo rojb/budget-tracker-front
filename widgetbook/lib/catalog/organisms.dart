@@ -68,6 +68,44 @@ WidgetbookFolder organismsFolder() {
             name: 'disabled',
             builder: (context) => stage(const _SaveBarDemo(enabled: false)),
           ),
+          WidgetbookUseCase(
+            name: 'split label (07)',
+            builder: (context) => stage(
+              const _SaveBarDemo(
+                enabled: true,
+                leadingIcon: UiIcons.split,
+                leadingSemanticLabel: 'Dividir pago',
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'placement: Column and ListView',
+            builder: (context) => stage(
+              SizedBox(
+                width: 393,
+                height: 360,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          UiSaveBar(label: 'Column', onConfirm: () {}),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          UiSaveBar(label: 'ListView', onConfirm: () {}),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       WidgetbookComponent(
@@ -271,9 +309,15 @@ class _CalculatorPadDemoState extends State<_CalculatorPadDemo> {
 }
 
 class _SaveBarDemo extends StatefulWidget {
-  const _SaveBarDemo({required this.enabled});
+  const _SaveBarDemo({
+    required this.enabled,
+    this.leadingIcon = UiIcons.calculator,
+    this.leadingSemanticLabel = 'Calculadora',
+  });
 
   final bool enabled;
+  final IconData leadingIcon;
+  final String leadingSemanticLabel;
 
   @override
   State<_SaveBarDemo> createState() => _SaveBarDemoState();
@@ -293,6 +337,8 @@ class _SaveBarDemoState extends State<_SaveBarDemo> {
           child: UiSaveBar(
             label: widget.enabled ? 'Guardar' : r'Faltan $ 500',
             enabled: widget.enabled,
+            leadingIcon: widget.leadingIcon,
+            leadingSemanticLabel: widget.leadingSemanticLabel,
             onConfirm: () => setState(() => _confirmed++),
             onCalculatorPressed: () => setState(() => _calculator++),
           ),
