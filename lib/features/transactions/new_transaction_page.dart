@@ -383,15 +383,18 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
           const SizedBox(height: 12),
           UiCalculatorPad(onKey: _onKey, onDelete: draft.typeDelete),
         ],
-        if (_error != null) ...[
-          const SizedBox(height: 8),
-          UiFormMessage(message: _error!),
-        ],
-        const SizedBox(height: 14),
+        // Always present, so an error appearing does not move the SaveBar.
+        const SizedBox(height: 8),
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 24),
+          child: _error == null ? null : UiFormMessage(message: _error!),
+        ),
+        const SizedBox(height: 6),
         UiSaveBar(
           label: expense ? 'Guardar gasto' : 'Guardar ingreso',
           enabled: !_saving,
           leadingIcon: expense ? UiIcons.split : UiIcons.calculator,
+          leadingSemanticLabel: expense ? 'Dividir pago' : 'Calculadora',
           onConfirm: _save,
           onCalculatorPressed: expense
               ? _openSplit
