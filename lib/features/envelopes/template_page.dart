@@ -8,7 +8,7 @@ import '../common/feedback.dart';
 import '../plans/plans_controller.dart';
 import 'envelopes_controller.dart';
 import 'envelopes_repository.dart';
-import 'faded_scroll.dart';
+import '../common/faded_scroll.dart';
 
 /// Screen 35 Plantilla sugerida: the template's envelopes from the API, all
 /// ticked, untickable one by one. "Crear N sobres" creates the ticked ones

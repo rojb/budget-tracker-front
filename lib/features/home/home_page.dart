@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ui/ui.dart';
 
+import '../common/faded_scroll.dart';
 import '../../app/routes.dart';
 import '../accounts/accounts_controller.dart';
 import '../envelopes/envelopes_controller.dart';
@@ -142,64 +143,66 @@ class _HomePageState extends State<HomePage> {
       listenable: _controller,
       builder: (context, _) => RefreshIndicator(
         onRefresh: _refresh,
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          children: [
-            Row(
-              children: [
-                Semantics(
-                  button: true,
-                  label: 'Menú de cuenta',
-                  child: GestureDetector(
-                    onTap: () => widget.menu.show(context),
-                    child: ExcludeSemantics(
-                      child: UiAvatar(initials: _controller.initials),
+        child: FadedScroll(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            children: [
+              Row(
+                children: [
+                  Semantics(
+                    button: true,
+                    label: 'Menú de cuenta',
+                    child: GestureDetector(
+                      onTap: () => widget.menu.show(context),
+                      child: ExcludeSemantics(
+                        child: UiAvatar(initials: _controller.initials),
+                      ),
                     ),
                   ),
-                ),
-                const Spacer(),
-                UiIconButton(
-                  icon: UiIcons.barChart,
-                  semanticLabel: 'Reportes',
-                  onPressed: () => context.push(AppRoutes.reports),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Text('Hola', style: UiTypography.headline),
-            Text(
-              '${_controller.firstName ?? ''}!',
-              style: UiTypography.headline,
-            ),
-            const SizedBox(height: 22),
-            UiJoinedCard(
-              primaryValue: formatMoney(
-                _controller.readyToAssignMinor,
-                widget.plans.currency,
-              ),
-              primaryLabel: 'Listo para asignar',
-              secondaryValue: '${_controller.envelopeCount}',
-              secondaryLabel: 'Sobres activos',
-              addLabel: 'Asignar dinero',
-              addEnabled: widget.plans.activePlan?.canEdit ?? false,
-              onAdd: () => context.push(AppRoutes.assign()),
-            ),
-            const SizedBox(height: 28),
-            Row(
-              children: [
-                Text('Metas', style: UiTypography.custom(28)),
-                const Spacer(),
-                if (_controller.goals.isNotEmpty)
-                  UiPageDots(
-                    count: _controller.goals.length + 1,
-                    index: _page.clamp(0, _controller.goals.length),
+                  const Spacer(),
+                  UiIconButton(
+                    icon: UiIcons.barChart,
+                    semanticLabel: 'Reportes',
+                    onPressed: () => context.push(AppRoutes.reports),
                   ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            _goals(),
-          ],
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text('Hola', style: UiTypography.headline),
+              Text(
+                '${_controller.firstName ?? ''}!',
+                style: UiTypography.headline,
+              ),
+              const SizedBox(height: 22),
+              UiJoinedCard(
+                primaryValue: formatMoney(
+                  _controller.readyToAssignMinor,
+                  widget.plans.currency,
+                ),
+                primaryLabel: 'Listo para asignar',
+                secondaryValue: '${_controller.envelopeCount}',
+                secondaryLabel: 'Sobres activos',
+                addLabel: 'Asignar dinero',
+                addEnabled: widget.plans.activePlan?.canEdit ?? false,
+                onAdd: () => context.push(AppRoutes.assign()),
+              ),
+              const SizedBox(height: 28),
+              Row(
+                children: [
+                  Text('Metas', style: UiTypography.custom(28)),
+                  const Spacer(),
+                  if (_controller.goals.isNotEmpty)
+                    UiPageDots(
+                      count: _controller.goals.length + 1,
+                      index: _page.clamp(0, _controller.goals.length),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              _goals(),
+            ],
+          ),
         ),
       ),
     );

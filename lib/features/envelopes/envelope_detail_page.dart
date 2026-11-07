@@ -137,7 +137,15 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
     );
     final group = widget.envelopes.groupById(envelope.groupId)?.name;
     final entries = _activityEntries(detail);
-    Widget figure(String value, String label, {bool muted = false}) => Expanded(
+    // Disponible leads (34 sp); Asignado and Gastado are secondary (24 sp).
+    // Each figure scales down instead of overflowing its column.
+    Widget figure(
+      String value,
+      String label, {
+      bool muted = false,
+      bool emphasized = false,
+    }) => Expanded(
+      flex: emphasized ? 13 : 10,
       child: Column(
         children: [
           FittedBox(
@@ -145,14 +153,20 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
             child: Text(
               value,
               style: UiTypography.custom(
-                24,
+                emphasized ? 34 : 24,
                 weight: 300,
                 color: muted ? UiColors.inkMuted : UiColors.ink,
               ),
             ),
           ),
           const SizedBox(height: 2),
-          Text(label, style: UiTypography.custom(15, color: UiColors.inkMuted)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: UiTypography.custom(15, color: UiColors.inkMuted),
+            ),
+          ),
         ],
       ),
     );
@@ -193,7 +207,13 @@ class _EnvelopeDetailPageState extends State<EnvelopeDetailPage> {
         child: Row(
           children: [
             figure(formatMoney(line.assignedMinor, currency), 'Asignado'),
-            figure(formatMoney(line.availableMinor, currency), 'Disponible'),
+            const SizedBox(width: 12),
+            figure(
+              formatMoney(line.availableMinor, currency),
+              'Disponible',
+              emphasized: true,
+            ),
+            const SizedBox(width: 12),
             figure(
               formatMoney(line.spentMinor, currency),
               'Gastado',
