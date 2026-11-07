@@ -11,19 +11,30 @@ import 'envelopes_repository.dart';
 /// The objective being edited in 23 and 31: no goal ([kind] null), monthly, or
 /// by a date. The API validates it; this only holds what the user typed.
 class GoalDraft {
-  const GoalDraft({this.kind, this.targetMinor = 0, this.dueDate});
+  const GoalDraft({
+    this.kind,
+    this.targetMinor = 0,
+    this.dueDate,
+    this.amountTouched = false,
+  });
 
+  /// A saved goal has an amount somebody chose, so it counts as touched.
   factory GoalDraft.of(GoalData? goal) => goal == null
       ? const GoalDraft()
       : GoalDraft(
           kind: goal.kind,
           targetMinor: goal.targetMinor,
           dueDate: goal.dueDate,
+          amountTouched: true,
         );
 
   final GoalKind? kind;
   final int targetMinor;
   final DateTime? dueDate;
+
+  /// False while [targetMinor] is the preselected amount of a new goal: the
+  /// screen draws it muted until the user picks or keys one.
+  final bool amountTouched;
 
   /// The goal to send, or null for "Sin objetivo".
   GoalData? toGoal() => kind == null
@@ -42,14 +53,23 @@ class GoalDraft {
       kind: next,
       targetMinor: start,
       dueDate: next == GoalKind.targetByDate ? dueDate : null,
+      amountTouched: amountTouched,
     );
   }
 
-  GoalDraft withTarget(int minor) =>
-      GoalDraft(kind: kind, targetMinor: minor, dueDate: dueDate);
+  GoalDraft withTarget(int minor) => GoalDraft(
+    kind: kind,
+    targetMinor: minor,
+    dueDate: dueDate,
+    amountTouched: true,
+  );
 
-  GoalDraft withDueDate(DateTime date) =>
-      GoalDraft(kind: kind, targetMinor: targetMinor, dueDate: date);
+  GoalDraft withDueDate(DateTime date) => GoalDraft(
+    kind: kind,
+    targetMinor: targetMinor,
+    dueDate: date,
+    amountTouched: amountTouched,
+  );
 }
 
 /// Quick amounts of the objective, in minor units of [currency]: ARS 20.000,
@@ -164,11 +184,15 @@ class GoalFields extends StatelessWidget {
               label: 'Cambiar el monto del objetivo',
               child: GestureDetector(
                 onTap: () => _editAmount(context),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: UiAmountCapsule(
-                    symbol: currency.symbol,
-                    value: formatAmountValue(draft.targetMinor, currency),
+                child: Opacity(
+                  // The preselected amount reads as a suggestion until chosen.
+                  opacity: draft.amountTouched ? 1 : 0.5,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: UiAmountCapsule(
+                      symbol: currency.symbol,
+                      value: formatAmountValue(draft.targetMinor, currency),
+                    ),
                   ),
                 ),
               ),
@@ -182,7 +206,7 @@ class GoalFields extends StatelessWidget {
               for (final minor in amounts.take(5))
                 UiChip(
                   label: formatAmountValue(minor, currency),
-                  selected: minor == draft.targetMinor,
+                  selected: draft.amountTouched && minor == draft.targetMinor,
                   onPressed: () => onChanged(draft.withTarget(minor)),
                 ),
             ],
@@ -195,7 +219,7 @@ class GoalFields extends StatelessWidget {
             child: UiFieldRow(
               label: 'Fecha límite',
               value: draft.dueDate == null
-                  ? '—'
+                  ? 'Obligatoria'
                   : '${dayMonthShort(draft.dueDate!)} ${draft.dueDate!.year}',
               onTap: () => _pickDate(context),
             ),
