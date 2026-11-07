@@ -143,7 +143,12 @@ GoRouter createRouter(Dependencies dependencies) {
         builder: (context, state) => NoPlanPage(onSignOut: auth.logout),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, shell) => AppShell(navigationShell: shell),
+        builder: (context, state, shell) => AppShell(
+          navigationShell: shell,
+          envelopes: dependencies.envelopesController,
+          accounts: dependencies.accountsController,
+          transactions: dependencies.transactionsController,
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -154,6 +159,8 @@ GoRouter createRouter(Dependencies dependencies) {
                   menu: AccountMenu(auth),
                   plans: plans,
                   envelopes: dependencies.envelopesController,
+                  accounts: dependencies.accountsController,
+                  transactions: dependencies.transactionsController,
                 ),
                 routes: [
                   GoRoute(
@@ -386,11 +393,10 @@ GoRouter createRouter(Dependencies dependencies) {
       ),
       GoRoute(
         path: AppRoutes.template,
-        builder: (context, state) =>
-            TemplatePage(
-              envelopes: dependencies.envelopesController,
-              plans: dependencies.plansController,
-            ),
+        builder: (context, state) => TemplatePage(
+          envelopes: dependencies.envelopesController,
+          plans: dependencies.plansController,
+        ),
       ),
       GoRoute(
         path: AppRoutes.assignMoney,

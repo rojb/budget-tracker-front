@@ -107,6 +107,8 @@ class _AssignMoneyPageState extends State<AssignMoneyPage> {
   Widget build(BuildContext context) {
     final envelopes = widget.envelopes;
     final remaining = _remaining;
+    final over = remaining < 0;
+    final noteColor = over ? UiColors.danger : UiColors.inkMuted;
     return Scaffold(
       body: SafeArea(
         child: ListenableBuilder(
@@ -139,9 +141,12 @@ class _AssignMoneyPageState extends State<AssignMoneyPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // What is left to assign as the user types; red once over.
                         Text(
-                          formatMoney(_total, _currency),
-                          style: UiTypography.display,
+                          formatMoney(remaining, _currency),
+                          style: UiTypography.display.copyWith(
+                            color: over ? UiColors.danger : null,
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -174,21 +179,20 @@ class _AssignMoneyPageState extends State<AssignMoneyPage> {
                       children: [
                         const SizedBox(width: 4),
                         Icon(
-                          remaining < 0 ? UiIcons.warning : UiIcons.info,
+                          over ? UiIcons.warning : UiIcons.info,
                           size: 20,
-                          color: UiColors.inkMuted,
+                          color: noteColor,
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            remaining < 0
-                                ? 'Te pasaste ${formatMoney(-remaining, _currency)}'
+                            over
+                                ? 'Te pasaste ${formatMoney(-remaining, _currency)}. '
+                                      'Quitá dinero de algún sobre o seguí y '
+                                      'lo ajustás después.'
                                 : 'Te quedan ${formatMoney(remaining, _currency)} '
                                       'por asignar',
-                            style: UiTypography.custom(
-                              15,
-                              color: UiColors.inkMuted,
-                            ),
+                            style: UiTypography.custom(15, color: noteColor),
                           ),
                         ),
                       ],

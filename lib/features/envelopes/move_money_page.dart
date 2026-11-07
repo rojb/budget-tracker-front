@@ -102,6 +102,11 @@ class _MoveMoneyPageState extends State<MoveMoneyPage> {
       return;
     }
     setState(() => _saving = true);
+    // Read before the move: the reload that follows may change the lines.
+    final fromName = _from?.envelope.name ?? '';
+    final title =
+        'Movido ${formatMoney(_amountMinor, _currency)} a '
+        '${_to?.envelope.name ?? ''}';
     try {
       await widget.envelopes.moveMoney(
         fromEnvelopeId: _fromId,
@@ -109,7 +114,7 @@ class _MoveMoneyPageState extends State<MoveMoneyPage> {
         amountMinor: _amountMinor,
       );
       if (!mounted) return;
-      showSaved(context, 'Guardado');
+      showSaved(context, title, detail: 'Desde $fromName');
       context.pop();
     } on ApiFailure catch (failure) {
       if (!mounted) return;
@@ -170,15 +175,23 @@ class _MoveMoneyPageState extends State<MoveMoneyPage> {
     );
   }
 
-  List<int> get _quick {
+  /// Three fixed slots: the cover of the destination's overspending (empty
+  /// until there is one) and the two usual amounts. A slot that has nothing
+  /// stays empty, so the chips never change position when the destination is
+  /// chosen.
+  List<int?> get _quick {
     final base = _currency == Currency.ars
         ? const [10000, 20000]
         : const [50, 100];
     final factor = math.pow(10, _currency.minorUnits).toInt();
-    return [
-      if (_cover > 0) _cover,
+    final cover = _cover;
+    final usual = [
       for (final value in base)
-        if (value * factor != _cover) value * factor,
+        if (value * factor != cover) value * factor,
+    ];
+    return [
+      cover > 0 ? cover : null,
+      for (var i = 0; i < 2; i++) i < usual.length ? usual[i] : null,
     ];
   }
 
@@ -245,16 +258,21 @@ class _MoveMoneyPageState extends State<MoveMoneyPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                Row(
                   children: [
-                    for (final minor in _quick)
-                      UiChip(
-                        label: formatAmountValue(minor, _currency),
-                        selected: minor == _amountMinor,
-                        onPressed: () => setState(() => _amountMinor = minor),
+                    for (final (index, minor) in _quick.indexed) ...[
+                      if (index > 0) const SizedBox(width: 8),
+                      Expanded(
+                        child: minor == null
+                            ? const SizedBox(height: UiSizes.chipHeight)
+                            : UiChip(
+                                label: formatAmountValue(minor, _currency),
+                                selected: minor == _amountMinor,
+                                onPressed: () =>
+                                    setState(() => _amountMinor = minor),
+                              ),
                       ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 22),
